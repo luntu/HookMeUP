@@ -10,7 +10,7 @@ namespace HookMeUP.iOS
 	
 
 		//static RegisterViewController registerViewController = new RegisterViewController();
-		UIAlertView alert = new UIAlertView();
+
 
 		public override void ViewDidLoad()
 		{
@@ -26,44 +26,42 @@ namespace HookMeUP.iOS
 
 			loginButton.TouchUpInside += (o, e) => {
 				i++;
-				string[] split = registerViewController.getValues().Split('#');
 
-				string usernameR = split[2];
-				string usernameL = usernameText.Text;
+				string[] split = registerViewController.GetValues().Split('#');
+				try
+				{
+					string usernameR = split[2];
+					string usernameL = usernameText.Text;
 
-				string passwordR = split[3];
-				string passwordL = passwordText.Text;
+					string passwordR = split[3];
+					string passwordL = passwordText.Text;
 
-				try{
+					//try{
 					if (usernameL.Equals(usernameR) && passwordL.Equals(passwordR))
 					{
-						NavigationController.PushViewController(registerViewController, true);
+						NavigationScreenController(registerViewController);
 					}
 					else {
 
-						alert.Title = "Login failed";
-						alert.Message = "Username and/or password is incorrect";
-						alert.AddButton("OK");
-						alert.Show();
+						AlertPopUp("Login failed", "Username and/or password is incorrect", "OK");
 					}
-				}catch (System.ArgumentOutOfRangeException) {
-					alert.Title = "Login failed";
-					alert.Message = "Username and/or password is incorrect";
-					alert.AddButton("OK");
-					alert.Show();
-				}
 
+					//}catch (ArgumentOutOfRangeException ) {
+
+					//	AlertPopUp("Login failed","Username and/or password is incorrect","OK");
+
+					//}
+				}
+				catch (IndexOutOfRangeException) {
+					AlertPopUp("Login failed","Fill in all the details","OK");
+				}
 				if (i == 3) {
 
-					alert.Title = "Login failed";
-					alert.Message = "You have entered the password 3 times incorrectly\n we suggest you click the 'forgot password button' or 'Register button'";
-					alert.AddButton("OK");
-					alert.Show();
-					//forgotPasswordButton
 
-					forgotPasswordButton.Layer.BorderWidth = 1;
-					forgotPasswordButton.Layer.CornerRadius = 4;
-					forgotPasswordButton.Layer.BorderColor = UIColor.Blue.CGColor;
+					AlertPopUp("Login failed","You have entered the password 3 times incorrectly\n we suggest you click the 'forgot password button' or 'Register button'","OK");
+
+
+					BorderButton(forgotPasswordButton, registerButton);
 					loginButton.Enabled = false;
 				}
 
@@ -73,9 +71,11 @@ namespace HookMeUP.iOS
 
 			};
 				
-			registerButton.TouchUpInside += (o, e) => { 
 
-				NavigationController.PushViewController(registerViewController, true);
+
+			registerButton.TouchUpInside += (o, e) => {
+
+				NavigationScreenController(registerViewController);
 
 			};
 

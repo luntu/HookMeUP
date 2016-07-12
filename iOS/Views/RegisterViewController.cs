@@ -6,9 +6,9 @@ namespace HookMeUP.iOS
 	public partial class RegisterViewController : ScreenViewController
 	{
 		static List<string> info = new List<string>();
-		UIAlertView alert = new UIAlertView();
 
-		public string getValues()  {
+
+		public string GetValues()  {
 			string value = "";
 			try
 			{
@@ -16,10 +16,7 @@ namespace HookMeUP.iOS
 			}
 			catch (System.ArgumentOutOfRangeException){
 
-				alert.Title = "Login failed";
-				alert.Message = "Username and/or password is incorrect";
-				alert.AddButton("OK");
-				alert.Show();
+				AlertPopUp("Login failed","Username and/or password is incorrect","OK");
 
 			}
 			return value;
@@ -56,35 +53,25 @@ namespace HookMeUP.iOS
 						if (password.Equals(verifyPasswordText.Text))
 						{
 							info.Add(name + "#" + surname + "#" + username + "#" + password + "#" + empNo);
-							alert.Title = "Done!!!";
-							alert.AddButton("OK");
-							alert.Message = "Registration complete";
-							alert.Show();
-							NavigationController.PushViewController(loginViewController,true);
+
+							AlertPopUp("Done!!!", "Registration complete", "OK");
+						//	NavigationController.PushViewController(loginViewController,true);
+						NavigationScreenController(loginViewController);
 						}
 						else { 
 						
-							alert.Title = "Registering failed!!!";
-							alert.AddButton("OK");
-							alert.Message = "passwords do not match";
-							alert.Show();
+							AlertPopUp("Registering failed!!!", "passwords do not match", "OK");
+
 							passwordTextR.Highlighted = true;
 							verifyPasswordText.Highlighted = true;
 						}
 						
 					}
 				else {
-					alert.Title = "Error";
-					alert.AddButton("OK");
-					alert.Message = "please complete all fields";
-					alert.Show();
+
+					AlertPopUp("Error","please complete all fields","OK","Cancel");
+
 					}
-					nameText.Text = "";
-					surnameText.Text = "";
-					usernameTextR.Text = "";
-					passwordTextR.Text = "";
-					verifyPasswordText.Text = "";
-					employeeNoText.Text = "";
 				};
 		}
 
