@@ -9,9 +9,14 @@ namespace HookMeUP.Droid
 	{
 		int count = 1;
 
+		UserManager userManager;
+
+
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
+
+			//userManager = new UserManager();
 
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.Main);

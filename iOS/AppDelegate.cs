@@ -22,9 +22,15 @@ namespace HookMeUP.iOS
 			// If not required for your application you can safely delete this method
 
 			// Code to start the Xamarin Test Cloud Agent
-#if ENABLE_TEST_CLOUD
-			Xamarin.Calabash.Start();
-#endif
+//#if ENABLE_TEST_CLOUD
+//			Xamarin.Calabash.Start();
+//#endif
+
+			this.Window = new UIWindow(UIScreen.MainScreen.Bounds);
+			UIViewController loginController = new LoginViewController();
+			UINavigationController navigationController = new UINavigationController(loginController);
+			Window.RootViewController = navigationController;
+			Window.MakeKeyAndVisible();
 
 			return true;
 		}
