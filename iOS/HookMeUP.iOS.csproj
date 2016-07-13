@@ -146,7 +146,6 @@
   <ItemGroup>
     <BundleResource Include="Resources\Unknown12.jpg" />
     <BundleResource Include="Resources\aliens.png" />
-    <BundleResource Include="Unknown12.jpg" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Views\RegisterViewController.xib" />
