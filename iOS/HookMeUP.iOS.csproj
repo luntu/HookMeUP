@@ -138,6 +138,10 @@
     <Compile Include="Views\ScreenViewController.designer.cs">
       <DependentUpon>ScreenViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\OrderViewController.cs" />
+    <Compile Include="Views\OrderViewController.designer.cs">
+      <DependentUpon>OrderViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Unknown12.jpg" />
@@ -148,6 +152,7 @@
     <InterfaceDefinition Include="Views\RegisterViewController.xib" />
     <InterfaceDefinition Include="Views\ForgotPasswordViewController.xib" />
     <InterfaceDefinition Include="Views\LoginViewController.xib" />
+    <InterfaceDefinition Include="Views\OrderViewController.xib" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

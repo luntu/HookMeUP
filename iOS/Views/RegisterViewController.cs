@@ -47,8 +47,7 @@ namespace HookMeUP.iOS
 							info.Add(name + "#" + surname + "#" + username + "#" + password + "#" + empNo);
 
 							AlertPopUp("Done!!!", "Registration complete", "OK");
-						//	NavigationController.PushViewController(loginViewController,true);
-						NavigationScreenController(loginViewController);
+							//NavigationScreenController(loginViewController);
 						}
 						else { 
 						
@@ -64,6 +63,8 @@ namespace HookMeUP.iOS
 					AlertPopUp("Error","please complete all fields","OK","Cancel");
 
 					}
+
+				nameText.Text = "";
 				};
 		}
 
