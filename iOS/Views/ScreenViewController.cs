@@ -9,6 +9,7 @@ namespace HookMeUP.iOS
 		
 		public static RegisterViewController registerViewController = new RegisterViewController();
 		public static LoginViewController loginViewController = new LoginViewController();
+		public static ForgotPasswordViewController forgotPasswordViewController = new ForgotPasswordViewController();
 
 		public void AlertPopUp(string title, string message, params string[] buttonText)
 		{

@@ -18,8 +18,8 @@ namespace HookMeUP.iOS
 			// Perform any additional setup after loading the view, typically from a nib.
 
 			  
-			forgotPasswordButton.TouchUpInside += (o, e) => { /*forgot password page*/ 
-
+			forgotPasswordButton.TouchUpInside += (o, e) => {
+				NavigationScreenController(forgotPasswordViewController);
 			};
 
 			int i = 0;
@@ -27,47 +27,63 @@ namespace HookMeUP.iOS
 			loginButton.TouchUpInside += (o, e) => {
 				i++;
 
-				string[] split = registerViewController.GetValues().Split('#');
-				try
-				{
-					string usernameR = split[2];
-					string usernameL = usernameText.Text;
 
-					string passwordR = split[3];
-					string passwordL = passwordText.Text;
 
-					//try{
-					if (usernameL.Equals(usernameR) && passwordL.Equals(passwordR))
-					{
-						NavigationScreenController(registerViewController);
-					}
-					else {
+				switch (!usernameText.Text.Equals("") && !passwordText.Text.Equals("")) {
+					
+				
 
-						AlertPopUp("Login failed", "Username and/or password is incorrect", "OK");
-					}
+					case true:
+						string[] split = registerViewController.GetValues().Split('#');
 
-					//}catch (ArgumentOutOfRangeException ) {
+						try
+						{
 
-					//	AlertPopUp("Login failed","Username and/or password is incorrect","OK");
+							string usernameL = usernameText.Text;
+							string usernameR = split[2];
 
-					//}
+
+							string passwordL = passwordText.Text;
+							string passwordR = split[3];
+							 
+							if (usernameL.Equals(usernameR) && passwordL.Equals(passwordR))
+							{
+								NavigationScreenController(registerViewController);
+							}
+							else {
+
+								AlertPopUp("Login failed!!", "Username and/or password is incorrect", "OK");
+							}
+
+							if (i == 3) {
+								
+								AlertPopUp("Login failed!!","You failed to login 3 times we suggest \nyou either Register or retrieve lost password","OK");
+								BorderButton(registerButton, forgotPasswordButton);
+								loginButton.Enabled = false;
+							} 
+						}
+						catch (IndexOutOfRangeException)
+						{
+							//Do nothing this is an empty value returned. The user did not register
+						}
+
+
+
+						break;
+
+					case false:
+
+						AlertPopUp("Error","Please fill in details","OK");
+
+						break;
+						
+				
 				}
-				catch (IndexOutOfRangeException) {
-					AlertPopUp("Login failed","Fill in all the details","OK");
-				}
-				if (i == 3) {
+			
 
-
-					AlertPopUp("Login failed","You have entered the password 3 times incorrectly\n we suggest you click the 'forgot password button' or 'Register button'","OK");
-
-
-					BorderButton(forgotPasswordButton, registerButton);
-					loginButton.Enabled = false;
-				}
 
 				usernameText.Text = "";
 				passwordText.Text = "";
-
 
 			};
 				

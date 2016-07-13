@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UIKit;
 
 namespace HookMeUP.iOS
@@ -7,29 +8,20 @@ namespace HookMeUP.iOS
 	{
 		static List<string> info = new List<string>();
 
-
 		public string GetValues()  {
+			
 			string value = "";
 			try
 			{
-				 value =  info[0];
+				value = info[0];       //throws Argument out of range exception
 			}
-			catch (System.ArgumentOutOfRangeException){
+			catch (ArgumentOutOfRangeException) { AlertPopUp("Invalid account","Account is invalid","OK");}
 
-				AlertPopUp("Login failed","Username and/or password is incorrect","OK");
-
-			}
 			return value;
 		
 		}
 
 	//	 static LoginViewController loginViewController = new LoginViewController();
-
-
-
-
-	
-
 
 		public override void ViewDidLoad()
 		{
