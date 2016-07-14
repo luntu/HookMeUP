@@ -7,32 +7,89 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OrderViewController">
             <connections>
+                <outlet property="costText" destination="cmg-sR-Gpe" id="7iW-Xs-L2U"/>
+                <outlet property="hookMeUPButton" destination="hAv-2h-Dzq" id="VM3-L1-bEi"/>
+                <outlet property="ordersTable" destination="mw3-tB-x2X" id="erj-UL-doJ"/>
+                <outlet property="timeText" destination="T1X-CQ-7qT" id="eTN-nf-e3a"/>
                 <outlet property="view" destination="2" id="RRd-Eg-VrN"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" ambiguous="YES" id="2">
+        <view contentMode="scaleToFill" id="2">
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Order now!!!!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="scM-vP-G91">
-                    <rect key="frame" x="8" y="15" width="224" height="48"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Order now!!!!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="scM-vP-G91">
+                    <rect key="frame" x="33" y="15" width="224" height="48"/>
                     <fontDescription key="fontDescription" name="AcademyEngravedLetPlain" family="Academy Engraved LET" pointSize="40"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="4sF-mo-Hd7">
-                    <rect key="frame" x="8" y="55" width="304" height="363"/>
-                </stackView>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hAv-2h-Dzq">
-                    <rect key="frame" x="105" y="433" width="46" height="30"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nep-BU-wIF">
+                    <rect key="frame" x="20" y="435" width="38" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="38" id="lDv-2F-JXE"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="TimesNewRomanPSMT" family="Times New Roman" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="T1X-CQ-7qT">
+                    <rect key="frame" x="67" y="435" width="120" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cost" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kQv-hC-SjC">
+                    <rect key="frame" x="19" y="398" width="39" height="21"/>
+                    <fontDescription key="fontDescription" name="TimesNewRomanPSMT" family="Times New Roman" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cmg-sR-Gpe">
+                    <rect key="frame" x="67" y="398" width="85" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="85" id="CD5-nw-GII"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hAv-2h-Dzq">
+                    <rect key="frame" x="213" y="412" width="87" height="30"/>
                     <state key="normal" title="Hook Me UP"/>
                 </button>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mw3-tB-x2X">
+                    <rect key="frame" x="20" y="91" width="280" height="298"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="1" green="0.97730173409999999" blue="0.88105403900000001" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="kQv-hC-SjC" firstAttribute="top" secondItem="cmg-sR-Gpe" secondAttribute="top" id="5wS-gF-C3R"/>
+                <constraint firstItem="kQv-hC-SjC" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="19" id="7lx-jj-5Fj"/>
+                <constraint firstItem="T1X-CQ-7qT" firstAttribute="top" secondItem="cmg-sR-Gpe" secondAttribute="bottom" constant="7" id="7rO-Hg-0Bf"/>
+                <constraint firstItem="cmg-sR-Gpe" firstAttribute="leading" secondItem="kQv-hC-SjC" secondAttribute="trailing" constant="9" id="9HO-Eo-v3p"/>
+                <constraint firstItem="mw3-tB-x2X" firstAttribute="leading" secondItem="nep-BU-wIF" secondAttribute="leading" id="BCe-UQ-YKN"/>
+                <constraint firstItem="scM-vP-G91" firstAttribute="top" secondItem="2" secondAttribute="top" constant="15" id="HBT-eM-YET"/>
+                <constraint firstItem="nep-BU-wIF" firstAttribute="top" secondItem="kQv-hC-SjC" secondAttribute="bottom" constant="16" id="IDK-8l-ZMs"/>
+                <constraint firstItem="hAv-2h-Dzq" firstAttribute="top" secondItem="mw3-tB-x2X" secondAttribute="bottom" constant="23" id="J2Q-gf-pqZ"/>
+                <constraint firstItem="scM-vP-G91" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="33" id="Jcg-CW-Ded"/>
+                <constraint firstItem="hAv-2h-Dzq" firstAttribute="leading" secondItem="cmg-sR-Gpe" secondAttribute="trailing" constant="61" id="KyI-Wv-qil"/>
+                <constraint firstItem="hAv-2h-Dzq" firstAttribute="leading" secondItem="T1X-CQ-7qT" secondAttribute="trailing" constant="26" id="Veo-vq-bkR"/>
+                <constraint firstItem="kQv-hC-SjC" firstAttribute="trailing" secondItem="nep-BU-wIF" secondAttribute="trailing" id="YNr-kB-Gku"/>
+                <constraint firstItem="mw3-tB-x2X" firstAttribute="centerY" secondItem="2" secondAttribute="centerY" id="Yl4-cs-CxB"/>
+                <constraint firstItem="mw3-tB-x2X" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="Z6s-Gp-BvO"/>
+                <constraint firstItem="cmg-sR-Gpe" firstAttribute="top" secondItem="mw3-tB-x2X" secondAttribute="bottom" constant="9" id="iJ4-gM-5MZ"/>
+                <constraint firstItem="kQv-hC-SjC" firstAttribute="top" secondItem="mw3-tB-x2X" secondAttribute="bottom" constant="9" id="iwo-hP-q6O"/>
+                <constraint firstItem="kQv-hC-SjC" firstAttribute="centerX" secondItem="nep-BU-wIF" secondAttribute="centerX" id="kcg-Zu-rxJ"/>
+                <constraint firstItem="nep-BU-wIF" firstAttribute="top" secondItem="T1X-CQ-7qT" secondAttribute="top" id="pYP-H0-JYC"/>
+                <constraint firstItem="cmg-sR-Gpe" firstAttribute="leading" secondItem="T1X-CQ-7qT" secondAttribute="leading" id="pqh-Ca-5Ut"/>
+                <constraint firstItem="mw3-tB-x2X" firstAttribute="trailing" secondItem="hAv-2h-Dzq" secondAttribute="trailing" id="tZW-5o-WFb"/>
+                <constraint firstItem="mw3-tB-x2X" firstAttribute="top" secondItem="scM-vP-G91" secondAttribute="bottom" constant="28" id="vNb-l2-2eK"/>
+                <constraint firstAttribute="bottom" secondItem="nep-BU-wIF" secondAttribute="bottom" constant="24" id="ynb-ip-JJf"/>
+            </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="621" y="477"/>
+            <point key="canvasLocation" x="195" y="445"/>
         </view>
     </objects>
 </document>

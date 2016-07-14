@@ -27,7 +27,7 @@ namespace HookMeUP.iOS
 //#endif
 
 			this.Window = new UIWindow(UIScreen.MainScreen.Bounds);
-			UIViewController loginController = new OrderViewController();
+			UIViewController loginController = new LoginViewController();
 			UINavigationController navigationController = new UINavigationController(loginController);
 			Window.RootViewController = navigationController;
 			Window.MakeKeyAndVisible();

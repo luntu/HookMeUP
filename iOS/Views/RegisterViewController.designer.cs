@@ -13,6 +13,9 @@ namespace HookMeUP.iOS
 	partial class RegisterViewController
 	{
 		[Outlet]
+		UIKit.UIButton backButtonRegister { get; set; }
+
+		[Outlet]
 		UIKit.UITextField employeeNoText { get; set; }
 
 		[Outlet]
@@ -68,6 +71,11 @@ namespace HookMeUP.iOS
 			if (verifyPasswordText != null) {
 				verifyPasswordText.Dispose ();
 				verifyPasswordText = null;
+			}
+
+			if (backButtonRegister != null) {
+				backButtonRegister.Dispose ();
+				backButtonRegister = null;
 			}
 		}
 	}

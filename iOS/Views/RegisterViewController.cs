@@ -28,6 +28,7 @@ namespace HookMeUP.iOS
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
 
+			NavigationController.NavigationBarHidden = true;
 			 
 
 			submitButton.TouchUpInside += (sender, evt) => {
@@ -46,8 +47,10 @@ namespace HookMeUP.iOS
 						{
 							info.Add(name + "#" + surname + "#" + username + "#" + password + "#" + empNo);
 
+							NavigationController.PopViewController(true);
 							AlertPopUp("Done!!!", "Registration complete", "OK");
-							//NavigationScreenController(loginViewController);
+							ClearFields(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,employeeNoText);
+
 						}
 						else { 
 						
@@ -64,8 +67,14 @@ namespace HookMeUP.iOS
 
 					}
 
-				nameText.Text = "";
 				};
+
+			backButtonRegister.TouchUpInside += (obj, evt) => { 
+			
+				ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, employeeNoText);
+				NavigationController.PopViewController(true);
+
+			};
 		}
 
 		public override void DidReceiveMemoryWarning()

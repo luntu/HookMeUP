@@ -10,6 +10,7 @@ namespace HookMeUP.iOS
 		public static RegisterViewController registerViewController = new RegisterViewController();
 		public static LoginViewController loginViewController = new LoginViewController();
 		public static ForgotPasswordViewController forgotPasswordViewController = new ForgotPasswordViewController();
+		public static OrderViewController orderViewController = new OrderViewController();
 
 		public void AlertPopUp(string title, string message, params string[] buttonText)
 		{
@@ -42,6 +43,12 @@ namespace HookMeUP.iOS
 		{
 			NavigationController.PushViewController(screen, true);
 
+		}
+
+		public void ClearFields(params UITextField[] texts) {
+			foreach (UITextField parameters in texts) {
+				parameters.Text = "";
+			}
 		}
 
 	}

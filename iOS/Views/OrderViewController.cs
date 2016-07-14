@@ -1,25 +1,58 @@
 ﻿using System;
-
+using Foundation;
 using UIKit;
 
 namespace HookMeUP.iOS
 {
 	public partial class OrderViewController : UIViewController
 	{
-		public OrderViewController() : base("OrderViewController", null)
-		{
-		}
+		
 
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
+
+
+
+			string[] tableItems = new string[] {"Hot Chocolate","Espresso","Red Espresso","Cafe Americano","Cafe Mocha","Cappuccino","Flavoured Cappuccino","Red Cappuccino","Latte","Flavoured Latte","Red Latte"};
+			ordersTable.Source = new TableSource(tableItems);
+
+			NavigationController.NavigationBarHidden = true;
+
 		}
 
-		public override void DidReceiveMemoryWarning()
+	}
+
+
+
+	public class TableSource : UITableViewSource
+	{
+		string[] tableItems;
+		string cellIdentifier = "TableCell";
+		public TableSource(string[] items)
 		{
-			base.DidReceiveMemoryWarning();
-			// Release any cached data, images, etc that aren't in use.
+			tableItems = items;
+		}
+
+		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+		{
+			UITableViewCell cell = tableView.DequeueReusableCell(cellIdentifier);
+			string item = tableItems[indexPath.Row];
+
+			if (cell == null)
+			{
+				cell = new UITableViewCell(UITableViewCellStyle.Default, cellIdentifier);
+
+			}
+			cell.TextLabel.Text = item;
+			return cell;
+		}
+
+
+		public override nint RowsInSection(UITableView tableview, nint section)
+		{
+			return tableItems.Length;
 		}
 	}
 }

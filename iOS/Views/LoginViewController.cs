@@ -17,6 +17,7 @@ namespace HookMeUP.iOS
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
 
+			NavigationController.NavigationBarHidden = true;
 			  
 			forgotPasswordButton.TouchUpInside += (o, e) => {
 				NavigationScreenController(forgotPasswordViewController);
@@ -48,19 +49,22 @@ namespace HookMeUP.iOS
 							 
 							if (usernameL.Equals(usernameR) && passwordL.Equals(passwordR))
 							{
-								NavigationScreenController(registerViewController);
+								NavigationScreenController(orderViewController);
 							}
 							else {
 
 								AlertPopUp("Login failed!!", "Username and/or password is incorrect", "OK");
+
+								if (i == 3)
+								{
+
+									AlertPopUp("Login failed!!", "You failed to login 3 times we suggest \nyou either Register or retrieve lost password", "OK");
+									BorderButton(registerButton, forgotPasswordButton);
+									loginButton.Enabled = false;
+								}
 							}
 
-							if (i == 3) {
-								
-								AlertPopUp("Login failed!!","You failed to login 3 times we suggest \nyou either Register or retrieve lost password","OK");
-								BorderButton(registerButton, forgotPasswordButton);
-								loginButton.Enabled = false;
-							} 
+
 						}
 						catch (IndexOutOfRangeException)
 						{
@@ -79,11 +83,10 @@ namespace HookMeUP.iOS
 						
 				
 				}
-			
 
 
-				usernameText.Text = "";
-				passwordText.Text = "";
+
+				ClearFields(usernameText,passwordText);
 
 			};
 				

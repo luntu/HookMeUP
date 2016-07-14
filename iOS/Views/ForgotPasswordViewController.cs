@@ -26,17 +26,27 @@ namespace HookMeUP.iOS
 							string employeeNo = info[4];
 							string password = info[3];
 
-							if (username.Equals(usernameTextForgot.Text) && employeeNo.Equals(employeeNoForgot.Text))
-							{
-								getPasswordText.Text = password;
+							switch (username.Equals(usernameTextForgot.Text) && employeeNo.Equals(employeeNoForgot.Text)) { 
+							
+								case true: 
 
-							}else{
+									getPasswordText.Text = password;
 
-								AlertPopUp("Error","Username and employee number do not match","OK");
-								getPasswordButton.Enabled = false;
+									break;
+
+								case false:
+									AlertPopUp("Error", "Username and employee number do not match", "OK");
+
+									if (i == 3)
+									{
+										AlertPopUp("Error", "You failed to retrive password 3 times \n we suggest you register as a new user ", "OK");
+										NavigationController.PopViewController(true);
+									}
+									break;
+
 							}
 
-
+						
 						}
 						catch (IndexOutOfRangeException){
 							//Do nothing this is an empty value returned. The user did not register
