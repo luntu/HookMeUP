@@ -1,7 +1,5 @@
 ﻿using System;
 
-using UIKit;
-
 namespace HookMeUP.iOS
 {
 	public partial class ForgotPasswordViewController : ScreenViewController
@@ -13,8 +11,11 @@ namespace HookMeUP.iOS
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
 			int i = 0;
+
 			getPasswordButton.TouchUpInside += (obj, evt) => {
+				
 				i++;
+
 				switch (!usernameTextForgot.Text.Equals("") && !employeeNoForgot.Text.Equals("")) {
 
 					case true:
@@ -34,12 +35,11 @@ namespace HookMeUP.iOS
 							else if (i == 3)
 							{
 								AlertPopUp("Error", "You failed to retrive password 3 times \n we suggest you register as a new user ", "OK");
-								ClearFields(getPasswordText,employeeNoForgot,usernameTextForgot);
+								ClearFields(getPasswordText, employeeNoForgot,usernameTextForgot);
 								NavigationController.PopViewController(true);
 							}else
 							{
 								AlertPopUp("Error", "Username and employee number do not match", "OK");
-
 							}
 
 						
@@ -51,7 +51,9 @@ namespace HookMeUP.iOS
 						break;
 
 					case false:
+						
 						AlertPopUp("Error","Please fill in details","Ok");
+
 						break;
 				}
 			

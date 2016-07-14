@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using UIKit;
 
 namespace HookMeUP.iOS
 {
@@ -27,8 +25,6 @@ namespace HookMeUP.iOS
 
 			loginButton.TouchUpInside += (o, e) => {
 				i++;
-
-
 
 				switch (!usernameText.Text.Equals("") && !passwordText.Text.Equals("")) {
 					
@@ -90,8 +86,6 @@ namespace HookMeUP.iOS
 
 			};
 				
-
-
 			registerButton.TouchUpInside += (o, e) => {
 
 				NavigationScreenController(registerViewController);
