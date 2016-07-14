@@ -46,22 +46,22 @@ namespace HookMeUP.iOS
 
 							string passwordL = passwordText.Text;
 							string passwordR = split[3];
-							 
+
 							if (usernameL.Equals(usernameR) && passwordL.Equals(passwordR))
 							{
 								NavigationScreenController(orderViewController);
 							}
-							else {
+							else if (i == 3)
+							{
 
+								AlertPopUp("Login failed!!", "You failed to login 3 times we suggest \nyou either Register or retrieve lost password", "OK");
+								BorderButton(registerButton, forgotPasswordButton);
+								loginButton.Enabled = false;
+							}
+							else { 
+							
 								AlertPopUp("Login failed!!", "Username and/or password is incorrect", "OK");
-
-								if (i == 3)
-								{
-
-									AlertPopUp("Login failed!!", "You failed to login 3 times we suggest \nyou either Register or retrieve lost password", "OK");
-									BorderButton(registerButton, forgotPasswordButton);
-									loginButton.Enabled = false;
-								}
+							
 							}
 
 

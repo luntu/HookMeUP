@@ -18,7 +18,6 @@ namespace HookMeUP.iOS
 			string[] tableItems = new string[] {"Hot Chocolate","Espresso","Red Espresso","Cafe Americano","Cafe Mocha","Cappuccino","Flavoured Cappuccino","Red Cappuccino","Latte","Flavoured Latte","Red Latte"};
 			ordersTable.Source = new TableSource(tableItems);
 
-			NavigationController.NavigationBarHidden = true;
 
 		}
 

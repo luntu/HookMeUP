@@ -13,6 +13,9 @@ namespace HookMeUP.iOS
 	partial class ForgotPasswordViewController
 	{
 		[Outlet]
+		UIKit.UIButton backButtonForgot { get; set; }
+
+		[Outlet]
 		UIKit.UITextField employeeNoForgot { get; set; }
 
 		[Outlet]
@@ -31,9 +34,9 @@ namespace HookMeUP.iOS
 				employeeNoForgot = null;
 			}
 
-			if (usernameTextForgot != null) {
-				usernameTextForgot.Dispose ();
-				usernameTextForgot = null;
+			if (getPasswordButton != null) {
+				getPasswordButton.Dispose ();
+				getPasswordButton = null;
 			}
 
 			if (getPasswordText != null) {
@@ -41,9 +44,14 @@ namespace HookMeUP.iOS
 				getPasswordText = null;
 			}
 
-			if (getPasswordButton != null) {
-				getPasswordButton.Dispose ();
-				getPasswordButton = null;
+			if (usernameTextForgot != null) {
+				usernameTextForgot.Dispose ();
+				usernameTextForgot = null;
+			}
+
+			if (backButtonForgot != null) {
+				backButtonForgot.Dispose ();
+				backButtonForgot = null;
 			}
 		}
 	}

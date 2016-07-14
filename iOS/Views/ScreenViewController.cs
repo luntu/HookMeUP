@@ -14,28 +14,39 @@ namespace HookMeUP.iOS
 
 		public void AlertPopUp(string title, string message, params string[] buttonText)
 		{
-			UIAlertView alert = new UIAlertView();
-			alert.Title = title;
-			alert.Message = message;
 
-			foreach (string elements in buttonText)
-			{
-				alert.AddButton(elements);
+			if (!title.Equals("") && !message.Equals("") && buttonText != null) { 
+
+				UIAlertView alert = new UIAlertView();
+				alert.Title = title;
+				alert.Message = message;
+
+				foreach (string elements in buttonText)
+				{
+					alert.AddButton(elements);
+				}
+
+				alert.Show();
 			}
 
-			alert.Show();
+
 
 		}
 
 		public void BorderButton(params UIButton[] button)
 		{
-			foreach (UIButton element in button)
-			{
-				element.Layer.BorderWidth = 1;
-				element.Layer.CornerRadius = 4;
-				element.Layer.BorderColor = UIColor.Cyan.CGColor;
+			if(button != null){ 
 
+				foreach (UIButton element in button)
+				{
+					element.Layer.BorderWidth = 1;
+					element.Layer.CornerRadius = 4;
+					element.Layer.BorderColor = UIColor.Cyan.CGColor;
+
+				}
+			
 			}
+
 
 		}
 
@@ -46,8 +57,13 @@ namespace HookMeUP.iOS
 		}
 
 		public void ClearFields(params UITextField[] texts) {
-			foreach (UITextField parameters in texts) {
-				parameters.Text = "";
+
+			if (texts != null)
+			{
+				foreach (UITextField parameters in texts)
+				{
+					parameters.Text = "";
+				}
 			}
 		}
 

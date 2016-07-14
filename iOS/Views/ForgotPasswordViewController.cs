@@ -26,23 +26,18 @@ namespace HookMeUP.iOS
 							string employeeNo = info[4];
 							string password = info[3];
 
-							switch (username.Equals(usernameTextForgot.Text) && employeeNo.Equals(employeeNoForgot.Text)) { 
-							
-								case true: 
+							if (username.Equals(usernameTextForgot.Text) && employeeNo.Equals(employeeNoForgot.Text))
+							{
+								getPasswordText.Text = password;
 
-									getPasswordText.Text = password;
-
-									break;
-
-								case false:
-									AlertPopUp("Error", "Username and employee number do not match", "OK");
-
-									if (i == 3)
-									{
-										AlertPopUp("Error", "You failed to retrive password 3 times \n we suggest you register as a new user ", "OK");
-										NavigationController.PopViewController(true);
-									}
-									break;
+							}
+							else if (i == 3)
+							{
+								AlertPopUp("Error", "You failed to retrive password 3 times \n we suggest you register as a new user ", "OK");
+								NavigationController.PopViewController(true);
+							}else
+							{
+								AlertPopUp("Error", "Username and employee number do not match", "OK");
 
 							}
 
@@ -59,7 +54,13 @@ namespace HookMeUP.iOS
 						break;
 				}
 			
-			}; 
+			};
+
+			backButtonForgot.TouchUpInside += (o, e) =>
+			{
+				NavigationController.PopViewController(true);
+				ClearFields(usernameTextForgot,employeeNoForgot,getPasswordText);
+			};
 
 		}
 
