@@ -55,6 +55,7 @@ namespace HookMeUP.iOS
 						AlertPopUp("Error","Please fill in details","Ok");
 
 						break;
+						//no default
 				}
 			
 			};
