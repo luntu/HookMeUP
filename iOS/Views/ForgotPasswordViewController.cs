@@ -34,6 +34,7 @@ namespace HookMeUP.iOS
 							else if (i == 3)
 							{
 								AlertPopUp("Error", "You failed to retrive password 3 times \n we suggest you register as a new user ", "OK");
+								ClearFields(getPasswordText,employeeNoForgot,usernameTextForgot);
 								NavigationController.PopViewController(true);
 							}else
 							{
