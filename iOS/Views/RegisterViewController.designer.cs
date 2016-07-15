@@ -25,6 +25,9 @@ namespace HookMeUP.iOS
 		UIKit.UITextField passwordTextR { get; set; }
 
 		[Outlet]
+		UIKit.UIScrollView registerUIScrollView { get; set; }
+
+		[Outlet]
 		UIKit.UIButton submitButton { get; set; }
 
 		[Outlet]
@@ -38,6 +41,11 @@ namespace HookMeUP.iOS
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (backButtonRegister != null) {
+				backButtonRegister.Dispose ();
+				backButtonRegister = null;
+			}
+
 			if (employeeNoText != null) {
 				employeeNoText.Dispose ();
 				employeeNoText = null;
@@ -73,9 +81,9 @@ namespace HookMeUP.iOS
 				verifyPasswordText = null;
 			}
 
-			if (backButtonRegister != null) {
-				backButtonRegister.Dispose ();
-				backButtonRegister = null;
+			if (registerUIScrollView != null) {
+				registerUIScrollView.Dispose ();
+				registerUIScrollView = null;
 			}
 		}
 	}
