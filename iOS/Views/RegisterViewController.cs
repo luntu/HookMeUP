@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Foundation;
 using UIKit;
 
 namespace HookMeUP.iOS
@@ -21,13 +22,12 @@ namespace HookMeUP.iOS
 		
 		}
 
-	//	 static LoginViewController loginViewController = new LoginViewController();
 
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
-
+			//NSNotificationCenter.DefaultCenter.AddObserver
 			NavigationController.NavigationBarHidden = true;
 			 
 

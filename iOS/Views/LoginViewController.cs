@@ -5,15 +5,11 @@ namespace HookMeUP.iOS
 	public partial class LoginViewController : ScreenViewController
 	{
 
-	
-
-		//static RegisterViewController registerViewController = new RegisterViewController();
-
-
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
+
 
 			NavigationController.NavigationBarHidden = true;
 			  
@@ -99,6 +95,10 @@ namespace HookMeUP.iOS
 			base.DidReceiveMemoryWarning();
 			// Release any cached data, images, etc that aren't in use.
 		}
+
+		//====================================================
+
+
 	}
 }
 
