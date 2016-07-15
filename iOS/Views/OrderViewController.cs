@@ -18,8 +18,23 @@ namespace HookMeUP.iOS
 			string[] tableItems = new string[] {"Hot Chocolate","Espresso","Red Espresso","Cafe Americano","Cafe Mocha","Cappuccino","Flavoured Cappuccino","Red Cappuccino","Latte","Flavoured Latte","Red Latte"};
 			ordersTable.Source = new TableSource(tableItems);
 
+			hookMeUPButton.TouchUpInside += (obj, evt) => {
+				// getting orders
 
+				UIAlertView a = new UIAlertView();
+				a.Title = "Orders";
+				a.Message = Order;
+				a.AddButton("OK");
+				a.Show();
+			
+			};
 		}
+
+		public string Order {
+			get; set;
+		}
+
+
 
 	}
 
@@ -29,6 +44,10 @@ namespace HookMeUP.iOS
 	{
 		string[] tableItems;
 		string cellIdentifier = "TableCell";
+		string order = "";
+
+		OrderViewController orderView = new OrderViewController();
+
 		public TableSource(string[] items)
 		{
 			tableItems = items;
@@ -53,6 +72,15 @@ namespace HookMeUP.iOS
 		{
 			return tableItems.Length;
 		}
+
+		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+		{
+			order = tableItems[indexPath.Row];
+			orderView.Order = order;
+		}
+
+
+
 	}
 }
 
