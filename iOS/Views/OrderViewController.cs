@@ -1,42 +1,58 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Foundation;
 using UIKit;
 
 namespace HookMeUP.iOS
 {
-	public partial class OrderViewController : UIViewController
+	public partial class OrderViewController : ScreenViewController
 	{
 		
+		public TableSource Source { get; set; }
+
 
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
 
-
-
+			//inserting cells into the table
 			string[] tableItems = new string[] {"Hot Chocolate","Espresso","Red Espresso","Cafe Americano","Cafe Mocha","Cappuccino","Flavoured Cappuccino","Red Cappuccino","Latte","Flavoured Latte","Red Latte"};
-			ordersTable.Source = new TableSource(tableItems);
+
+			Source = new TableSource(tableItems);
+
+			ordersTable.Source = Source;
 
 			hookMeUPButton.TouchUpInside += (obj, evt) => {
 				// getting orders
 
-				UIAlertView a = new UIAlertView();
-				a.Title = "Orders";
-				a.Message = Order;
-				a.AddButton("OK");
-				a.Show();
+				if (Source.ordersList != null)
+				{
+					string elements = "";
+				
+					foreach (string orderElements in Source.ordersList) {
+						elements += orderElements+"\n";
+					
+					}
+					AlertPopUp("Orders selected",elements.Trim(),"OK");
+
+
+				}
+				else
+				{
+
+					AlertPopUp("Error", "No order(s) selected", "OK");
+
+				}
 			
 			};
 		}
 
-		public string Order {
-			get; set;
-		}
-
-
-
 	}
+
+
+	//==============================================================================================================================================================================================================================
 
 
 
@@ -44,17 +60,18 @@ namespace HookMeUP.iOS
 	{
 		string[] tableItems;
 		string cellIdentifier = "TableCell";
-		string order = "";
+		public string order = "";
 
-		OrderViewController orderView = new OrderViewController();
-
-		public TableSource(string[] items)
-		{
+		public TableSource(string [] items) {
 			tableItems = items;
 		}
 
+
+		public List<string> ordersList = new List<string>();
+
 		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
 		{
+
 			UITableViewCell cell = tableView.DequeueReusableCell(cellIdentifier);
 			string item = tableItems[indexPath.Row];
 
@@ -73,10 +90,16 @@ namespace HookMeUP.iOS
 			return tableItems.Length;
 		}
 
+
+
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
-			order = tableItems[indexPath.Row];
-			orderView.Order = order;
+			ordersList.Add(tableItems[indexPath.Row]);
+		}
+
+		public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
+		{
+			ordersList.Remove(tableItems[indexPath.Row]);
 		}
 
 

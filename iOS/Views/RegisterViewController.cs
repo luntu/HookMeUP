@@ -7,6 +7,8 @@ namespace HookMeUP.iOS
 {
 	public partial class RegisterViewController : ScreenViewController
 	{
+
+
 		static List<string> info = new List<string>();
 
 		public string GetValues()  {
@@ -32,9 +34,7 @@ namespace HookMeUP.iOS
 			 
 
 			submitButton.TouchUpInside += (sender, evt) => {
-
-
-
+				
 					string name = nameText.Text;
 					string surname = surnameText.Text;
 					string username = usernameTextR.Text;
@@ -50,6 +50,7 @@ namespace HookMeUP.iOS
 							NavigationController.PopViewController(true);
 							AlertPopUp("Done!!!", "Registration complete", "OK");
 							ClearFields(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,employeeNoText);
+							isRegisteredSuccessful = true;
 
 						}
 						else { 
@@ -58,13 +59,14 @@ namespace HookMeUP.iOS
 
 							passwordTextR.Highlighted = true;
 							verifyPasswordText.Highlighted = true;
+							isRegisteredSuccessful = false;
 						}
 						
 					}
 				else {
 
 					AlertPopUp("Error","please complete all fields","OK","Cancel");
-
+					isRegisteredSuccessful = false;
 					}
 
 				};
@@ -76,6 +78,8 @@ namespace HookMeUP.iOS
 
 			};
 		}
+
+		public bool isRegisteredSuccessful { get;set;}
 
 		public override void DidReceiveMemoryWarning()
 		{
