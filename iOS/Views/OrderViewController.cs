@@ -16,9 +16,9 @@ namespace HookMeUP.iOS
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
-
+			DismissKeyboardOnBackgroundTap();
 			//inserting cells into the table
-			string[] tableItems = new string[] {"Hot Chocolate","Espresso","Red Espresso","Cafe Americano","Cafe Mocha","Cappuccino","Flavoured Cappuccino","Red Cappuccino","Latte","Flavoured Latte","Red Latte"};
+			List<string> tableItems = new List<string>() {"Hot Chocolate","Espresso","Red Espresso","Cafe Americano","Cafe Mocha","Cappuccino","Flavoured Cappuccino","Red Cappuccino","Latte","Flavoured Latte","Red Latte"};
 
 			Source = new TableSource(tableItems);
 
@@ -58,11 +58,11 @@ namespace HookMeUP.iOS
 
 	public class TableSource : UITableViewSource
 	{
-		string[] tableItems;
+		List<string> tableItems;
 		string cellIdentifier = "TableCell";
 		public string order = "";
 
-		public TableSource(string [] items) {
+		public TableSource(List<string> items) {
 			tableItems = items;
 		}
 
@@ -87,7 +87,7 @@ namespace HookMeUP.iOS
 
 		public override nint RowsInSection(UITableView tableview, nint section)
 		{
-			return tableItems.Length;
+			return tableItems.Count;
 		}
 
 

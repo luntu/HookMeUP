@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using CoreGraphics;
 using Foundation;
 using UIKit;
 
@@ -7,6 +9,13 @@ namespace HookMeUP.iOS
 {
 	public partial class RegisterViewController : ScreenViewController
 	{
+
+
+		private UIView activeview;             // Controller that activated the keyboard
+		private float scroll_amount = 0.0f;    // amount to scroll 
+		private float bottom = 0.0f;           // bottom point
+		private float offset = 10.0f;          // extra offset
+		private bool moveViewUp = false;
 
 
 		static List<string> info = new List<string>();
@@ -81,34 +90,28 @@ namespace HookMeUP.iOS
 
 		public bool isRegisteredSuccessful { get;set;}
 
-		public override void DidReceiveMemoryWarning()
+		public override void ViewWillAppear(bool animated)
 		{
-			base.DidReceiveMemoryWarning();
-			// Release any cached data, images, etc that aren't in use.
+			base.ViewWillAppear(animated);
+			RegisterKeyboardNotification();
 		}
 
-		/*	void AlertMessage() {
+		void RegisterKeyboardNotification()
+		{
+			NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.DidShowNotification, KeyboardNotification);
+			NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.WillHideNotification, KeyboardNotification);
+		}
 
-		
-			alert.Title = "Error";
-			alert.AddButton("OK");
-			alert.Message = "please complete all fields";
-			/*alert.Clicked += (p, evt) =>
-			{
-				int button = (int)evt.ButtonIndex;
-				if (button == 0)
-				{
-					Debug.WriteLine("Ok button clicked");
-				}
-				else if (button == 1)
-				{
-					Debug.WriteLine("Cancel button clicked");
-				}
-			};* /
-			alert.Show();
-		}*/
+		void KeyboardNotification(NSNotification notification)
+		{
+
+		}
 
 
+		//void KeyboardDownNotification(NSNotification notificationDown)
+		//{
+		//	// scroll view down
+		//}
 	}
 }
 

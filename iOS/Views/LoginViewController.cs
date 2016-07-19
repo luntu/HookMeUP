@@ -96,6 +96,12 @@ namespace HookMeUP.iOS
 			// Release any cached data, images, etc that aren't in use.
 		}
 
+		public override bool HandlesKeyboardNotifications()
+		{
+			
+			return true;
+		}
+
 		//====================================================
 
 
