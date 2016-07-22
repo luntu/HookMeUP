@@ -10,6 +10,11 @@ namespace HookMeUP.iOS
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
+
+			DismissKeyboardOnBackgroundTap();
+			RegisterForKeyboardNotifications();
+
+
 			int i = 0;
 
 			getPasswordButton.TouchUpInside += (obj, evt) => {

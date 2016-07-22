@@ -35,7 +35,9 @@ namespace HookMeUP.iOS
 			// Perform any additional setup after loading the view, typically from a nib.
 			//NSNotificationCenter.DefaultCenter.AddObserver
 			NavigationController.NavigationBarHidden = true;
-			 
+			DismissKeyboardOnBackgroundTap();
+			RegisterForKeyboardNotifications();
+
 
 			submitButton.TouchUpInside += (sender, evt) => {
 				

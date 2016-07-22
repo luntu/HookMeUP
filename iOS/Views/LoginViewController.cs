@@ -4,13 +4,16 @@ namespace HookMeUP.iOS
 {
 	public partial class LoginViewController : ScreenViewController
 	{
-
+		
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
 
 			NavigationController.NavigationBarHidden = true;
+
+			DismissKeyboardOnBackgroundTap();
+			RegisterForKeyboardNotifications();
 
 
 			forgotPasswordButton.TouchUpInside += (o, e) => {
@@ -99,6 +102,8 @@ namespace HookMeUP.iOS
 
 
 		//====================================================
+
+
 
 
 	}
