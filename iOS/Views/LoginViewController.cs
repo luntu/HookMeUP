@@ -14,7 +14,7 @@ namespace HookMeUP.iOS
 
 			DismissKeyboardOnBackgroundTap();
 			RegisterForKeyboardNotifications();
-
+			ShouldReturn(usernameText, passwordText);
 
 			forgotPasswordButton.TouchUpInside += (o, e) => {
 				NavigationScreenController(forgotPasswordViewController);

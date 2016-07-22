@@ -182,6 +182,18 @@ namespace HookMeUP.iOS
 			View.AddGestureRecognizer(tap);
 		}
 
+		public bool ShouldReturn(params UITextField[] textField) {
+
+			for (int i = 0; i < textField.Length; i++)
+			{
+				if (textField[i].Tag == 1)
+					textField[i + 1].BecomeFirstResponder();
+				else
+					textField[i].ResignFirstResponder();
+
+			}
+			return true;
+		}
 		#endregion
 	}
 
@@ -189,13 +201,7 @@ namespace HookMeUP.iOS
 	{
 		/// <summary>
 		/// Find the first responder in the <paramref name="view"/>'s subview hierarchy
-		/// </summary>
-		/// <param name="view">
-		/// A <see cref="UIView"/>
-		/// </param>
-		/// <returns>
-		/// A <see cref="UIView"/> that is the first responder or null if there is no first responder
-		/// </returns>
+
 		public static UIView FindFirstResponder(this UIView view)
 		{
 			if (view.IsFirstResponder)
