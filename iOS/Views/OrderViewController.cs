@@ -12,21 +12,22 @@ namespace HookMeUP.iOS
 
 		public TableSource Source { get; set; }
 		double dynamicPrice = 0.00;
-		int minutes = 5;
+	
 
 		List<string> tableItems = new List<string>() { "Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00",
 		"Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00",
 		"Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00" };
+		OrderWaitTime orderWaitTime = new OrderWaitTime();
 
-
-
-
+		public int GetVouchers { get; set; }
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
 
 			//inserting cells into the table
+
+			VouchersLabel.Text = GetVouchers + " vouchers";
 
 			Source = new TableSource(tableItems);
 
@@ -68,7 +69,9 @@ namespace HookMeUP.iOS
 							if (e.ButtonIndex == 0)
 							{
 								//submit datadase. Notify Vuyo
-								AlertPopUp("Order on the way", "Your order will take about " + minutes + " minutes", "OK");
+								orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
+
+								AlertPopUp("Order on the way", "Your order will take about " + orderWaitTime.CalculateWaitTime()+ " minutes", "OK");
 							}
 
 						};
@@ -113,11 +116,6 @@ namespace HookMeUP.iOS
 	//==============================================================================================================
 	//==============================================================================================================
 	//==============================================================================================================
-	//==============================================================================================================
-	//==============================================================================================================
-	//==============================================================================================================
-	//==============================================================================================================
-
 
 
 	public class TableSource : UITableViewSource
@@ -128,6 +126,7 @@ namespace HookMeUP.iOS
 		double price = 0;
 		public event EventHandler<double> onCellSelected;
 		public event EventHandler<double> onCellDeselected;
+
 
 		public TableSource(List<string> items)
 		{
@@ -160,6 +159,9 @@ namespace HookMeUP.iOS
 			int index = randomIndex.Next(0, images.Count);
 			UIImage image = UIImage.FromFile("TableImages/" + images[index]);
 			cell.ImageView.Image = ResizeImage(image, 80, 80);
+
+
+
 		
 			return cell;
 		}
@@ -190,6 +192,7 @@ namespace HookMeUP.iOS
 			if (onCellSelected != null)
 			{
 				onCellSelected(tableView, price);
+
 			}
 			//new OrderViewController().DisplayPrice(price);
 		}
@@ -224,5 +227,27 @@ namespace HookMeUP.iOS
 		}
 
 	}
+
+	//==============================================================================================================
+	//==============================================================================================================
+	//==============================================================================================================
+	//==============================================================================================================
+
+
+	public class OrderWaitTime {
+		
+		const int AVERAGE_ORDER_TIME = 2;
+
+		public int GetOrdersTotal { get; set;}
+
+		public int CalculateWaitTime() {
+			int time = GetOrdersTotal * AVERAGE_ORDER_TIME;
+			return time;
+		}
+
+		public void UpdateToDB() { }
+		public int GetTimeFromDB {get;set;}
+	}
+
 }
 

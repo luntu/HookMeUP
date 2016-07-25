@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -21,12 +22,12 @@
         <view contentMode="scaleToFill" id="2">
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Evacuation" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DYh-Po-Edt">
-                    <rect key="frame" x="46" y="30" width="228" height="42"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Emergency Evacuation" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DYh-Po-Edt">
+                    <rect key="frame" x="8" y="32" width="291" height="40"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="42" id="6xk-w4-Vkf"/>
+                        <constraint firstAttribute="height" constant="40" id="6xk-w4-Vkf"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="AmericanTypewriter-CondensedBold" family="American Typewriter" pointSize="35"/>
+                    <fontDescription key="fontDescription" name="AmericanTypewriter-CondensedBold" family="American Typewriter" pointSize="30"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -85,15 +86,15 @@
                 <constraint firstItem="gRb-mg-NbH" firstAttribute="leading" secondItem="cc6-yl-le5" secondAttribute="leading" id="J7Z-Ad-6HK"/>
                 <constraint firstItem="d2q-Cb-bCl" firstAttribute="leading" secondItem="GwK-Tl-bRc" secondAttribute="leading" id="M1g-QD-lZw"/>
                 <constraint firstItem="Aua-d0-BRo" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="34" id="MZH-xM-UbK"/>
-                <constraint firstItem="DYh-Po-Edt" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="XUu-Iz-yzF"/>
+                <constraint firstItem="DYh-Po-Edt" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" constant="-6.5" id="XUu-Iz-yzF"/>
                 <constraint firstAttribute="trailing" secondItem="gRb-mg-NbH" secondAttribute="trailing" constant="21" id="YtY-zU-X7z"/>
                 <constraint firstItem="zaQ-VY-Ren" firstAttribute="top" secondItem="yFF-jl-ERY" secondAttribute="top" id="ZBg-7o-slZ"/>
                 <constraint firstItem="BXN-do-fI4" firstAttribute="baseline" secondItem="GwK-Tl-bRc" secondAttribute="firstBaseline" id="bc6-Pk-uPm"/>
                 <constraint firstItem="fLT-Sl-PQX" firstAttribute="centerY" secondItem="gRb-mg-NbH" secondAttribute="centerY" id="bi1-jQ-819"/>
-                <constraint firstItem="DYh-Po-Edt" firstAttribute="trailing" secondItem="Aua-d0-BRo" secondAttribute="trailing" id="bvJ-Rq-4IB"/>
+                <constraint firstItem="DYh-Po-Edt" firstAttribute="trailing" secondItem="Aua-d0-BRo" secondAttribute="trailing" constant="25" id="bvJ-Rq-4IB"/>
                 <constraint firstItem="zaQ-VY-Ren" firstAttribute="baseline" secondItem="yFF-jl-ERY" secondAttribute="baseline" id="c7I-RA-3rg"/>
                 <constraint firstItem="d2q-Cb-bCl" firstAttribute="baseline" secondItem="cc6-yl-le5" secondAttribute="baseline" id="dFm-Or-Gj1"/>
-                <constraint firstItem="DYh-Po-Edt" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="46" id="hOQ-OM-ZzJ"/>
+                <constraint firstItem="DYh-Po-Edt" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="8" id="hOQ-OM-ZzJ"/>
                 <constraint firstItem="gRb-mg-NbH" firstAttribute="trailing" secondItem="cc6-yl-le5" secondAttribute="trailing" id="kWP-H9-jFJ"/>
                 <constraint firstItem="Aua-d0-BRo" firstAttribute="top" secondItem="DYh-Po-Edt" secondAttribute="bottom" constant="6" id="ktM-mO-GZ5"/>
                 <constraint firstItem="fLT-Sl-PQX" firstAttribute="leading" secondItem="2" secondAttribute="leadingMargin" id="n3X-jl-qpl"/>
@@ -105,7 +106,7 @@
                 <constraint firstItem="BXN-do-fI4" firstAttribute="leading" secondItem="GwK-Tl-bRc" secondAttribute="trailing" constant="49" id="pPn-aw-vDS"/>
                 <constraint firstItem="cc6-yl-le5" firstAttribute="baseline" secondItem="d2q-Cb-bCl" secondAttribute="firstBaseline" id="rWL-Y1-h0k"/>
                 <constraint firstAttribute="trailing" secondItem="yFF-jl-ERY" secondAttribute="trailing" constant="33" id="rzj-ZN-Sin"/>
-                <constraint firstItem="DYh-Po-Edt" firstAttribute="top" secondItem="2" secondAttribute="top" constant="30" id="u1F-hf-k47"/>
+                <constraint firstItem="DYh-Po-Edt" firstAttribute="top" secondItem="2" secondAttribute="top" constant="32" id="u1F-hf-k47"/>
                 <constraint firstItem="GwK-Tl-bRc" firstAttribute="baseline" secondItem="BXN-do-fI4" secondAttribute="baseline" id="u2T-o1-Z1W"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>

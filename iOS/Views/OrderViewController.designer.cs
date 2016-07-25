@@ -1,55 +1,50 @@
 // WARNING
 //
-// This file has been generated automatically by Xamarin Studio from the outlets and
-// actions declared in your storyboard file.
-// Manual changes to this file will not be maintained.
+// This file has been generated automatically by Xamarin Studio to store outlets and
+// actions made in the UI designer. If it is removed, they will be lost.
+// Manual changes to this file may not be handled correctly.
 //
 using Foundation;
-using System;
 using System.CodeDom.Compiler;
-using UIKit;
 
 namespace HookMeUP.iOS
 {
-    [Register ("OrderViewController")]
-    partial class OrderViewController
-    {
-        [Outlet]
-        UIKit.UITextField costText { get; set; }
+	[Register ("OrderViewController")]
+	partial class OrderViewController
+	{
+		[Outlet]
+		UIKit.UITextField costText { get; set; }
 
+		[Outlet]
+		UIKit.UIButton hookMeUPButton { get; set; }
 
-        [Outlet]
-        UIKit.UIButton hookMeUPButton { get; set; }
+		[Outlet]
+		UIKit.UITableView ordersTable { get; set; }
 
+		[Outlet]
+		UIKit.UILabel VouchersLabel { get; set; }
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (costText != null) {
+				costText.Dispose ();
+				costText = null;
+			}
 
-        [Outlet]
-        UIKit.UITableView ordersTable { get; set; }
+			if (hookMeUPButton != null) {
+				hookMeUPButton.Dispose ();
+				hookMeUPButton = null;
+			}
 
+			if (ordersTable != null) {
+				ordersTable.Dispose ();
+				ordersTable = null;
+			}
 
-        [Outlet]
-        UIKit.UITextField timeText { get; set; }
-
-        void ReleaseDesignerOutlets ()
-        {
-            if (costText != null) {
-                costText.Dispose ();
-                costText = null;
-            }
-
-            if (hookMeUPButton != null) {
-                hookMeUPButton.Dispose ();
-                hookMeUPButton = null;
-            }
-
-            if (ordersTable != null) {
-                ordersTable.Dispose ();
-                ordersTable = null;
-            }
-
-            if (timeText != null) {
-                timeText.Dispose ();
-                timeText = null;
-            }
-        }
-    }
+			if (VouchersLabel != null) {
+				VouchersLabel.Dispose ();
+				VouchersLabel = null;
+			}
+		}
+	}
 }

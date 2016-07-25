@@ -45,6 +45,7 @@ namespace HookMeUP.iOS
 							if (usernameL.Equals(usernameR) && passwordL.Equals(passwordR))
 							{
 								NavigationScreenController(orderViewController);
+								orderViewController.GetVouchers = int.Parse(split[5]);
 							}
 							else if (i == 3)
 							{

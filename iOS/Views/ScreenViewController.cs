@@ -31,8 +31,6 @@ namespace HookMeUP.iOS
 				alert.Show();
 			}
 
-
-
 		}
 
 		public void BorderButton(params UIButton[] button)
@@ -75,9 +73,7 @@ namespace HookMeUP.iOS
 
 		#region Keyboard adjust
 
-		/// <summary>
-		/// Set this field to any view inside the scroll view to center this view instead of the current responder
-		/// </summary>
+
 		protected UIView ViewToCenterOnKeyboardShown;
 		public bool HandlesKeyboardNotifications()
 		{
@@ -90,12 +86,7 @@ namespace HookMeUP.iOS
 			NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.WillShowNotification, OnKeyboardNotification);
 		}
 
-		/// <summary>
-		/// Gets the UIView that represents the "active" user input control (e.g. textfield, or button under a text field)
-		/// </summary>
-		/// <returns>
-		/// A <see cref="UIView"/>
-		/// </returns>
+	
 		protected virtual UIView KeyboardGetActiveView()
 		{
 			return View.FindFirstResponder();
@@ -126,15 +117,7 @@ namespace HookMeUP.iOS
 			UIView.CommitAnimations();
 		}
 
-		/// <summary>
-		/// Override this method to apply custom logic when the keyboard is shown/hidden
-		/// </summary>
-		/// <param name='visible'>
-		/// If the keyboard is visible
-		/// </param>
-		/// <param name='keyboardHeight'>
-		/// Calculated height of the keyboard (width not generally needed here)
-		/// </param>
+	
 		protected virtual void OnKeyboardChanged(bool visible, float keyboardHeight)
 		{
 			var activeView = ViewToCenterOnKeyboardShown ?? KeyboardGetActiveView();
@@ -174,9 +157,6 @@ namespace HookMeUP.iOS
 			scrollView.ScrollIndicatorInsets = UIEdgeInsets.Zero;
 		}
 
-		/// <summary>
-		/// Call it to force dismiss keyboard when background is tapped
-		/// </summary>
 		protected void DismissKeyboardOnBackgroundTap()
 		{
 			// Add gesture recognizer to hide keyboard
@@ -202,8 +182,6 @@ namespace HookMeUP.iOS
 
 	public static class ViewExtensions
 	{
-		/// <summary>
-		/// Find the first responder in the <paramref name="view"/>'s subview hierarchy
 
 		public static UIView FindFirstResponder(this UIView view)
 		{
@@ -220,21 +198,7 @@ namespace HookMeUP.iOS
 			return null;
 		}
 
-		/// <summary>
-		/// Find the first Superview of the specified type (or descendant of)
-		/// </summary>
-		/// <param name="view">
-		/// A <see cref="UIView"/>
-		/// </param>
-		/// <param name="stopAt">
-		/// A <see cref="UIView"/> that indicates where to stop looking up the superview hierarchy
-		/// </param>
-		/// <param name="type">
-		/// A <see cref="Type"/> to look for, this should be a UIView or descendant type
-		/// </param>
-		/// <returns>
-		/// A <see cref="UIView"/> if it is found, otherwise null
-		/// </returns>
+
 		public static UIView FindSuperviewOfType(this UIView view, UIView stopAt, Type type)
 		{
 			if (view.Superview != null)
@@ -253,4 +217,3 @@ namespace HookMeUP.iOS
 	}
 
 }
-
