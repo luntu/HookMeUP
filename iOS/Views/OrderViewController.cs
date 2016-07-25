@@ -14,7 +14,9 @@ namespace HookMeUP.iOS
 		double dynamicPrice = 0.00;
 		int minutes = 5;
 
-		List<string> tableItems = new List<string>() { "Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00", "Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00", "Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00" };
+		List<string> tableItems = new List<string>() { "Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00",
+		"Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00",
+		"Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00" };
 
 
 
@@ -148,7 +150,10 @@ namespace HookMeUP.iOS
 
 				cell.TextLabel.Text = item;
 
-				List<string> images = new List<string>() { "cappuccino.jpg", "Cappuccino1.jpg", "cappuccino2.jpg", "Cappuccino400.jpg", "CaramelFlan.jpg", "HazelnutCappuccino.jpg", "Unknown12.jpg" };
+				List<string> images = new List<string>() { "cappuccino.jpg", "Cappuccino1.jpg", "cappuccino2.jpg",
+				"Cappuccino400.jpg", "CaramelFlan.jpg", "HazelnutCappuccino.jpg", "Unknown12.jpg","Pic1.jpg","Pic2.jpg",
+				"Pic3.jpg","Pic4.jpg","Pic5.jpg","Pic6.jpg","Pic7.jpg","Pic8.jpg"};
+			
 				Random randomIndex = new Random();
 				int index = randomIndex.Next(0, images.Count);
 				UIImage image = UIImage.FromFile("TableImages/" + images[index]);

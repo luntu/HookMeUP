@@ -170,6 +170,14 @@
     <BundleResource Include="TableImages\HazelnutCappuccino.jpg" />
     <BundleResource Include="TableImages\Cappuccino400.jpg" />
     <BundleResource Include="Images\user-login-icon.png" />
+    <BundleResource Include="TableImages\Pic1.jpg" />
+    <BundleResource Include="TableImages\Pic2.jpg" />
+    <BundleResource Include="TableImages\Pic3.jpg" />
+    <BundleResource Include="TableImages\Pic4.jpg" />
+    <BundleResource Include="TableImages\Pic5.jpg" />
+    <BundleResource Include="TableImages\Pic6.jpg" />
+    <BundleResource Include="TableImages\Pic7.jpg" />
+    <BundleResource Include="TableImages\Pic8.jpg" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Views\RegisterViewController.xib" />

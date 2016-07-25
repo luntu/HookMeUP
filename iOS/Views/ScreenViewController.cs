@@ -103,7 +103,7 @@ namespace HookMeUP.iOS
 			if (!IsViewLoaded) return;
 
 			//Check if the keyboard is becoming visible
-			var visible = notification.Name == UIKeyboard.WillShowNotification;
+			bool visible = notification.Name == UIKeyboard.WillShowNotification; // is this the keyboard that pops up boolean type
 
 			//Start an animation, using values from the keyboard
 			UIView.BeginAnimations("AnimateForKeyboard");
@@ -158,7 +158,7 @@ namespace HookMeUP.iOS
 			RectangleF relativeFrame = (RectangleF)viewToCenter.Superview.ConvertRectToView(viewToCenter.Frame, scrollView);
 
 			bool landscape = InterfaceOrientation == UIInterfaceOrientation.LandscapeLeft || InterfaceOrientation == UIInterfaceOrientation.LandscapeRight;
-			var spaceAboveKeyboard = (landscape ? scrollView.Frame.Width : scrollView.Frame.Height) - keyboardHeight;
+			var spaceAboveKeyboard = (landscape ? scrollView.Frame.Width : scrollView.Frame.Height) - 75;
 
 			// Move the active field to the center of the available space
 			var offset = relativeFrame.Y - (spaceAboveKeyboard - viewToCenter.Frame.Height) / 2;
@@ -190,7 +190,6 @@ namespace HookMeUP.iOS
 					textField[i + 1].BecomeFirstResponder();
 				else
 					textField[i].ResignFirstResponder();
-
 			}
 			return true;
 		}
