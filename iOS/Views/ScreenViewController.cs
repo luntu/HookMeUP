@@ -7,7 +7,7 @@ namespace HookMeUP.iOS
 {
 	public partial class ScreenViewController : UIViewController
 	{
-		
+
 		public static RegisterViewController registerViewController = new RegisterViewController();
 		public static LoginViewController loginViewController = new LoginViewController();
 		public static ForgotPasswordViewController forgotPasswordViewController = new ForgotPasswordViewController();
@@ -16,7 +16,8 @@ namespace HookMeUP.iOS
 		public void AlertPopUp(string title, string message, params string[] buttonText)
 		{
 
-			if (!title.Equals("") && !message.Equals("") && buttonText != null) { 
+			if (!title.Equals("") && !message.Equals("") && buttonText != null)
+			{
 
 				UIAlertView alert = new UIAlertView();
 				alert.Title = title;
@@ -36,7 +37,8 @@ namespace HookMeUP.iOS
 
 		public void BorderButton(params UIButton[] button)
 		{
-			if(button != null){ 
+			if (button != null)
+			{
 
 				foreach (UIButton element in button)
 				{
@@ -45,7 +47,7 @@ namespace HookMeUP.iOS
 					element.Layer.BorderColor = UIColor.Cyan.CGColor;
 
 				}
-			
+
 			}
 
 
@@ -57,7 +59,8 @@ namespace HookMeUP.iOS
 
 		}
 
-		public void ClearFields(params UITextField[] texts) {
+		public void ClearFields(params UITextField[] texts)
+		{
 
 			if (texts != null)
 			{
@@ -182,7 +185,8 @@ namespace HookMeUP.iOS
 			View.AddGestureRecognizer(tap);
 		}
 
-		public bool ShouldReturn(params UITextField[] textField) {
+		public bool ShouldReturn(params UITextField[] textField)
+		{
 
 			for (int i = 0; i < textField.Length; i++)
 			{

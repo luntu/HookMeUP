@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-	
+
 using System.Drawing;
 using Foundation;
 using UIKit;
@@ -25,7 +25,7 @@ namespace HookMeUP.iOS
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
-		
+
 			//inserting cells into the table
 
 			Source = new TableSource(tableItems);
@@ -37,7 +37,7 @@ namespace HookMeUP.iOS
 			Source.onCellDeselected += (o, e) =>
 			 {
 				 DeductDeselectedOrderPrice(e);
-			};
+			 };
 
 			ordersTable.Source = Source;
 
@@ -67,8 +67,8 @@ namespace HookMeUP.iOS
 						{
 							if (e.ButtonIndex == 0)
 							{
-							//submit datadase. Notify Vuyo
-							AlertPopUp("Order on the way", "Your order will take about " + minutes + " minutes", "OK");
+								//submit datadase. Notify Vuyo
+								AlertPopUp("Order on the way", "Your order will take about " + minutes + " minutes", "OK");
 							}
 
 						};
@@ -81,8 +81,10 @@ namespace HookMeUP.iOS
 
 						AlertPopUp("Error", "No order(s) selected", "OK");
 
+					}
 				}
-				}catch(ArgumentOutOfRangeException){
+				catch (ArgumentOutOfRangeException)
+				{
 					AlertPopUp("Error", "No order(s) selected", "OK");
 
 				}
@@ -99,7 +101,7 @@ namespace HookMeUP.iOS
 		}
 		public void DeductDeselectedOrderPrice(double price)
 		{
-			
+
 			dynamicPrice -= price;
 
 			costText.Text = dynamicPrice.ToString("R 0.00");
@@ -119,107 +121,108 @@ namespace HookMeUP.iOS
 
 
 	public class TableSource : UITableViewSource
+	{
+		List<string> tableItems;
+		string cellIdentifier = "TableCell";
+		public string order = "";
+		double price = 0;
+		public event EventHandler<double> onCellSelected;
+		public event EventHandler<double> onCellDeselected;
+
+		public TableSource(List<string> items)
 		{
-			List<string> tableItems;
-			string cellIdentifier = "TableCell";
-			public string order = "";
-			double price = 0;
-			public event EventHandler<double> onCellSelected;
-			public event EventHandler<double> onCellDeselected;
+			tableItems = items;
+		}
 
-			public TableSource(List<string> items)
+		public List<string> ordersList = new List<string>();
+
+		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+		{
+
+			UITableViewCell cell = tableView.DequeueReusableCell(cellIdentifier);
+
+
+			if (cell == null)
 			{
-				tableItems = items;
+				     cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
+
 			}
+			string[] split = tableItems[indexPath.Row].Split('#');
+			string item = split[0];
 
-			public List<string> ordersList = new List<string>();
+			cell.TextLabel.Text = item;
 
-			public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
-			{
-
-				UITableViewCell cell = tableView.DequeueReusableCell(cellIdentifier);
-
-
-				if (cell == null)
-				{
-					cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
-
-				}
-				string[] split = tableItems[indexPath.Row].Split('#');
-				string item = split[0];
-
-				cell.TextLabel.Text = item;
-
-				List<string> images = new List<string>() { "cappuccino.jpg", "Cappuccino1.jpg", "cappuccino2.jpg",
+			List<string> images = new List<string>() { "cappuccino.jpg", "Cappuccino1.jpg", "cappuccino2.jpg",
 				"Cappuccino400.jpg", "CaramelFlan.jpg", "HazelnutCappuccino.jpg", "Unknown12.jpg","Pic1.jpg","Pic2.jpg",
 				"Pic3.jpg","Pic4.jpg","Pic5.jpg","Pic6.jpg","Pic7.jpg","Pic8.jpg"};
-			
-				Random randomIndex = new Random();
-				int index = randomIndex.Next(0, images.Count);
-				UIImage image = UIImage.FromFile("TableImages/" + images[index]);
-				cell.ImageView.Image = ResizeImage(image, 80, 80);
-				return cell;
-			}
 
-			public UIImage ResizeImage(UIImage imageSource, float width, float height)
+			Random randomIndex = new Random();
+			int index = randomIndex.Next(0, images.Count);
+			UIImage image = UIImage.FromFile("TableImages/" + images[index]);
+			cell.ImageView.Image = ResizeImage(image, 80, 80);
+		
+			return cell;
+		}
+
+		public UIImage ResizeImage(UIImage imageSource, float width, float height)
+		{
+			UIGraphics.BeginImageContext(new SizeF(width, height));
+			imageSource.Draw(new RectangleF(0, 0, width, height));
+			var imageResult = UIGraphics.GetImageFromCurrentImageContext();
+			UIGraphics.EndImageContext();
+			return imageResult;
+		}
+
+
+		public override nint RowsInSection(UITableView tableview, nint section)
+		{
+			return tableItems.Count;
+		}
+
+
+
+		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+		{
+			ordersList.Add(tableItems[indexPath.Row]);
+			string[] split = tableItems[indexPath.Row].Split('#');
+			price = double.Parse(split[1]);
+
+			if (onCellSelected != null)
 			{
-				UIGraphics.BeginImageContext(new SizeF(width, height));
-				imageSource.Draw(new RectangleF(0, 0, width, height));
-				var imageResult = UIGraphics.GetImageFromCurrentImageContext();
-				UIGraphics.EndImageContext();
-				return imageResult;
+				onCellSelected(tableView, price);
 			}
+			//new OrderViewController().DisplayPrice(price);
+		}
 
+		public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
+		{
 
-			public override nint RowsInSection(UITableView tableview, nint section)
+			string[] split = tableItems[indexPath.Row].Split('#');
+			price = double.Parse(split[1]);
+
+			if (onCellDeselected != null)
 			{
-				return tableItems.Count;
+				onCellDeselected(tableView, price);
 			}
+			ordersList.Remove(tableItems[indexPath.Row]);
+		}
+
+		public override string TitleForHeader(UITableView tableView, nint section)
+		{
+			return "Order List\n";
+		}
 
 
+		public void GetOrdersListAndPriceFromDatabase(params string[] ordersAndPriceFromDatabase)
+		{
 
-			public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+			foreach (string elementOrders in ordersAndPriceFromDatabase)
 			{
-				ordersList.Add(tableItems[indexPath.Row]);
-				string[] split = tableItems[indexPath.Row].Split('#');
-				price = double.Parse(split[1]);
-
-				if (onCellSelected != null)
-				{
-					onCellSelected(tableView, price); 
-				}
-				//new OrderViewController().DisplayPrice(price);
-			}
-
-			public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
-			{
-			
-				string[] split = tableItems[indexPath.Row].Split('#');
-				price = double.Parse(split[1]);
-
-				if (onCellDeselected != null)
-				{
-					onCellDeselected(tableView, price);
-				}
-				ordersList.Remove(tableItems[indexPath.Row]);
-			}
-
-			public override string TitleForHeader(UITableView tableView, nint section)
-			{
-				return "Order List\n";
-			}
-
-
-			public void GetOrdersListAndPriceFromDatabase(params string[] ordersAndPriceFromDatabase)
-			{
-
-				foreach (string elementOrders in ordersAndPriceFromDatabase)
-				{
-					tableItems.Add(elementOrders);
-				}
-
+				tableItems.Add(elementOrders);
 			}
 
 		}
+
 	}
+}
 
