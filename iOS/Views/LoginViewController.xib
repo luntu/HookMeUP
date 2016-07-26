@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
@@ -59,12 +58,6 @@
                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                     <state key="normal" title="Login"/>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hook Me UP" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.59999999999999998" translatesAutoresizingMaskIntoConstraints="NO" id="4L5-9h-gOO">
-                                    <rect key="frame" x="33" y="15" width="256" height="72"/>
-                                    <fontDescription key="fontDescription" name="AcademyEngravedLetPlain" family="Academy Engraved LET" pointSize="60"/>
-                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ani-iY-oSS">
                                     <rect key="frame" x="169" y="277" width="132" height="30"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -76,33 +69,39 @@
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="user-login-icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="hF5-Gy-QFD">
-                                    <rect key="frame" x="20" y="79" width="281" height="170"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="coffee-cup-clip-art-ldxgvdj.png" translatesAutoresizingMaskIntoConstraints="NO" id="hF5-Gy-QFD">
+                                    <rect key="frame" x="26" y="71" width="281" height="170"/>
                                 </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hook Me UP" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.59999999999999998" translatesAutoresizingMaskIntoConstraints="NO" id="4L5-9h-gOO">
+                                    <rect key="frame" x="26" y="26" width="256" height="72"/>
+                                    <fontDescription key="fontDescription" name="AcademyEngravedLetPlain" family="Academy Engraved LET" pointSize="60"/>
+                                    <color key="textColor" red="0.74827724358974357" green="0.60404121649914644" blue="0.34773039051255999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                             </subviews>
                             <color key="backgroundColor" red="1" green="0.97050247639999998" blue="0.89525226889999998" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
-                                <constraint firstItem="hF5-Gy-QFD" firstAttribute="trailing" secondItem="ani-iY-oSS" secondAttribute="trailing" id="0TJ-Rj-dco"/>
-                                <constraint firstItem="ani-iY-oSS" firstAttribute="top" secondItem="hF5-Gy-QFD" secondAttribute="bottom" constant="28" id="1cM-A8-gpY"/>
-                                <constraint firstItem="hF5-Gy-QFD" firstAttribute="leading" secondItem="VEK-C2-874" secondAttribute="leading" constant="20" id="1xi-CA-bKQ"/>
+                                <constraint firstItem="hF5-Gy-QFD" firstAttribute="trailing" secondItem="ani-iY-oSS" secondAttribute="trailing" constant="6" id="0TJ-Rj-dco"/>
+                                <constraint firstItem="ani-iY-oSS" firstAttribute="top" secondItem="hF5-Gy-QFD" secondAttribute="bottom" constant="36" id="1cM-A8-gpY"/>
+                                <constraint firstItem="hF5-Gy-QFD" firstAttribute="leading" secondItem="VEK-C2-874" secondAttribute="leading" constant="26" id="1xi-CA-bKQ"/>
                                 <constraint firstItem="SK7-3s-bHt" firstAttribute="leading" secondItem="VEK-C2-874" secondAttribute="leading" constant="33" id="3nH-4m-wGs"/>
                                 <constraint firstItem="5at-Jx-nOV" firstAttribute="top" secondItem="Apa-M3-DLp" secondAttribute="bottom" constant="17" id="6b5-hh-zen"/>
-                                <constraint firstItem="hF5-Gy-QFD" firstAttribute="top" secondItem="VEK-C2-874" secondAttribute="top" constant="79" id="8Et-xT-8pb"/>
+                                <constraint firstItem="hF5-Gy-QFD" firstAttribute="top" secondItem="VEK-C2-874" secondAttribute="top" constant="71" id="8Et-xT-8pb"/>
                                 <constraint firstItem="Apa-M3-DLp" firstAttribute="centerX" secondItem="5at-Jx-nOV" secondAttribute="centerX" id="CYy-za-EcE"/>
-                                <constraint firstItem="4L5-9h-gOO" firstAttribute="top" secondItem="VEK-C2-874" secondAttribute="top" constant="15" id="Ff3-Ba-Z7O"/>
-                                <constraint firstAttribute="trailing" secondItem="4L5-9h-gOO" secondAttribute="trailing" constant="31" id="HSn-VE-WEe"/>
+                                <constraint firstItem="4L5-9h-gOO" firstAttribute="top" secondItem="VEK-C2-874" secondAttribute="top" constant="26" id="Ff3-Ba-Z7O"/>
+                                <constraint firstAttribute="trailing" secondItem="4L5-9h-gOO" secondAttribute="trailing" constant="38" id="HSn-VE-WEe"/>
                                 <constraint firstItem="h4k-2R-6ql" firstAttribute="top" secondItem="1mZ-dW-wuH" secondAttribute="bottom" constant="22" id="Htx-ji-cPH"/>
                                 <constraint firstItem="1mZ-dW-wuH" firstAttribute="leading" secondItem="SK7-3s-bHt" secondAttribute="leading" id="JLU-qX-aGI"/>
                                 <constraint firstAttribute="trailing" secondItem="h4k-2R-6ql" secondAttribute="trailing" constant="163" id="NrL-Ca-oMa"/>
                                 <constraint firstAttribute="trailing" secondItem="ani-iY-oSS" secondAttribute="trailing" constant="19" id="Nxb-bp-ga0"/>
                                 <constraint firstAttribute="bottom" secondItem="5at-Jx-nOV" secondAttribute="bottom" constant="47" id="OIq-1x-Ep5"/>
-                                <constraint firstItem="4L5-9h-gOO" firstAttribute="leading" secondItem="SK7-3s-bHt" secondAttribute="leading" id="X59-H1-Fl5"/>
-                                <constraint firstAttribute="bottom" secondItem="hF5-Gy-QFD" secondAttribute="bottom" constant="231" id="YT9-MS-fvo"/>
-                                <constraint firstItem="SK7-3s-bHt" firstAttribute="top" secondItem="hF5-Gy-QFD" secondAttribute="bottom" constant="32" id="YXe-FC-fQV"/>
+                                <constraint firstItem="4L5-9h-gOO" firstAttribute="leading" secondItem="SK7-3s-bHt" secondAttribute="leading" constant="-7" id="X59-H1-Fl5"/>
+                                <constraint firstAttribute="bottom" secondItem="hF5-Gy-QFD" secondAttribute="bottom" constant="239" id="YT9-MS-fvo"/>
+                                <constraint firstItem="SK7-3s-bHt" firstAttribute="top" secondItem="hF5-Gy-QFD" secondAttribute="bottom" constant="40" id="YXe-FC-fQV"/>
                                 <constraint firstItem="2Gq-6q-nzf" firstAttribute="trailing" secondItem="ani-iY-oSS" secondAttribute="trailing" id="Ypl-Hj-a3h"/>
-                                <constraint firstItem="4L5-9h-gOO" firstAttribute="leading" secondItem="VEK-C2-874" secondAttribute="leading" constant="33" id="cTo-4C-kTL"/>
+                                <constraint firstItem="4L5-9h-gOO" firstAttribute="leading" secondItem="VEK-C2-874" secondAttribute="leading" constant="26" id="cTo-4C-kTL"/>
                                 <constraint firstItem="2Gq-6q-nzf" firstAttribute="bottom" secondItem="1mZ-dW-wuH" secondAttribute="bottom" id="dzH-pe-uSl"/>
-                                <constraint firstItem="Apa-M3-DLp" firstAttribute="trailing" secondItem="4L5-9h-gOO" secondAttribute="trailing" id="goP-E6-7H0"/>
+                                <constraint firstItem="Apa-M3-DLp" firstAttribute="trailing" secondItem="4L5-9h-gOO" secondAttribute="trailing" constant="7" id="goP-E6-7H0"/>
                                 <constraint firstItem="1mZ-dW-wuH" firstAttribute="trailing" secondItem="SK7-3s-bHt" secondAttribute="trailing" id="hF8-uH-6F9"/>
                                 <constraint firstItem="2Gq-6q-nzf" firstAttribute="leading" secondItem="1mZ-dW-wuH" secondAttribute="trailing" constant="57" id="kqn-Gd-rHQ"/>
                                 <constraint firstItem="1mZ-dW-wuH" firstAttribute="leading" secondItem="VEK-C2-874" secondAttribute="leading" constant="33" id="rgP-2R-LIi"/>
@@ -138,6 +137,6 @@
         </view>
     </objects>
     <resources>
-        <image name="user-login-icon.png" width="256" height="256"/>
+        <image name="coffee-cup-clip-art-ldxgvdj.png" width="522" height="595"/>
     </resources>
 </document>

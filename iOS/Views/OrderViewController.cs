@@ -37,27 +37,25 @@ namespace HookMeUP.iOS
 				DisplaySelectedOrderPrice(e);
 			};
 
-
 			Source.onCellDeselectedForPrice += (o, e) =>
 			 {
 				 DeductDeselectedOrderPrice(e);
 			 };
 
-		
-			Source.onCellSelectedForVouchers += (o, e) =>
-			 {
-				 e--;
-				 VouchersLabel.Text = e + " Vouchers";
-				 Source.Voucher = VouchersLabel.Text;
-			 };
 
-		
+			Source.onCellSelectedForVouchers += (o, e) =>
+				{
+					e--;
+					VouchersLabel.Text = e + " Vouchers";
+					Source.Voucher = VouchersLabel.Text;
+				};
+
 			Source.onCellDeselectedForVouchers += (o, e) =>
-			{
-				e++;
-				VouchersLabel.Text = e + " Vouchers";
-				Source.Voucher = VouchersLabel.Text;
-			};
+				{
+					e++;
+					VouchersLabel.Text = e + " Vouchers";
+					Source.Voucher = VouchersLabel.Text;
+				};
 
 			ordersTable.Source = Source;
 
@@ -69,43 +67,46 @@ namespace HookMeUP.iOS
 
 				try
 				{
-					if (Source.ordersList != null && !Source.ordersList[0].Equals(""))
+
+					//if vouchers are not zero
+
+					string[] split = VouchersLabel.Text.Split(' ');
+
+
+					if (!split[0].Equals("0"))
 					{
 
-						string elements = "";
-
-						foreach (string orderElements in Source.ordersList)
+						if (Source.ordersList != null && !Source.ordersList[0].Equals(""))
 						{
-							string[] split = orderElements.Split('#');
-							elements += split[0] + "\n";
+							Order();
+
+						}
+						else
+						{
+
+							AlertPopUp("Error", "No order(s) selected", "OK");
+
 						}
 
+					}
+					else {
+
 						UIAlertView alert = new UIAlertView();
-						alert.Title = "Orders selected";
-						alert.Message = elements.Trim();
-						alert.AddButton("Order");
+						alert.Title = "Out of Vouchers!!";
+						alert.Message = "Pay by cash perhaps?";
+						alert.AddButton("Pay");
 						alert.AddButton("Cancel");
 						alert.Clicked += (o, e) =>
 						{
 							if (e.ButtonIndex == 0)
 							{
-								//submit datadase. Notify Vuyo
-								orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
-
-								AlertPopUp("Order on the way", "Your order will take about " + orderWaitTime.CalculateWaitTime() + " minutes", "OK");
+								Order();
 							}
-
 						};
 						alert.Show();
-
-
 					}
-					else
-					{
 
-						AlertPopUp("Error", "No order(s) selected", "OK");
 
-					}
 				}
 				catch (ArgumentOutOfRangeException)
 				{
@@ -117,6 +118,36 @@ namespace HookMeUP.iOS
 
 		}
 
+		void Order()
+		{
+			string elements = "";
+
+			foreach (string orderElements in Source.ordersList)
+			{
+				string[] splitElements = orderElements.Split('#');
+				elements += splitElements[0] + "\n";
+			}
+
+			UIAlertView alert = new UIAlertView();
+			alert.Title = "Orders selected";
+			alert.Message = elements.Trim();
+			alert.AddButton("Order");
+			alert.AddButton("Cancel");
+			alert.Clicked += (o, e) =>
+			{
+				if (e.ButtonIndex == 0)
+				{
+					//submit datadase. Notify Vuyo
+					orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
+
+					AlertPopUp("Order on the way", "Your order will take about " + orderWaitTime.CalculateWaitTime() + " minutes", "OK");
+				}
+
+			};
+			alert.Show();
+
+		}
+
 		public void DisplaySelectedOrderPrice(double price)
 		{
 			dynamicPrice += price;
@@ -125,18 +156,16 @@ namespace HookMeUP.iOS
 		}
 		public void DeductDeselectedOrderPrice(double price)
 		{
-
 			dynamicPrice -= price;
-
 			costText.Text = dynamicPrice.ToString("R 0.00");
 		}
 
 	}
 
-	//==============================================================================================================
-	//==============================================================================================================
-	//==============================================================================================================
-	//==============================================================================================================
+	//==================================================================================================================
+	//==================================================================================================================
+	//==================================================================================================================
+	//==================================================================================================================
 
 
 	public class TableSource : UITableViewSource

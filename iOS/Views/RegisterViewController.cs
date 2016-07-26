@@ -51,7 +51,7 @@ namespace HookMeUP.iOS
 					{
 						if (password.Equals(verifyPasswordText.Text))
 						{
-							info.Add(name + "#" + surname + "#" + username + "#" + password + "#" + empNo+"#23");
+							info.Add(name + "#" + surname + "#" + username + "#" + password + "#" + empNo+"#2");
 
 							NavigationController.PopViewController(true);
 							AlertPopUp("Done!!!", "Registration complete", "OK");

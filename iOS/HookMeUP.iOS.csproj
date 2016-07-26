@@ -156,6 +156,10 @@
     <Compile Include="Views\AliensTrackerListViewController.designer.cs">
       <DependentUpon>AliensTrackerListViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\HomeViewController.cs" />
+    <Compile Include="Views\HomeViewController.designer.cs">
+      <DependentUpon>HomeViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
@@ -169,7 +173,6 @@
     <BundleResource Include="TableImages\Unknown12.jpg" />
     <BundleResource Include="TableImages\HazelnutCappuccino.jpg" />
     <BundleResource Include="TableImages\Cappuccino400.jpg" />
-    <BundleResource Include="Images\user-login-icon.png" />
     <BundleResource Include="TableImages\Pic1.jpg" />
     <BundleResource Include="TableImages\Pic2.jpg" />
     <BundleResource Include="TableImages\Pic3.jpg" />
@@ -178,6 +181,7 @@
     <BundleResource Include="TableImages\Pic6.jpg" />
     <BundleResource Include="TableImages\Pic7.jpg" />
     <BundleResource Include="TableImages\Pic8.jpg" />
+    <BundleResource Include="Resources\coffee-cup-clip-art-ldxgvdj.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Views\RegisterViewController.xib" />
@@ -187,6 +191,7 @@
     <InterfaceDefinition Include="Views\AdminViewController.xib" />
     <InterfaceDefinition Include="Views\AliensTrackerRegisterViewController.xib" />
     <InterfaceDefinition Include="Views\AliensTrackerListViewController.xib" />
+    <InterfaceDefinition Include="Views\HomeViewController.xib" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
