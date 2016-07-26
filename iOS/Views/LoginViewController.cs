@@ -17,6 +17,7 @@ namespace HookMeUP.iOS
 			ShouldReturn(usernameText, passwordText);
 
 			forgotPasswordButton.TouchUpInside += (o, e) => {
+				ClearFields(usernameText,passwordText);
 				NavigationScreenController(forgotPasswordViewController);
 			};
 
@@ -89,6 +90,7 @@ namespace HookMeUP.iOS
 			registerButton.TouchUpInside += (o, e) => {
 
 				NavigationScreenController(registerViewController);
+				ClearFields(usernameText,passwordText);
 
 			};
 

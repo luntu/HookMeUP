@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Diagnostics;
 using System.Drawing;
 using Foundation;
 using UIKit;
@@ -12,7 +12,7 @@ namespace HookMeUP.iOS
 
 		public TableSource Source { get; set; }
 		double dynamicPrice = 0.00;
-	
+
 
 		List<string> tableItems = new List<string>() { "Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00",
 		"Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00",
@@ -28,19 +28,40 @@ namespace HookMeUP.iOS
 			//inserting cells into the table
 
 			VouchersLabel.Text = GetVouchers + " vouchers";
-
 			Source = new TableSource(tableItems);
+			Source.Voucher = VouchersLabel.Text;
 
-			Source.onCellSelected += (o, e) =>
+
+			Source.onCellSelectedForPrice += (o, e) =>
 			{
 				DisplaySelectedOrderPrice(e);
 			};
-			Source.onCellDeselected += (o, e) =>
+
+
+			Source.onCellDeselectedForPrice += (o, e) =>
 			 {
 				 DeductDeselectedOrderPrice(e);
 			 };
 
+		
+			Source.onCellSelectedForVouchers += (o, e) =>
+			 {
+				 e--;
+				 VouchersLabel.Text = e + " Vouchers";
+				 Source.Voucher = VouchersLabel.Text;
+			 };
+
+		
+			Source.onCellDeselectedForVouchers += (o, e) =>
+			{
+				e++;
+				VouchersLabel.Text = e + " Vouchers";
+				Source.Voucher = VouchersLabel.Text;
+			};
+
 			ordersTable.Source = Source;
+
+
 
 			hookMeUPButton.TouchUpInside += (obj, evt) =>
 			{
@@ -71,7 +92,7 @@ namespace HookMeUP.iOS
 								//submit datadase. Notify Vuyo
 								orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
 
-								AlertPopUp("Order on the way", "Your order will take about " + orderWaitTime.CalculateWaitTime()+ " minutes", "OK");
+								AlertPopUp("Order on the way", "Your order will take about " + orderWaitTime.CalculateWaitTime() + " minutes", "OK");
 							}
 
 						};
@@ -122,10 +143,12 @@ namespace HookMeUP.iOS
 	{
 		List<string> tableItems;
 		string cellIdentifier = "TableCell";
-		public string order = "";
+		public string Voucher { get; set; }
 		double price = 0;
-		public event EventHandler<double> onCellSelected;
-		public event EventHandler<double> onCellDeselected;
+		public event EventHandler<double> onCellSelectedForPrice;
+		public event EventHandler<double> onCellDeselectedForPrice;
+		public event EventHandler<int> onCellSelectedForVouchers;
+		public event EventHandler<int> onCellDeselectedForVouchers;
 		//
 
 
@@ -144,7 +167,7 @@ namespace HookMeUP.iOS
 
 			if (cell == null)
 			{
-				     cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
+				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
 
 			}
 			string[] split = tableItems[indexPath.Row].Split('#');
@@ -163,7 +186,7 @@ namespace HookMeUP.iOS
 
 
 
-		
+
 			return cell;
 		}
 
@@ -187,15 +210,21 @@ namespace HookMeUP.iOS
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
 			ordersList.Add(tableItems[indexPath.Row]);
-			string[] split = tableItems[indexPath.Row].Split('#');
-			price = double.Parse(split[1]);
+			string[] splitForPrice = tableItems[indexPath.Row].Split('#');
+			price = double.Parse(splitForPrice[1]);
+			string[] splitForVoucher = Voucher.Split(' ');
+			int voucherNumber = int.Parse(splitForVoucher[0]);
 
-			if (onCellSelected != null)
+			if (onCellSelectedForPrice != null)
 			{
-				onCellSelected(tableView, price);
+				onCellSelectedForPrice(tableView, price);
 
 			}
-			//new OrderViewController().DisplayPrice(price);
+
+			if (onCellSelectedForVouchers != null)
+			{
+				onCellSelectedForVouchers(tableView, voucherNumber);
+			}
 		}
 
 		public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
@@ -204,11 +233,21 @@ namespace HookMeUP.iOS
 			string[] split = tableItems[indexPath.Row].Split('#');
 			price = double.Parse(split[1]);
 
-			if (onCellDeselected != null)
+			string[] splitForVoucher = Voucher.Split(' ');
+			int voucherNumber = int.Parse(splitForVoucher[0]);
+			Debug.WriteLine(voucherNumber);
+			if (onCellDeselectedForPrice != null)
 			{
-				onCellDeselected(tableView, price);
+				onCellDeselectedForPrice(tableView, price);
 			}
+
 			ordersList.Remove(tableItems[indexPath.Row]);
+
+			if (onCellDeselectedForVouchers != null)
+			{
+				onCellDeselectedForVouchers(tableView, voucherNumber);
+			}
+
 		}
 
 		public override string TitleForHeader(UITableView tableView, nint section)
@@ -235,19 +274,21 @@ namespace HookMeUP.iOS
 	//==============================================================================================================
 
 
-	public class OrderWaitTime {
-		
+	public class OrderWaitTime
+	{
+
 		const int AVERAGE_ORDER_TIME = 2;
 
-		public int GetOrdersTotal { get; set;}
+		public int GetOrdersTotal { get; set; }
 
-		public int CalculateWaitTime() {
+		public int CalculateWaitTime()
+		{
 			int time = GetOrdersTotal * AVERAGE_ORDER_TIME;
 			return time;
 		}
 
 		public void UpdateToDB() { }
-		public int GetTimeFromDB {get;set;}
+		public int GetTimeFromDB { get; set; }
 	}
 
 }
