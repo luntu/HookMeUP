@@ -22,6 +22,9 @@ namespace HookMeUP.iOS
 		UIKit.UITableView ordersTable { get; set; }
 
 		[Outlet]
+		UIKit.UIButton viewOrderButton { get; set; }
+
+		[Outlet]
 		UIKit.UILabel VouchersLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
@@ -44,6 +47,11 @@ namespace HookMeUP.iOS
 			if (VouchersLabel != null) {
 				VouchersLabel.Dispose ();
 				VouchersLabel = null;
+			}
+
+			if (viewOrderButton != null) {
+				viewOrderButton.Dispose ();
+				viewOrderButton = null;
 			}
 		}
 	}

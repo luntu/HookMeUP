@@ -160,6 +160,10 @@
     <Compile Include="Views\HomeViewController.designer.cs">
       <DependentUpon>HomeViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\QueueViewController.cs" />
+    <Compile Include="Views\QueueViewController.designer.cs">
+      <DependentUpon>QueueViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
@@ -192,6 +196,7 @@
     <InterfaceDefinition Include="Views\AliensTrackerRegisterViewController.xib" />
     <InterfaceDefinition Include="Views\AliensTrackerListViewController.xib" />
     <InterfaceDefinition Include="Views\HomeViewController.xib" />
+    <InterfaceDefinition Include="Views\QueueViewController.xib" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

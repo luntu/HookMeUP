@@ -12,7 +12,7 @@ namespace HookMeUP.iOS
 
 		public TableSource Source { get; set; }
 		double dynamicPrice = 0.00;
-
+		//public event EventHandler<UITableView> disableCell; 
 
 		List<string> tableItems = new List<string>() { "Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00",
 		"Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00",
@@ -26,7 +26,7 @@ namespace HookMeUP.iOS
 			// Perform any additional setup after loading the view, typically from a nib.
 
 			//inserting cells into the table
-
+			viewOrderButton.Enabled = false;
 			VouchersLabel.Text = GetVouchers + " vouchers";
 			Source = new TableSource(tableItems);
 			Source.Voucher = VouchersLabel.Text;
@@ -44,10 +44,22 @@ namespace HookMeUP.iOS
 
 
 			Source.onCellSelectedForVouchers += (o, e) =>
+			{
+				e--;
+
+				if (e >= 0)
 				{
-					e--;
 					VouchersLabel.Text = e + " Vouchers";
 					Source.Voucher = VouchersLabel.Text;
+
+				}
+				else
+				{
+					//disableCell(this, (UITableView)o);
+				
+				} 
+					
+					
 				};
 
 			Source.onCellDeselectedForVouchers += (o, e) =>
@@ -70,11 +82,11 @@ namespace HookMeUP.iOS
 
 					//if vouchers are not zero
 
-					string[] split = VouchersLabel.Text.Split(' ');
+				
 
 
-					if (!split[0].Equals("0"))
-					{
+					//if (!split[0].Equals("0"))
+					//{
 
 						if (Source.ordersList != null && !Source.ordersList[0].Equals(""))
 						{
@@ -88,35 +100,41 @@ namespace HookMeUP.iOS
 
 						}
 
-					}
-					else {
+					//}
+					//else {
 
-						UIAlertView alert = new UIAlertView();
-						alert.Title = "Out of Vouchers!!";
-						alert.Message = "Pay by cash perhaps?";
-						alert.AddButton("Pay");
-						alert.AddButton("Cancel");
-						alert.Clicked += (o, e) =>
-						{
-							if (e.ButtonIndex == 0)
-							{
-								Order();
-							}
-						};
-						alert.Show();
-					}
+					//	UIAlertView alert = new UIAlertView();
+					//	alert.Title = "Out of Vouchers!!";
+					//	alert.Message = "Pay by cash perhaps?";
+					//	alert.AddButton("Pay");
+					//	alert.AddButton("Cancel");
+					//	alert.Clicked += (o, e) =>
+					//	{
+					//		if (e.ButtonIndex == 0)
+					//		{
+					//			Order();
+					//		}
+					//	};
+					//	alert.Show();
+					//}
 
 
 				}
 				catch (ArgumentOutOfRangeException)
 				{
 					AlertPopUp("Error", "No order(s) selected", "OK");
-
 				}
 
 			};
 
+			viewOrderButton.TouchUpInside +=(o,e) =>{
+				NavigationScreenController(queueViewController);
+			};
+
 		}
+
+
+
 
 		void Order()
 		{
@@ -139,7 +157,7 @@ namespace HookMeUP.iOS
 				{
 					//submit datadase. Notify Vuyo
 					orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
-
+					viewOrderButton.Enabled = true;
 					AlertPopUp("Order on the way", "Your order will take about " + orderWaitTime.CalculateWaitTime() + " minutes", "OK");
 				}
 
@@ -218,6 +236,8 @@ namespace HookMeUP.iOS
 
 			return cell;
 		}
+
+
 
 		public UIImage ResizeImage(UIImage imageSource, float width, float height)
 		{
