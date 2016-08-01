@@ -1,14 +1,21 @@
 ﻿using System;
+using Auth0.SDK;
+
 
 namespace HookMeUP.iOS
 {
 	public partial class LoginViewController : ScreenViewController
 	{
-		
-		public override void ViewDidLoad()
+		private Auth0Client auth0 = new Auth0Client("mavukz35.auth0.com", "jkOQKVC3v089zk5XXMPJBTkclaSmNhdo");
+
+		public override  void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
+
+
+
+
 
 			NavigationController.NavigationBarHidden = true;
 
@@ -16,81 +23,89 @@ namespace HookMeUP.iOS
 			RegisterForKeyboardNotifications();
 			ShouldReturn(usernameText, passwordText);
 
-			forgotPasswordButton.TouchUpInside += (o, e) => {
-				ClearFields(usernameText,passwordText);
+			forgotPasswordButton.TouchUpInside += (o, e) =>
+			{
+				ClearFields(usernameText, passwordText);
 				NavigationScreenController(forgotPasswordViewController);
 			};
 
 			int i = 0;
 
-			loginButton.TouchUpInside += (o, e) => {
-				i++;
+			loginButton.TouchUpInside += async(o, e) =>
+		   {
+			   i++;
 
-				switch (!usernameText.Text.Equals("") && !passwordText.Text.Equals("")) {
-					
-				
-
-					case true:
-						string[] split = registerViewController.GetValues().Split('#');
-
-						try
-						{
-
-							string usernameL = usernameText.Text;
-							string usernameR = split[2];
-
-
-							string passwordL = passwordText.Text;
-							string passwordR = split[3];
-
-							if (usernameL.Equals(usernameR) && passwordL.Equals(passwordR))
-							{
-								NavigationScreenController(orderViewController);
-								orderViewController.GetVouchers = int.Parse(split[5]);
-							}
-							else if (i == 3)
-							{
-
-								AlertPopUp("Login failed!!", "You failed to login 3 times we suggest \nyou either Register or retrieve lost password", "OK");
-								BorderButton(registerButton, forgotPasswordButton);
-								loginButton.Enabled = false;
-							}
-							else { 
-							
-								AlertPopUp("Login failed!!", "Username and/or password is incorrect", "OK");
-							
-							}
-
-
-						}
-						catch (IndexOutOfRangeException)
-						{
-							//Do nothing this is an empty value returned. The user did not register
-						}
+				var user = await auth0.LoginAsync("Username-Password-Authentication", "luntu.mavukz35@gmail.com", "Lm19980609");
+				string userInfo = user.Profile.ToString();
+				AlertPopUp("user info",userInfo,"OK");
+				/*
+			   switch (!usernameText.Text.Equals("") && !passwordText.Text.Equals(""))
+			   {
 
 
 
-						break;
+				   case true:
+					   string[] split = registerViewController.GetValues().Split('#');
 
-					case false:
+					   try
+					   {
 
-						AlertPopUp("Error","Please fill in details","OK");
-
-						break;
-						
-				
-				}
+						   string usernameL = usernameText.Text;
+						   string usernameR = split[2];
 
 
+						   string passwordL = passwordText.Text;
+						   string passwordR = split[3];
 
-				ClearFields(usernameText,passwordText);
+						   if (usernameL.Equals(usernameR) && passwordL.Equals(passwordR))
+						   {
+							   NavigationScreenController(orderViewController);
+							   orderViewController.GetVouchers = int.Parse(split[5]);
+						   }
+						   else if (i == 3)
+						   {
 
-			};
-				
-			registerButton.TouchUpInside += (o, e) => {
+							   AlertPopUp("Login failed!!", "You failed to login 3 times we suggest \nyou either Register or retrieve lost password", "OK");
+							   BorderButton(registerButton, forgotPasswordButton);
+							   loginButton.Enabled = false;
+						   }
+						   else {
+
+							   AlertPopUp("Login failed!!", "Username and/or password is incorrect", "OK");
+
+						   }
+
+
+					   }
+					   catch (IndexOutOfRangeException)
+					   {
+						   //Do nothing this is an empty value returned. The user did not register
+					   }
+
+
+
+					   break;
+
+				   case false:
+
+					   AlertPopUp("Error", "Please fill in details", "OK");
+
+					   break;
+
+
+			   }
+
+
+
+			   ClearFields(usernameText, passwordText);
+
+		   */};
+
+			registerButton.TouchUpInside += (o, e) =>
+			{
 
 				NavigationScreenController(registerViewController);
-				ClearFields(usernameText,passwordText);
+				ClearFields(usernameText, passwordText);
 
 			};
 
@@ -105,8 +120,6 @@ namespace HookMeUP.iOS
 
 
 		//====================================================
-
-
 
 
 	}

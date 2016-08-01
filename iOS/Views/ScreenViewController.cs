@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Auth0.SDK;
 using Foundation;
 using UIKit;
 
@@ -13,6 +14,8 @@ namespace HookMeUP.iOS
 		public static ForgotPasswordViewController forgotPasswordViewController = new ForgotPasswordViewController();
 		public static OrderViewController orderViewController = new OrderViewController();
 		public static QueueViewController queueViewController = new QueueViewController();
+
+
 		public void AlertPopUp(string title, string message, params string[] buttonText)
 		{
 
