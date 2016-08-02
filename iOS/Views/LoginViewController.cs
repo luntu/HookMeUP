@@ -1,12 +1,10 @@
 ﻿using System;
-using Auth0.SDK;
-
 
 namespace HookMeUP.iOS
 {
 	public partial class LoginViewController : ScreenViewController
 	{
-		private Auth0Client auth0 = new Auth0Client("mavukz35.auth0.com", "jkOQKVC3v089zk5XXMPJBTkclaSmNhdo");
+		
 
 		public override  void ViewDidLoad()
 		{
@@ -31,14 +29,11 @@ namespace HookMeUP.iOS
 
 			int i = 0;
 
-			loginButton.TouchUpInside += async(o, e) =>
+			loginButton.TouchUpInside += (o, e) =>
 		   {
 			   i++;
 
-				var user = await auth0.LoginAsync("Username-Password-Authentication", "luntu.mavukz35@gmail.com", "Lm19980609");
-				string userInfo = user.Profile.ToString();
-				AlertPopUp("user info",userInfo,"OK");
-				/*
+
 			   switch (!usernameText.Text.Equals("") && !passwordText.Text.Equals(""))
 			   {
 
@@ -99,7 +94,7 @@ namespace HookMeUP.iOS
 
 			   ClearFields(usernameText, passwordText);
 
-		   */};
+		   };
 
 			registerButton.TouchUpInside += (o, e) =>
 			{

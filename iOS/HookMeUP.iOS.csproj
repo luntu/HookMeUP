@@ -93,14 +93,8 @@
     <Reference Include="Calabash">
       <HintPath>..\packages\Xamarin.TestCloud.Agent.0.19.2\lib\Xamarin.iOS10\Calabash.dll</HintPath>
     </Reference>
-    <Reference Include="Auth0Client.iOS">
-      <HintPath>..\Components\Auth0Client-0.5.0\lib\ios-unified\Auth0Client.iOS.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Components\Auth0Client-0.5.0\lib\ios-unified\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Auth.iOS">
-      <HintPath>..\Components\Auth0Client-0.5.0\lib\ios-unified\Xamarin.Auth.iOS.dll</HintPath>
+    <Reference Include="Parse.iOS">
+      <HintPath>..\Components\parse-1.7.0\lib\ios-unified\Parse.iOS.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -208,8 +202,8 @@
     <InterfaceDefinition Include="Views\QueueViewController.xib" />
   </ItemGroup>
   <ItemGroup>
-    <XamarinComponentReference Include="Auth0Client">
-      <Version>0.5.0</Version>
+    <XamarinComponentReference Include="parse">
+      <Version>1.7.0</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
   </ItemGroup>

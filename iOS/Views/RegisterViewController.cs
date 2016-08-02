@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using CoreGraphics;
+using Parse;
 using Foundation;
 using UIKit;
 
@@ -37,10 +36,11 @@ namespace HookMeUP.iOS
 			NavigationController.NavigationBarHidden = true;
 			DismissKeyboardOnBackgroundTap();
 			RegisterForKeyboardNotifications();
-
+			ParseClient.Initialize("G7S25vITx0tfeOhODauYKwtauCvzityLwJFGYHPw", "ypPxS2V2rTGl1lNbvEVKUEACKF8PRhWxkWQsbkFe");
 
 			submitButton.TouchUpInside += (sender, evt) => {
 				
+			
 					string name = nameText.Text;
 					string surname = surnameText.Text;
 					string username = usernameTextR.Text;
@@ -51,7 +51,10 @@ namespace HookMeUP.iOS
 					{
 						if (password.Equals(verifyPasswordText.Text))
 						{
-							info.Add(name + "#" + surname + "#" + username + "#" + password + "#" + empNo+"#2");
+							//info.Add(name + "#" + surname + "#" + username + "#" + password + "#" + empNo+"#2");
+							ParseObject tableName = new ParseObject("UserInformation");
+
+							AddToDB(tableName, name, surname, username, password, empNo,23);
 
 							NavigationController.PopViewController(true);
 							AlertPopUp("Done!!!", "Registration complete", "OK");
@@ -107,6 +110,19 @@ namespace HookMeUP.iOS
 		void KeyboardDownNotification(NSNotification notification)
 		{
 
+		}
+
+		async void AddToDB(ParseObject tableName,string name,string surname, string username, string password,string empNo,int vouchers)
+		{
+			
+			tableName["Name"] = name;
+			tableName["Surname"] = surname;
+			tableName["Username"] = username;
+			tableName["Password"] = password;
+			tableName["EmployeeNumber"] = empNo;
+			tableName["Vouchers"] = vouchers;
+
+			await tableName.SaveAsync();
 		}
 
 	}
