@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Foundation;
 using Parse;
+using Foundation;
 using UIKit;
 
 namespace HookMeUP.iOS
@@ -114,16 +114,13 @@ namespace HookMeUP.iOS
 
 		async void AddToDB(string name,string surname, string username, string password,string empNo,int vouchers)
 		{
-		ParseObject tableName = new ParseObject("UserInformation") 
-			{ 
-				{ "Name",name },
-				{ "Surname" ,surname},
-				{ "Username",username},
-				{ "Password",password},
-				{"EmployeeNumber",empNo },
-				{ "Vouchers",vouchers }
-			};
-		
+			
+			tableName["Name"] = name;
+			tableName["Surname"] = surname;
+			tableName["Username"] = username;
+			tableName["Password"] = password;
+			tableName["EmployeeNumber"] = empNo;
+			tableName["Vouchers"] = vouchers;
 
 			await tableName.SaveAsync();
 		}

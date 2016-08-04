@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using Foundation;
+using Parse;
 using UIKit;
 
 
@@ -14,6 +15,7 @@ namespace HookMeUP.iOS
 		public static ForgotPasswordViewController forgotPasswordViewController = new ForgotPasswordViewController();
 		public static OrderViewController orderViewController = new OrderViewController();
 		public static QueueViewController queueViewController = new QueueViewController();
+		public ParseObject tableName = new ParseObject("UserInformation");
 	
 
 		public void AlertPopUp(string title, string message, params string[] buttonText)
