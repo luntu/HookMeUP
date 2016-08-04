@@ -137,8 +137,6 @@
     <Compile Include="Views\ForgotPasswordViewController.designer.cs">
       <DependentUpon>ForgotPasswordViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="SQLite.cs" />
-    <Compile Include="SQLiteAsync.cs" />
     <Compile Include="Views\ScreenViewController.cs" />
     <Compile Include="Views\ScreenViewController.designer.cs">
       <DependentUpon>ScreenViewController.cs</DependentUpon>
@@ -167,6 +165,7 @@
     <Compile Include="Views\QueueViewController.designer.cs">
       <DependentUpon>QueueViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\User.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />

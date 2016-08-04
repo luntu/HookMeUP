@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Parse;
 namespace HookMeUP.iOS
 {
 	public partial class LoginViewController : ScreenViewController
@@ -11,9 +11,10 @@ namespace HookMeUP.iOS
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
 
+			const string APPLICATION_ID = "G7S25vITx0tfeOhODauYKwtauCvzityLwJFGYHPw";
+			const string DOT_NET_ID = "ypPxS2V2rTGl1lNbvEVKUEACKF8PRhWxkWQsbkFe";
 
-
-
+			ParseClient.Initialize(APPLICATION_ID, DOT_NET_ID);
 
 			NavigationController.NavigationBarHidden = true;
 
@@ -29,33 +30,37 @@ namespace HookMeUP.iOS
 
 			int i = 0;
 
-			loginButton.TouchUpInside += (o, e) =>
-		   {
+			loginButton.TouchUpInside += async (sender, evt) =>
+		   	{
 			   i++;
-
+			 
 
 			   switch (!usernameText.Text.Equals("") && !passwordText.Text.Equals(""))
 			   {
 
-
-
-				   case true:
-					   string[] split = registerViewController.GetValues().Split('#');
-
+				case true:
+											   
 					   try
 					   {
+							   var queryy = from userInformation in ParseObject.GetQuery("UserInformation")
+							   where userInformation.Get<string>("Username") == usernameText.Text
+							   select userInformation;
 
-						   string usernameL = usernameText.Text;
-						   string usernameR = split[2];
 
 
-						   string passwordL = passwordText.Text;
-						   string passwordR = split[3];
+							ParseQuery < ParseObject > query = ParseObject.GetQuery("UserInformation");
+						   	ParseObject userInfo = await query.GetAsync("");
+							string usernameL = usernameText.Text;
+							string usernameR = userInfo.Get<string>("Username");
+
+
+						   	string passwordL = passwordText.Text;
+						   	string passwordR = userInfo.Get<string>("Password");
 
 						   if (usernameL.Equals(usernameR) && passwordL.Equals(passwordR))
 						   {
 							   NavigationScreenController(orderViewController);
-							   orderViewController.GetVouchers = int.Parse(split[5]);
+							   orderViewController.GetVouchers = userInfo.Get<int>("Vouchers");
 						   }
 						   else if (i == 3)
 						   {

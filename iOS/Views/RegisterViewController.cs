@@ -1,32 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Parse;
-using Foundation;
-using UIKit;
-
+﻿
 namespace HookMeUP.iOS
 {
 	public partial class RegisterViewController : ScreenViewController
 	{
-
-
-
-	
-		static List<string> info = new List<string>();
-
-		public string GetValues()  {
-			
-			string value = "";
-			try
-			{
-				value = info[0];       //throws Argument out of range exception
-			}
-			catch (ArgumentOutOfRangeException) { AlertPopUp("Invalid account","Account is invalid","OK");}
-
-			return value;
 		
-		}
-
 
 		public override void ViewDidLoad()
 		{
@@ -36,7 +13,7 @@ namespace HookMeUP.iOS
 			NavigationController.NavigationBarHidden = true;
 			DismissKeyboardOnBackgroundTap();
 			RegisterForKeyboardNotifications();
-			ParseClient.Initialize("G7S25vITx0tfeOhODauYKwtauCvzityLwJFGYHPw", "ypPxS2V2rTGl1lNbvEVKUEACKF8PRhWxkWQsbkFe");
+
 
 			submitButton.TouchUpInside += (sender, evt) => {
 				
@@ -89,43 +66,26 @@ namespace HookMeUP.iOS
 		}
 
 		public bool isRegisteredSuccessful { get;set;}
-
-		public override void ViewWillAppear(bool animated)
-		{
-			base.ViewWillAppear(animated);
-			RegisterKeyboardNotification();
-		}
-
-		void RegisterKeyboardNotification()
-		{
-			NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.DidShowNotification, KeyboardUpNotification);
-			NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.WillHideNotification, KeyboardDownNotification);
-		}
-
-		void KeyboardUpNotification(NSNotification notification)
-		{
-
-		}
-
-		void KeyboardDownNotification(NSNotification notification)
-		{
-
-		}
-
+			
 		async void AddToDB(string name,string surname, string username, string password,string empNo,int vouchers)
 		{
-			
+
 			tableName["Name"] = name;
 			tableName["Surname"] = surname;
 			tableName["Username"] = username;
 			tableName["Password"] = password;
-			tableName["EmployeeNumber"] = empNo;
+			tableName["Email"] = empNo;
 			tableName["Vouchers"] = vouchers;
 
 			await tableName.SaveAsync();
 		}
 
+
+
+
 	}
+
+
 }
 
 

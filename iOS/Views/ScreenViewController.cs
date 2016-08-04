@@ -16,7 +16,7 @@ namespace HookMeUP.iOS
 		public static OrderViewController orderViewController = new OrderViewController();
 		public static QueueViewController queueViewController = new QueueViewController();
 		public ParseObject tableName = new ParseObject("UserInformation");
-	
+
 
 		public void AlertPopUp(string title, string message, params string[] buttonText)
 		{

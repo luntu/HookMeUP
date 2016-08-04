@@ -1,4 +1,5 @@
 ﻿using System;
+using Parse;
 
 namespace HookMeUP.iOS
 {
@@ -17,20 +18,22 @@ namespace HookMeUP.iOS
 
 			int i = 0;
 
-			getPasswordButton.TouchUpInside += (obj, evt) => {
+			getPasswordButton.TouchUpInside += async(obj, evt) => {
 				
 				i++;
 
 				switch (!usernameTextForgot.Text.Equals("") && !employeeNoForgot.Text.Equals("")) {
 
 					case true:
-						string[] info = registerViewController.GetValues().Split('#');
+						ParseQuery<ParseObject> query = ParseObject.GetQuery("UserInformation");
+						ParseObject userInfo = await query.GetAsync("");
+
 
 						try
 						{
-							string username = info[2];
-							string employeeNo = info[4];
-							string password = info[3];
+							string username = userInfo.Get<string>("Username");
+							string employeeNo = userInfo.Get<string>("EmployeeNumber");
+							string password = userInfo.Get<string>("Password");
 
 							if (username.Equals(usernameTextForgot.Text) && employeeNo.Equals(employeeNoForgot.Text))
 							{
