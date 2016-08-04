@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Parse;
 using Foundation;
+using Parse;
 using UIKit;
 
 namespace HookMeUP.iOS
@@ -52,9 +52,9 @@ namespace HookMeUP.iOS
 						if (password.Equals(verifyPasswordText.Text))
 						{
 							//info.Add(name + "#" + surname + "#" + username + "#" + password + "#" + empNo+"#2");
-							ParseObject tableName = new ParseObject("UserInformation");
+							
 
-							AddToDB(tableName, name, surname, username, password, empNo,23);
+							AddToDB(name, surname, username, password, empNo,23);
 
 							NavigationController.PopViewController(true);
 							AlertPopUp("Done!!!", "Registration complete", "OK");
@@ -112,15 +112,18 @@ namespace HookMeUP.iOS
 
 		}
 
-		async void AddToDB(ParseObject tableName,string name,string surname, string username, string password,string empNo,int vouchers)
+		async void AddToDB(string name,string surname, string username, string password,string empNo,int vouchers)
 		{
-			
-			tableName["Name"] = name;
-			tableName["Surname"] = surname;
-			tableName["Username"] = username;
-			tableName["Password"] = password;
-			tableName["EmployeeNumber"] = empNo;
-			tableName["Vouchers"] = vouchers;
+		ParseObject tableName = new ParseObject("UserInformation") 
+			{ 
+				{ "Name",name },
+				{ "Surname" ,surname},
+				{ "Username",username},
+				{ "Password",password},
+				{"EmployeeNumber",empNo },
+				{ "Vouchers",vouchers }
+			};
+		
 
 			await tableName.SaveAsync();
 		}
