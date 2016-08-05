@@ -165,7 +165,6 @@
     <Compile Include="Views\QueueViewController.designer.cs">
       <DependentUpon>QueueViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\User.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
