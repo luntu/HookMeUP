@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Parse;
 namespace HookMeUP.iOS
 {
@@ -39,17 +40,23 @@ namespace HookMeUP.iOS
 			   {
 
 				case true:
-											   
-					   try
+						   	var query = from userInformation in ParseObject.GetQuery("UserInformation")
+						   				where userInformation.Get<string>("Username") == usernameText.Text
+						   				select userInformation;
+
+						   	IEnumerable<ParseObject> results = await query.FindAsync();
+							foreach (var elements in results)
+							{
+							   string n = elements.Get<string>("Name");
+							   System.Diagnostics.Debug.WriteLine(n);
+							}
+						/*
+						   try
 					   {
-							   var queryy = from userInformation in ParseObject.GetQuery("UserInformation")
-							   where userInformation.Get<string>("Username") == usernameText.Text
-							   select userInformation;
+							
 
-
-
-							ParseQuery < ParseObject > query = ParseObject.GetQuery("UserInformation");
-						   	ParseObject userInfo = await query.GetAsync("");
+							//	ParseQuery < ParseObject > query = ParseObject.GetQuery("UserInformation");
+							   
 							string usernameL = usernameText.Text;
 							string usernameR = userInfo.Get<string>("Username");
 
@@ -83,7 +90,7 @@ namespace HookMeUP.iOS
 					   }
 
 
-
+*/
 					   break;
 
 				   case false:
