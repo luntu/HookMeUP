@@ -8,6 +8,22 @@ namespace HookMeUP.iOS
 	public partial class RegisterViewController : ScreenViewController
 	{
 		List<UITextField> fields = new List<UITextField>();
+		async void Values() {
+
+			ParseQuery<ParseObject> query = ParseObject.GetQuery("UserInformation");
+			query.Include("Username");
+
+			var coll = await query.FindAsync();
+
+			string value;
+
+			foreach (ParseObject element in coll)
+			{
+				value = element.Get<string>("Username")+"\n";
+
+			}
+		
+		}
 
 		void SetFields(){
 			fields.Add(nameText);
@@ -39,6 +55,7 @@ namespace HookMeUP.iOS
 			SetTags();
 			SetFields();
 			submitButton.Enabled = true;
+			Values();
 
 			for (int i = 0; i < fields.Count-1; i++) {
 
@@ -53,24 +70,34 @@ namespace HookMeUP.iOS
 
 
 			}
+		
+				//			usernameTextR.AllEvents += async(sender, e) => {
+				//				try
+				//				{
+				//					ParseQuery<ParseObject> query = ParseObject.GetQuery("UserInformation");
+				////													where userInfo.Get<string>("Username") == usernameTextR.Text
 
-			usernameTextR.AllTouchEvents += (sender, e) => {
-				try
-				{
-					ParseQuery<ParseObject> query = from userInfo in ParseObject.GetQuery("UserInformation")
-													where userInfo.Get<string>("Username") == usernameTextR.Text
-													select userInfo;
-					Toast.MakeText("Someone already has that username ").Show();
-					submitButton.Enabled = false;
-				}
-				catch (ParseException) {
-					submitButton.Enabled = true;
-				}
+				////				                                                            select userInfo;
+				//					query.Include("Username");
+				//					var coll =await query.FindAsync();
 
-			};
-	
+				//					foreach (ParseObject element in coll) {
+				//						string value = element.Get<string>("Username");
+				//						System.Diagnostics.Debug.WriteLine(value);
+				//					} 
+				//					//ParseObject obj = await query.FirstAsync();
+				//					//if(obj.Get<string>("Username").Equals(usernameTextR.Text))
+				//					//Toast.MakeText("Someone already has that username ").Show();
+				//					submitButton.Enabled = false;
+				//				}
+				//				catch (ParseException) {
+				//					submitButton.Enabled = true;
+				//				}
 
-			submitButton.TouchUpInside += (sender, evt) => {
+				//			};
+
+
+				submitButton.TouchUpInside += (sender, evt) => {
 							
 				string name = nameText.Text;
 				string surname = surnameText.Text;
