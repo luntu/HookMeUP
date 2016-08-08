@@ -96,6 +96,9 @@
     <Reference Include="Parse.iOS">
       <HintPath>..\Components\parse-1.7.0\lib\ios-unified\Parse.iOS.dll</HintPath>
     </Reference>
+    <Reference Include="ToastIOS">
+      <HintPath>..\Components\ToastIOS-1.6\lib\ios-unified\ToastIOS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HookMeUP\HookMeUP.csproj">
@@ -202,6 +205,10 @@
   <ItemGroup>
     <XamarinComponentReference Include="parse">
       <Version>1.7.0</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="ToastIOS">
+      <Version>1.6</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
   </ItemGroup>

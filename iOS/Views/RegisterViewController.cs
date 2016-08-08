@@ -1,11 +1,22 @@
-﻿
-using Parse;
+﻿using System.Collections.Generic;
 using UIKit;
+using Parse;
+using ToastIOS;
 
 namespace HookMeUP.iOS
 {
 	public partial class RegisterViewController : ScreenViewController
 	{
+		List<UITextField> fields = new List<UITextField>();
+
+		void SetFields(){
+			fields.Add(nameText);
+			fields.Add(surnameText);
+			fields.Add(usernameTextR);
+			fields.Add(passwordTextR);
+			fields.Add(verifyPasswordText);
+			fields.Add(emailText);
+		}
 
 		void SetTags() {
 			nameText.Tag = 0;
@@ -13,7 +24,7 @@ namespace HookMeUP.iOS
 			usernameTextR.Tag = 2;
 			passwordTextR.Tag = 3;
 			verifyPasswordText.Tag = 4;
-			employeeNoText.Tag = 5;
+			emailText.Tag = 5;
 
 		}
 		public override void ViewDidLoad()
@@ -26,21 +37,38 @@ namespace HookMeUP.iOS
 			RegisterForKeyboardNotifications();
 			nameText.BecomeFirstResponder();
 			SetTags();
+			SetFields();
+			submitButton.Enabled = true;
 
-			nameText.ShouldReturn += (textField) => {
-				int nextTag = (int)textField.Tag + 1;
-				UIResponder nextResponder = ((UITextField)textField).Superview.ViewWithTag(nextTag);
-				if (nextResponder.BecomeFirstResponder())
+			for (int i = 0; i < fields.Count-1; i++) {
+
+				fields[i].ShouldReturn += (textField) =>
 				{
-					nextResponder.BecomeFirstResponder();
-				}
-				else
+					
+					int nextTag = (int)textField.Tag + 1;
+					fields[nextTag].BecomeFirstResponder();
+
+					return true;
+				};
+
+
+			}
+
+			usernameTextR.AllTouchEvents += (sender, e) => {
+				try
 				{
-					((UITextField)textField).ResignFirstResponder();
+					ParseQuery<ParseObject> query = from userInfo in ParseObject.GetQuery("UserInformation")
+													where userInfo.Get<string>("Username") == usernameTextR.Text
+													select userInfo;
+					Toast.MakeText("Someone already has that username ").Show();
+					submitButton.Enabled = false;
 				}
-				return true;
+				catch (ParseException) {
+					submitButton.Enabled = true;
+				}
+
 			};
-		
+	
 
 			submitButton.TouchUpInside += (sender, evt) => {
 							
@@ -48,7 +76,7 @@ namespace HookMeUP.iOS
 				string surname = surnameText.Text;
 				string username = usernameTextR.Text;
 				string password = passwordTextR.Text;
-				string empNo = employeeNoText.Text;
+				string empNo = emailText.Text;
 
 				if (!name.Equals("") && !surname.Equals("") && !username.Equals("") && !password.Equals("") && !verifyPasswordText.Text.Equals("") && !empNo.Equals(""))
 				{
@@ -59,7 +87,7 @@ namespace HookMeUP.iOS
 						AddToDB(name, surname, username, password, empNo,23);
 						NavigationController.PopViewController(true);
 						AlertPopUp("Done!!!", "Registration complete", "OK");
-						ClearFields(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,employeeNoText);
+						ClearFields(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
 						isRegisteredSuccessful = true;
 
 					}
@@ -82,7 +110,7 @@ namespace HookMeUP.iOS
 
 			backButtonRegister.TouchUpInside += (obj, evt) => { 
 			
-				ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, employeeNoText);
+				ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
 				NavigationController.PopViewController(true);
 
 			};

@@ -16,16 +16,13 @@ namespace HookMeUP.iOS
 		UIKit.UIButton backButtonForgot { get; set; }
 
 		[Outlet]
-		UIKit.UITextField employeeNoForgot { get; set; }
+		UIKit.UITextField emailTextForgot { get; set; }
 
 		[Outlet]
 		UIKit.UIScrollView forgotUIScrollView { get; set; }
 
 		[Outlet]
 		UIKit.UIButton getPasswordButton { get; set; }
-
-		[Outlet]
-		UIKit.UITextField getPasswordText { get; set; }
 
 		[Outlet]
 		UIKit.UITextField usernameTextForgot { get; set; }
@@ -37,9 +34,14 @@ namespace HookMeUP.iOS
 				backButtonForgot = null;
 			}
 
-			if (employeeNoForgot != null) {
-				employeeNoForgot.Dispose ();
-				employeeNoForgot = null;
+			if (emailTextForgot != null) {
+				emailTextForgot.Dispose ();
+				emailTextForgot = null;
+			}
+
+			if (forgotUIScrollView != null) {
+				forgotUIScrollView.Dispose ();
+				forgotUIScrollView = null;
 			}
 
 			if (getPasswordButton != null) {
@@ -47,19 +49,9 @@ namespace HookMeUP.iOS
 				getPasswordButton = null;
 			}
 
-			if (getPasswordText != null) {
-				getPasswordText.Dispose ();
-				getPasswordText = null;
-			}
-
 			if (usernameTextForgot != null) {
 				usernameTextForgot.Dispose ();
 				usernameTextForgot = null;
-			}
-
-			if (forgotUIScrollView != null) {
-				forgotUIScrollView.Dispose ();
-				forgotUIScrollView = null;
 			}
 		}
 	}

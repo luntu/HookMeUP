@@ -48,7 +48,6 @@ namespace HookMeUP.iOS
 					element.Layer.BorderWidth = 1;
 					element.Layer.CornerRadius = 4;
 					element.Layer.BorderColor = UIColor.Cyan.CGColor;
-
 				}
 
 			}
