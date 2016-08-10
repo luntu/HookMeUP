@@ -11,12 +11,13 @@ namespace HookMeUP.iOS
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
-
+			loadingOverlay = new LoadingOverlay(bounds);
+			View.Add(loadingOverlay);
 			const string APPLICATION_ID = "G7S25vITx0tfeOhODauYKwtauCvzityLwJFGYHPw";
 			const string DOT_NET_ID = "ypPxS2V2rTGl1lNbvEVKUEACKF8PRhWxkWQsbkFe";
 
 			ParseClient.Initialize(APPLICATION_ID, DOT_NET_ID);
-
+			loadingOverlay.Hide();
 			NavigationController.NavigationBarHidden = true;
 
 			DismissKeyboardOnBackgroundTap();
@@ -41,8 +42,8 @@ namespace HookMeUP.iOS
 				case true:
 						   try
 						   {
-							
 
+							View.Add(loadingOverlay);
 							ParseQuery<ParseObject> query = from userInformation in ParseObject.GetQuery("UserInformation")
 														   where userInformation.Get<string>("Username") == usernameText.Text
 														   && userInformation.Get<string>("Password") == passwordText.Text
@@ -52,8 +53,8 @@ namespace HookMeUP.iOS
 							int vouchers = result.Get<int>("Vouchers");
 							orderViewController.GetVouchers = vouchers;
 
-							NavigationScreenController(orderViewController);						
-
+							NavigationScreenController(orderViewController);
+							loadingOverlay.Hide();
 						   }
 						   catch (ParseException) {
 							   AlertPopUp("Login failed","Username or password incorrect","OK");
@@ -99,12 +100,6 @@ namespace HookMeUP.iOS
 			base.DidReceiveMemoryWarning();
 			// Release any cached data, images, etc that aren't in use.
 		}
-
-
-
-		//====================================================
-
-
 	}
 }
 

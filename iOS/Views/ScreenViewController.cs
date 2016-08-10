@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using CoreGraphics;
 using Foundation;
 using Parse;
 using UIKit;
@@ -16,6 +17,9 @@ namespace HookMeUP.iOS
 		public static OrderViewController orderViewController = new OrderViewController();
 		public static QueueViewController queueViewController = new QueueViewController();
 		public ParseObject tableName = new ParseObject("UserInformation");
+		public LoadingOverlay loadingOverlay;
+		public CGRect bounds = UIScreen.MainScreen.Bounds;
+
 
 
 		public void AlertPopUp(string title, string message, params string[] buttonText)
@@ -184,6 +188,8 @@ namespace HookMeUP.iOS
 		#endregion
 	}
 
+	//==================================================================================================================
+	//keyboard notification => active view detection
 	public static class ViewExtensions
 	{
 
@@ -217,6 +223,51 @@ namespace HookMeUP.iOS
 			}
 
 			return null;
+		}
+	}
+
+	//==================================================================================================================
+	//loading status bar
+	public class LoadingOverlay : UIView
+	{
+		// control declarations
+		UIActivityIndicatorView activitySpinner;
+
+		public LoadingOverlay(CGRect frame) : base(frame)
+		{
+			// configurable bits
+
+			Alpha = 0.75f;
+		
+
+			// derive the center x and y
+			nfloat centerX = Frame.Width / 2;
+			nfloat centerY = Frame.Height / 2;
+
+			// create the activity spinner, center it horizontall and put it 5 points above center x
+			activitySpinner = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.WhiteLarge);
+			activitySpinner.Frame = new CGRect(
+				centerX - (activitySpinner.Frame.Width / 2),
+				centerY - activitySpinner.Frame.Height - 20,
+				activitySpinner.Frame.Width,
+				activitySpinner.Frame.Height);
+			AddSubview(activitySpinner);
+			activitySpinner.StartAnimating();
+			activitySpinner.Color = UIColor.Black;
+
+
+		}
+
+		/// <summary>
+		/// Fades out the control and then removes it from the super view
+		/// </summary>
+		public void Hide()
+		{
+			UIView.Animate(
+				0.5, // duration
+				() => { Alpha = 0; },
+				() => { RemoveFromSuperview(); }
+			);
 		}
 	}
 
