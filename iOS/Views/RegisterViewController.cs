@@ -48,12 +48,20 @@ namespace HookMeUP.iOS
 				if (values.Contains(usernameTextR.Text))
 				{
 					Toast.MakeText("Someone already has that username").Show();
-					usernameTextR.BorderRect(usernameTextR.Bounds);
+					usernameTextR.Layer.BorderColor = UIColor.Red.CGColor;
+					usernameTextR.Layer.BorderWidth = 1;
+					usernameTextR.Layer.CornerRadius = 3;
+				
 					submitButton.Enabled = false;
 				}
-				else submitButton.Enabled = true;
-				
+				else
+				{
+					submitButton.Enabled = true;
+					usernameTextR.Layer.BorderColor = UIColor.Clear.CGColor;
+				}
 			};
+
+
 
 			submitButton.TouchUpInside += (sender, evt) => 
 			{

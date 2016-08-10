@@ -50,7 +50,7 @@ namespace HookMeUP.iOS
 				foreach (UIButton element in button)
 				{
 					element.Layer.BorderWidth = 1;
-					element.Layer.CornerRadius = 4;
+					element.Layer.CornerRadius = 3;
 					element.Layer.BorderColor = UIColor.Cyan.CGColor;
 				}
 
