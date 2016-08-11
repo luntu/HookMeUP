@@ -42,21 +42,25 @@ namespace HookMeUP.iOS
 				case true:
 						   try
 						   {
-
+							loadingOverlay = new LoadingOverlay(bounds);
 							View.Add(loadingOverlay);
+
 							ParseQuery<ParseObject> query = from userInformation in ParseObject.GetQuery("UserInformation")
-														   where userInformation.Get<string>("Username") == usernameText.Text
-														   && userInformation.Get<string>("Password") == passwordText.Text
-														   select userInformation;
+														   	where userInformation.Get<string>("Username") == usernameText.Text
+															&& userInformation.Get<string>("Password") == passwordText.Text
+														   	select userInformation;
 							
 							ParseObject result = await query.FirstAsync();
+							orderViewController.GetName = result.Get<string>("Name");
 							int vouchers = result.Get<int>("Vouchers");
 							orderViewController.GetVouchers = vouchers;
+							loadingOverlay.Hide();
 
 							NavigationScreenController(orderViewController);
-							loadingOverlay.Hide();
+
 						   }
 						   catch (ParseException) {
+							loadingOverlay.Hide();
 							   AlertPopUp("Login failed","Username or password incorrect","OK");
 
 							   if (i == 3)

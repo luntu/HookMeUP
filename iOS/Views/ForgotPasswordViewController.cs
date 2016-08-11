@@ -29,9 +29,12 @@ namespace HookMeUP.iOS
 						
 						try
 						{
+							loadingOverlay = new LoadingOverlay(bounds);
+							View.Add(loadingOverlay);
+
 							ParseQuery<ParseObject> query = from userInfo in ParseObject.GetQuery("UserInformation")
-								                            where userInfo.Get<string>("Username") == usernameTextForgot.Text
-															where userInfo.Get<string>("Email") == emailTextForgot.Text
+															where userInfo.Get<string>("Username") == usernameTextForgot.Text
+															&& userInfo.Get<string>("Email") == emailTextForgot.Text
 															select userInfo;
 							
 							ParseObject objQ = await query.FirstAsync();
@@ -39,6 +42,8 @@ namespace HookMeUP.iOS
 							string name = objQ.Get<string>("Name");
 							string email = objQ.Get<string>("Email");
 							string password = objQ.Get<string>("Password");
+
+							loadingOverlay.Hide();
 
 							if (MFMailComposeViewController.CanSendMail)
 							{

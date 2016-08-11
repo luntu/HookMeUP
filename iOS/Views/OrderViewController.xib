@@ -55,7 +55,7 @@
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qcm-ru-MsB">
                     <rect key="frame" x="205" y="442" width="102" height="30"/>
-                    <state key="normal" title="View My Order"/>
+                    <state key="normal" title="View Order"/>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hAv-2h-Dzq">
                     <rect key="frame" x="20" y="442" width="116" height="30"/>
@@ -71,7 +71,9 @@
                 <constraint firstAttribute="bottom" secondItem="kQv-hC-SjC" secondAttribute="bottom" constant="57" id="C3r-Pg-B5F"/>
                 <constraint firstItem="scM-vP-G91" firstAttribute="top" secondItem="2" secondAttribute="top" constant="27" id="HBT-eM-YET"/>
                 <constraint firstItem="scM-vP-G91" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="34" id="Jcg-CW-Ded"/>
+                <constraint firstItem="Qcm-ru-MsB" firstAttribute="baseline" secondItem="hAv-2h-Dzq" secondAttribute="baseline" id="Jju-Vf-2zE"/>
                 <constraint firstItem="mw3-tB-x2X" firstAttribute="top" secondItem="scM-vP-G91" secondAttribute="bottom" constant="8" id="MXH-oi-S8I"/>
+                <constraint firstAttribute="trailing" secondItem="Qcm-ru-MsB" secondAttribute="trailing" constant="13" id="NgK-Wk-LuX"/>
                 <constraint firstItem="kQv-hC-SjC" firstAttribute="top" secondItem="n49-r0-TCl" secondAttribute="top" id="OAj-rs-XYG"/>
                 <constraint firstItem="n49-r0-TCl" firstAttribute="leading" secondItem="cmg-sR-Gpe" secondAttribute="trailing" constant="8" symbolic="YES" id="Pb9-Gt-CcE"/>
                 <constraint firstItem="cmg-sR-Gpe" firstAttribute="leading" secondItem="kQv-hC-SjC" secondAttribute="trailing" constant="16" id="PjR-Kn-I1U"/>
@@ -80,10 +82,9 @@
                 <constraint firstItem="cmg-sR-Gpe" firstAttribute="top" secondItem="mw3-tB-x2X" secondAttribute="bottom" constant="18" id="dz3-Xt-Cw3"/>
                 <constraint firstItem="kQv-hC-SjC" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="eVl-0d-b5b"/>
                 <constraint firstItem="mw3-tB-x2X" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="fck-jR-9Xi"/>
+                <constraint firstItem="Qcm-ru-MsB" firstAttribute="leading" secondItem="hAv-2h-Dzq" secondAttribute="trailing" constant="69" id="g8p-Bd-YAQ"/>
                 <constraint firstItem="n49-r0-TCl" firstAttribute="top" secondItem="mw3-tB-x2X" secondAttribute="bottom" constant="21" id="i8C-c7-cPi"/>
                 <constraint firstItem="cmg-sR-Gpe" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="55" id="mrX-OU-djY"/>
-                <constraint firstItem="Qcm-ru-MsB" firstAttribute="leading" secondItem="hAv-2h-Dzq" secondAttribute="trailing" constant="69" id="n7o-0J-u35"/>
-                <constraint firstItem="Qcm-ru-MsB" firstAttribute="baseline" secondItem="hAv-2h-Dzq" secondAttribute="baseline" id="nKV-fn-o47"/>
                 <constraint firstItem="kQv-hC-SjC" firstAttribute="firstBaseline" secondItem="n49-r0-TCl" secondAttribute="baseline" id="nmD-7I-Uhh"/>
                 <constraint firstItem="mw3-tB-x2X" firstAttribute="centerY" secondItem="2" secondAttribute="centerY" constant="-8" id="u4C-Oe-Dg4"/>
                 <constraint firstItem="cmg-sR-Gpe" firstAttribute="centerY" secondItem="n49-r0-TCl" secondAttribute="centerY" id="uhq-gU-hRk"/>

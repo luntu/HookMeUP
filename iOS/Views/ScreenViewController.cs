@@ -16,7 +16,8 @@ namespace HookMeUP.iOS
 		public static ForgotPasswordViewController forgotPasswordViewController = new ForgotPasswordViewController();
 		public static OrderViewController orderViewController = new OrderViewController();
 		public static QueueViewController queueViewController = new QueueViewController();
-		public ParseObject tableName = new ParseObject("UserInformation");
+		public ParseObject tableNameUserInfo = new ParseObject("UserInformation");
+		public ParseObject tableNameOrders = new ParseObject("Orders");
 		public LoadingOverlay loadingOverlay;
 		public CGRect bounds = UIScreen.MainScreen.Bounds;
 
@@ -226,6 +227,7 @@ namespace HookMeUP.iOS
 		}
 	}
 
+
 	//==================================================================================================================
 	//loading status bar
 	public class LoadingOverlay : UIView
@@ -238,7 +240,7 @@ namespace HookMeUP.iOS
 			// configurable bits
 
 			Alpha = 0.75f;
-		
+			BackgroundColor = UIColor.White;
 
 			// derive the center x and y
 			nfloat centerX = Frame.Width / 2;

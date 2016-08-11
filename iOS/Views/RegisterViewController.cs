@@ -116,15 +116,19 @@ namespace HookMeUP.iOS
 			
 		async void AddToDB(string name,string surname, string username, string password,string empNo,int vouchers)
 		{
+			loadingOverlay = new LoadingOverlay(bounds);
+			View.Add(loadingOverlay);
+		
+			tableNameUserInfo["Name"] = name;
+			tableNameUserInfo["Surname"] = surname;
+			tableNameUserInfo["Username"] = username;
+			tableNameUserInfo["Password"] = password;
+			tableNameUserInfo["Email"] = empNo;
+			tableNameUserInfo["Vouchers"] = vouchers;
 
-			tableName["Name"] = name;
-			tableName["Surname"] = surname;
-			tableName["Username"] = username;
-			tableName["Password"] = password;
-			tableName["Email"] = empNo;
-			tableName["Vouchers"] = vouchers;
+			await tableNameUserInfo.SaveAsync();
 
-			await tableName.SaveAsync();
+			loadingOverlay.Hide();
 		}
 
 		void SetTags()

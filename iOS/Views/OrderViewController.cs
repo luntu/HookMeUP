@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using Foundation;
+using Parse;
 using UIKit;
 
 namespace HookMeUP.iOS
@@ -10,13 +10,13 @@ namespace HookMeUP.iOS
 	public partial class OrderViewController : ScreenViewController
 	{
 
-		public TableSource Source { get; set; }
+		public TableSourceOrdering Source { get; set; }
 		double dynamicPrice = 0.00;
-		//public event EventHandler<UITableView> disableCell; 
 
 		List<string> tableItems = new List<string>() { "Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00",
 		"Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00",
 		"Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00" };
+
 		OrderWaitTime orderWaitTime = new OrderWaitTime();
 
 		public int GetVouchers { get; set; }
@@ -26,11 +26,11 @@ namespace HookMeUP.iOS
 			// Perform any additional setup after loading the view, typically from a nib.
 
 			//inserting cells into the table
-			viewOrderButton.Enabled = false;
-			VouchersLabel.Text = GetVouchers + " vouchers";
-			Source = new TableSource(tableItems);
-			Source.Voucher = VouchersLabel.Text;
 
+			VouchersLabel.Text = GetVouchers + " vouchers";
+			Source = new TableSourceOrdering(tableItems);
+			Source.Voucher = VouchersLabel.Text;
+			ordersTable.Source = Source;
 
 			Source.onCellSelectedForPrice += (o, e) =>
 			{
@@ -69,7 +69,7 @@ namespace HookMeUP.iOS
 					Source.Voucher = VouchersLabel.Text;
 				};
 
-			ordersTable.Source = Source;
+
 
 
 
@@ -79,44 +79,17 @@ namespace HookMeUP.iOS
 
 				try
 				{
+					
+					if (Source.ordersList != null && !Source.ordersList[0].Equals(""))
+					{
 
-					//if vouchers are not zero
+						Order();
 
-				
+					}
+					else AlertPopUp("Error", "No order(s) selected", "OK");
 
 
-					//if (!split[0].Equals("0"))
-					//{
 
-						if (Source.ordersList != null && !Source.ordersList[0].Equals(""))
-						{
-							Order();
-
-						}
-						else
-						{
-
-							AlertPopUp("Error", "No order(s) selected", "OK");
-
-						}
-
-					//}
-					//else {
-
-					//	UIAlertView alert = new UIAlertView();
-					//	alert.Title = "Out of Vouchers!!";
-					//	alert.Message = "Pay by cash perhaps?";
-					//	alert.AddButton("Pay");
-					//	alert.AddButton("Cancel");
-					//	alert.Clicked += (o, e) =>
-					//	{
-					//		if (e.ButtonIndex == 0)
-					//		{
-					//			Order();
-					//		}
-					//	};
-					//	alert.Show();
-					//}
 
 
 				}
@@ -128,30 +101,41 @@ namespace HookMeUP.iOS
 			};
 
 			viewOrderButton.TouchUpInside +=(o,e) =>{
-				NavigationScreenController(queueViewController);
+				NavigationScreenController(new QueueViewController());
 			};
 
 		}
 
 
-
+		public string GetName { get; set; } 
+		
+		
 
 		void Order()
 		{
+
+			List<string> items = new List<string>();
+			List<double> prices = new List<double>();
 			string elements = "";
 
 			foreach (string orderElements in Source.ordersList)
 			{
+				
 				string[] splitElements = orderElements.Split('#');
 				elements += splitElements[0] + "\n";
+				items.Add(splitElements[0]);
+				prices.Add(double.Parse(splitElements[1]));
+
 			}
+
 
 			UIAlertView alert = new UIAlertView();
 			alert.Title = "Orders selected";
 			alert.Message = elements.Trim();
 			alert.AddButton("Order");
 			alert.AddButton("Cancel");
-			alert.Clicked += (o, e) =>
+
+			alert.Clicked += async (o, e) =>
 			{
 				if (e.ButtonIndex == 0)
 				{
@@ -159,6 +143,24 @@ namespace HookMeUP.iOS
 					orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
 					viewOrderButton.Enabled = true;
 					AlertPopUp("Order on the way", "Your order will take about " + orderWaitTime.CalculateWaitTime() + " minutes", "OK");
+
+					loadingOverlay = new LoadingOverlay(bounds);
+					View.Add(loadingOverlay);
+
+					try
+					{
+						tableNameOrders["PersonOrdered"] = GetName;
+						tableNameOrders["OrderList"] = items;
+						tableNameOrders["Price"] = prices;
+						tableNameOrders["IsOrderDone"] = false;
+						await tableNameOrders.SaveAsync();
+					}
+					catch (ParseException q)
+					{
+						Console.WriteLine(q.StackTrace);
+					}
+					loadingOverlay.Hide();
+
 				}
 
 			};
@@ -178,6 +180,7 @@ namespace HookMeUP.iOS
 			costText.Text = dynamicPrice.ToString("R 0.00");
 		}
 
+
 	}
 
 	//==================================================================================================================
@@ -186,7 +189,7 @@ namespace HookMeUP.iOS
 	//==================================================================================================================
 
 
-	public class TableSource : UITableViewSource
+	public class TableSourceOrdering : UITableViewSource
 	{
 		List<string> tableItems;
 		string cellIdentifier = "TableCell";
@@ -196,15 +199,15 @@ namespace HookMeUP.iOS
 		public event EventHandler<double> onCellDeselectedForPrice;
 		public event EventHandler<int> onCellSelectedForVouchers;
 		public event EventHandler<int> onCellDeselectedForVouchers;
-		//
+		public List<string> ordersList = new List<string>();
 
 
-		public TableSource(List<string> items)
+		public TableSourceOrdering(List<string> items)
 		{
 			tableItems = items;
 		}
 
-		public List<string> ordersList = new List<string>();
+
 
 		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
 		{
@@ -231,13 +234,13 @@ namespace HookMeUP.iOS
 			UIImage image = UIImage.FromFile("TableImages/" + images[index]);
 			cell.ImageView.Image = ResizeImage(image, 80, 80);
 
-
-
-
 			return cell;
 		}
 
-
+		public override nint RowsInSection(UITableView tableview, nint section)
+		{
+			return tableItems.Count;
+		}
 
 		public UIImage ResizeImage(UIImage imageSource, float width, float height)
 		{
@@ -247,14 +250,6 @@ namespace HookMeUP.iOS
 			UIGraphics.EndImageContext();
 			return imageResult;
 		}
-
-
-		public override nint RowsInSection(UITableView tableview, nint section)
-		{
-			return tableItems.Count;
-		}
-
-
 
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
@@ -284,7 +279,7 @@ namespace HookMeUP.iOS
 
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);
-			Debug.WriteLine(voucherNumber);
+		
 			if (onCellDeselectedForPrice != null)
 			{
 				onCellDeselectedForPrice(tableView, price);
@@ -302,17 +297,6 @@ namespace HookMeUP.iOS
 		public override string TitleForHeader(UITableView tableView, nint section)
 		{
 			return "Order List\n";
-		}
-
-
-		public void GetOrdersListAndPriceFromDatabase(params string[] ordersAndPriceFromDatabase)
-		{
-
-			foreach (string elementOrders in ordersAndPriceFromDatabase)
-			{
-				tableItems.Add(elementOrders);
-			}
-
 		}
 
 	}

@@ -114,7 +114,6 @@
     <Folder Include="Resources\" />
     <Folder Include="Views\" />
     <Folder Include="TableImages\" />
-    <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -190,6 +189,7 @@
     <BundleResource Include="TableImages\Pic7.jpg" />
     <BundleResource Include="TableImages\Pic8.jpg" />
     <BundleResource Include="Resources\coffee-cup-clip-art-ldxgvdj.png" />
+    <BundleResource Include="Resources\lock_and_key_coffee_mug-r00da98d73f744b8cad8dc62f64638b27_x7jg5_8byvr_324.jpg" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Views\RegisterViewController.xib" />
