@@ -76,23 +76,23 @@ namespace HookMeUP.iOS
 				{
 					if (password.Equals(verifyPasswordText.Text))
 					{
-						//info.Add(name + "#" + surname + "#" + username + "#" + password + "#" + empNo+"#2");
-							
+						verifyPasswordText.Layer.BorderColor = UIColor.Clear.CGColor;
+						passwordTextR.Layer.BorderColor = UIColor.Clear.CGColor;
 						AddToDB(name, surname, username, password, empNo,23);
 						NavigationController.PopViewController(true);
 						AlertPopUp("Done!!!", "Registration complete", "OK");
 						ClearFields(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
 						isRegisteredSuccessful = true;
-
 					}
-					else { 
-
+					else 
+					{
+						ErrorBorder(verifyPasswordText, passwordTextR);
 						AlertPopUp("Registering failed!!!", "passwords do not match", "OK");
 						passwordTextR.Highlighted = true;
 						verifyPasswordText.Highlighted = true;
 						isRegisteredSuccessful = false;
-						}
 					}
+				}
 
 				else {
 
@@ -111,7 +111,14 @@ namespace HookMeUP.iOS
 			};
 		}
 
-
+		private void ErrorBorder(params UITextField[] textF) 
+		{
+			foreach (UITextField field in textF) {
+				field.Layer.BorderColor = UIColor.Red.CGColor;
+				field.Layer.BorderWidth = 1;
+				field.Layer.CornerRadius = 3;
+			}
+		}
 		public bool isRegisteredSuccessful { get;set;}
 			
 		async void AddToDB(string name,string surname, string username, string password,string empNo,int vouchers)

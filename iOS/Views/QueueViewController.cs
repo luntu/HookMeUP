@@ -88,10 +88,11 @@ namespace HookMeUP.iOS
 				cell.BackgroundColor = UIColor.Green;
 			}
 			else {
-				cell.BackgroundColor = UIColor.Brown;
+				cell.BackgroundColor = UIColor.LightGray;
 			}
 
 			cell.TextLabel.Text = item;
+			cell.DetailTextLabel.Text = "Order number: " + (indexPath.Row+1);
 
 			return cell;
 		}
