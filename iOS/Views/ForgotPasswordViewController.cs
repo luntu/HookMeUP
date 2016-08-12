@@ -7,7 +7,7 @@ namespace HookMeUP.iOS
 	public partial class ForgotPasswordViewController : ScreenViewController
 	{
 
-		private MFMailComposeViewController mailcontroller;
+		MFMailComposeViewController mailcontroller;
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
@@ -65,7 +65,8 @@ namespace HookMeUP.iOS
 							else System.Diagnostics.Debug.WriteLine("Mail can't be sent");
 
 						}
-						catch (ParseException){
+						catch (ParseException)
+						{
 							AlertPopUp("Error", "Username and email do not match", "OK");
 							if (i == 3)
 							{
@@ -81,7 +82,7 @@ namespace HookMeUP.iOS
 						AlertPopUp("Error","Please fill in details","Ok");
 
 						break;
-						//no default
+						
 				}
 			
 			};

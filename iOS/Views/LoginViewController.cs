@@ -11,13 +11,7 @@ namespace HookMeUP.iOS
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
-			loadingOverlay = new LoadingOverlay(bounds);
-			View.Add(loadingOverlay);
-			const string APPLICATION_ID = "G7S25vITx0tfeOhODauYKwtauCvzityLwJFGYHPw";
-			const string DOT_NET_ID = "ypPxS2V2rTGl1lNbvEVKUEACKF8PRhWxkWQsbkFe";
 
-			ParseClient.Initialize(APPLICATION_ID, DOT_NET_ID);
-			loadingOverlay.Hide();
 			NavigationController.NavigationBarHidden = true;
 
 			DismissKeyboardOnBackgroundTap();
@@ -26,6 +20,15 @@ namespace HookMeUP.iOS
 			usernameText.BecomeFirstResponder();
 			ShouldReturn(usernameText, passwordText);
 			TextFieldKeyboardIteration(usernameText, passwordText);
+
+
+			loadingOverlay = new LoadingOverlay(bounds);
+			View.Add(loadingOverlay);
+			const string APPLICATION_ID = "G7S25vITx0tfeOhODauYKwtauCvzityLwJFGYHPw";
+			const string DOT_NET_ID = "ypPxS2V2rTGl1lNbvEVKUEACKF8PRhWxkWQsbkFe";
+
+			ParseClient.Initialize(APPLICATION_ID, DOT_NET_ID);
+			loadingOverlay.Hide();
 
 			forgotPasswordButton.TouchUpInside += (o, e) =>
 			{
@@ -55,6 +58,7 @@ namespace HookMeUP.iOS
 							
 							ParseObject result = await query.FirstAsync();
 							orderViewController.GetName = result.Get<string>("Name");
+							orderViewController.CurrentUser = result;
 							int vouchers = result.Get<int>("Vouchers");
 							orderViewController.GetVouchers = vouchers;
 							loadingOverlay.Hide();

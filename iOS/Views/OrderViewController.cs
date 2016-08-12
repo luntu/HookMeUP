@@ -12,6 +12,7 @@ namespace HookMeUP.iOS
 
 		public TableSourceOrdering Source { get; set; }
 		double dynamicPrice = 0.00;
+		int voucherUpdate = 0;
 
 		List<string> tableItems = new List<string>() { "Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00",
 		"Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00",
@@ -42,6 +43,7 @@ namespace HookMeUP.iOS
 				 DeductDeselectedOrderPrice(e);
 			 };
 
+		
 
 			Source.onCellSelectedForVouchers += (o, e) =>
 			{
@@ -109,7 +111,7 @@ namespace HookMeUP.iOS
 
 		public string GetName { get; set; } 
 		
-		
+		public ParseObject CurrentUser { get; set; }
 
 		void Order()
 		{
@@ -144,16 +146,23 @@ namespace HookMeUP.iOS
 					viewOrderButton.Enabled = true;
 					AlertPopUp("Order on the way", "Your order will take about " + orderWaitTime.CalculateWaitTime() + " minutes", "OK");
 
+					string[] arrSplit = VouchersLabel.Text.Split(' ');
+					voucherUpdate = int.Parse(arrSplit[0]);
+					System.Diagnostics.Debug.WriteLine(voucherUpdate);
+
 					loadingOverlay = new LoadingOverlay(bounds);
 					View.Add(loadingOverlay);
 
 					try
 					{
+						
 						tableNameOrders["PersonOrdered"] = GetName;
 						tableNameOrders["OrderList"] = items;
 						tableNameOrders["Price"] = prices;
 						tableNameOrders["IsOrderDone"] = false;
+						CurrentUser["Vouchers"] = voucherUpdate;
 						await tableNameOrders.SaveAsync();
+						await CurrentUser.SaveAsync();
 					}
 					catch (ParseException q)
 					{
