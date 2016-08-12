@@ -27,6 +27,7 @@ namespace HookMeUP.iOS
 											select ordersTB;
 
 			IEnumerable<ParseObject> column = await query.FindAsync();
+			loadingOverlay.Hide();
 
 			foreach (ParseObject nameElements in column)
 			{
@@ -35,12 +36,13 @@ namespace HookMeUP.iOS
 				string replacedName = namesColumn.Replace(nameOfCurrentUser, "You");
 				activeOrdersList.Add(replacedName);
 			}
-			loadingOverlay.Hide();
+
 
 			Source = new TableSourceActiveOrders(activeOrdersList);
 
-			ActiveOrdersTable.Source = Source;
 
+			ActiveOrdersTable.Source = Source;
+		
 
 			backOrdersButton.TouchUpInside += (o, e) =>
 			{
@@ -90,7 +92,7 @@ namespace HookMeUP.iOS
 			else {
 				cell.BackgroundColor = UIColor.LightGray;
 			}
-
+			cell.Layer.CornerRadius = 3f;
 			cell.TextLabel.Text = item;
 			cell.DetailTextLabel.Text = "Order number: " + (indexPath.Row+1);
 

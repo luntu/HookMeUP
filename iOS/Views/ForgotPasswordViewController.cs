@@ -12,10 +12,11 @@ namespace HookMeUP.iOS
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
-
+			usernameTextForgot.BecomeFirstResponder();
 			DismissKeyboardOnBackgroundTap();
 			RegisterForKeyboardNotifications();
-
+			ShouldReturn(usernameTextForgot, emailTextForgot);
+			TextFieldKeyboardIteration(usernameTextForgot, emailTextForgot);
 
 			int i = 0;
 

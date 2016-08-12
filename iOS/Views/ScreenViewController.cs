@@ -15,7 +15,7 @@ namespace HookMeUP.iOS
 		public static LoginViewController loginViewController = new LoginViewController();
 		public static ForgotPasswordViewController forgotPasswordViewController = new ForgotPasswordViewController();
 		public static OrderViewController orderViewController = new OrderViewController();
-		public static QueueViewController queueViewController = new QueueViewController();
+		//public static QueueViewController queueViewController = new QueueViewController();
 		public ParseObject tableNameUserInfo = new ParseObject("UserInformation");
 		public ParseObject tableNameOrders = new ParseObject("Orders");
 		public LoadingOverlay loadingOverlay;
@@ -76,6 +76,29 @@ namespace HookMeUP.iOS
 					parameters.Text = string.Empty;
 				}
 			}
+		}
+
+		public void TextFieldKeyboardIteration(params UITextField[] fields) {
+
+			//set Tags
+			for (int i = 0; i < fields.Length; i++) {
+				fields[i].Tag = i;
+			}
+
+			for (int i = 0; i < fields.Length - 1; i++)
+			{
+
+				fields[i].ShouldReturn += (textField) =>
+				{
+
+					int nextTag = (int)textField.Tag + 1;
+					fields[nextTag].BecomeFirstResponder();
+
+					return true;
+				};
+
+			}
+
 		}
 
 		//==============================================================================================================

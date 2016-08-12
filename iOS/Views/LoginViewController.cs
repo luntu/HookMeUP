@@ -22,7 +22,10 @@ namespace HookMeUP.iOS
 
 			DismissKeyboardOnBackgroundTap();
 			RegisterForKeyboardNotifications();
+
+			usernameText.BecomeFirstResponder();
 			ShouldReturn(usernameText, passwordText);
+			TextFieldKeyboardIteration(usernameText, passwordText);
 
 			forgotPasswordButton.TouchUpInside += (o, e) =>
 			{
@@ -65,7 +68,6 @@ namespace HookMeUP.iOS
 
 							   if (i == 3)
 							   {
-
 								   AlertPopUp("Login failed!!", "You failed to login 3 times we suggest \nyou either Register or retrieve lost password", "OK");
 								   BorderButton(registerButton, forgotPasswordButton);
 								   loginButton.Enabled = false;

@@ -23,25 +23,12 @@ namespace HookMeUP.iOS
 			DismissKeyboardOnBackgroundTap();
 			RegisterForKeyboardNotifications();
 			nameText.BecomeFirstResponder();
-			SetTags();
 			SetFields();
 			submitButton.Enabled = true;
 			Values();
 
-
-			for (int i = 0; i < fields.Count-1; i++) {
-
-				fields[i].ShouldReturn += (textField) =>
-				{
-					
-					int nextTag = (int)textField.Tag + 1;
-					fields[nextTag].BecomeFirstResponder();
-
-					return true;
-				};
-
-			}
-
+			TextFieldKeyboardIteration(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
+		
 		
 			usernameTextR.EditingDidEnd += (sender, e) =>
 			{
