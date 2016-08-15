@@ -13,7 +13,7 @@ namespace HookMeUP.iOS
 		public TableSourceOrdering Source { get; set; }
 		double dynamicPrice = 0.00;
 		int voucherUpdate = 0;
-
+		public int time;
 		List<string> tableItems = new List<string>() { "Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00",
 		"Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00",
 		"Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00" };
@@ -21,6 +21,7 @@ namespace HookMeUP.iOS
 		OrderWaitTime orderWaitTime = new OrderWaitTime();
 
 		public int GetVouchers { get; set; }
+
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
@@ -117,7 +118,7 @@ namespace HookMeUP.iOS
 		{
 
 			List<string> items = new List<string>();
-			List<double> prices = new List<double>();
+			double prices = 0;
 			string elements = "";
 
 			foreach (string orderElements in Source.ordersList)
@@ -126,7 +127,7 @@ namespace HookMeUP.iOS
 				string[] splitElements = orderElements.Split('#');
 				elements += splitElements[0] + "\n";
 				items.Add(splitElements[0]);
-				prices.Add(double.Parse(splitElements[1]));
+				prices += double.Parse(splitElements[1]);
 
 			}
 
@@ -142,9 +143,11 @@ namespace HookMeUP.iOS
 				if (e.ButtonIndex == 0)
 				{
 					//submit datadase. Notify Vuyo
+
+
 					orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
-					viewOrderButton.Enabled = true;
-					AlertPopUp("Order on the way", "Your order will take about " + orderWaitTime.CalculateWaitTime() + " minutes", "OK");
+					time = orderWaitTime.CalculateWaitTime();
+					AlertPopUp("Order on the way", "Your order will take about " + time + " minutes", "OK");
 
 					string[] arrSplit = VouchersLabel.Text.Split(' ');
 					voucherUpdate = int.Parse(arrSplit[0]);
@@ -234,9 +237,12 @@ namespace HookMeUP.iOS
 
 			cell.TextLabel.Text = item;
 
-			List<string> images = new List<string>() { "cappuccino.jpg", "Cappuccino1.jpg", "cappuccino2.jpg",
+			List<string> images = new List<string>()
+			{
+				"cappuccino.jpg", "Cappuccino1.jpg", "cappuccino2.jpg",
 				"Cappuccino400.jpg", "CaramelFlan.jpg", "HazelnutCappuccino.jpg", "Unknown12.jpg","Pic1.jpg","Pic2.jpg",
-				"Pic3.jpg","Pic4.jpg","Pic5.jpg","Pic6.jpg","Pic7.jpg","Pic8.jpg"};
+				"Pic3.jpg","Pic4.jpg","Pic5.jpg","Pic6.jpg","Pic7.jpg","Pic8.jpg"
+			};
 
 			Random randomIndex = new Random();
 			int index = randomIndex.Next(0, images.Count);

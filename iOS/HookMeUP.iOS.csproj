@@ -109,6 +109,9 @@
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\unnamed.png" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Default-568h%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -170,7 +173,6 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
-    <BundleResource Include="Resources\Default-568h%402x.png" />
     <BundleResource Include="Resources\.DS_Store" />
     <BundleResource Include="Resources\5503928-Emergency-fire-safety-sign-Stock-Vector-evacuation.jpg" />
     <BundleResource Include="TableImages\cappuccino.jpg" />

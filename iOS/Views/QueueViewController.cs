@@ -19,6 +19,7 @@ namespace HookMeUP.iOS
 			// Perform any additional setup after loading the view, typically from a nib.
 			activeOrdersList = new List<string>();
 
+
 			loadingOverlay = new LoadingOverlay(bounds);
 			View.Add(loadingOverlay);
 
@@ -39,7 +40,7 @@ namespace HookMeUP.iOS
 
 
 			Source = new TableSourceActiveOrders(activeOrdersList);
-
+			Source.GetTime = orderViewController.time;
 
 			ActiveOrdersTable.Source = Source;
 		
@@ -49,6 +50,7 @@ namespace HookMeUP.iOS
 				NavigationController.PopViewController(true);
 			};
 		}
+
 
 		public override void DidReceiveMemoryWarning()
 		{
@@ -65,15 +67,21 @@ namespace HookMeUP.iOS
 		string cellIdentifier = "TableCell";
 		List<string> itemList;
 
+		public TableSourceActiveOrders()
+		{
+		}
+
+		//UITableViewCell specificUserCell;
+
+
 		public TableSourceActiveOrders(List<string> items)
 		{
 			itemList = items;
-			foreach (string g in itemList) 
-			{
-				Debug.WriteLine(g);
-			}
+
 		}
-		
+
+		public int GetTime { get; set; }
+	
 		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
 		{
 			UITableViewCell cell = tableView.DequeueReusableCell(cellIdentifier);
@@ -88,16 +96,31 @@ namespace HookMeUP.iOS
 			if (item.Equals("You"))
 			{
 				cell.BackgroundColor = UIColor.Green;
+				//specificUserCell = cell;
 			}
 			else {
 				cell.BackgroundColor = UIColor.LightGray;
 			}
 			cell.Layer.CornerRadius = 3f;
-			cell.TextLabel.Text = item;
-			cell.DetailTextLabel.Text = "Order number: " + (indexPath.Row+1);
+			cell.TextLabel.Text ="#" + (indexPath.Row + 1) + " " + item;
+			cell.DetailTextLabel.Text = "Time: " + GetTime + " minutes";
 
 			return cell;
 		}
+
+
+
+		//public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+		//{
+		//	if (specificUserCell != null)
+		//	{
+		//		//queue.AlertPopUp("Order list",itemList[indexPath.Row],"OK");
+		//	}
+		//	else 
+		//	{
+		//		ToastIOS.Toast.MakeText("Access denied").Show();
+		//	}
+		//}
 
 		public override nint RowsInSection(UITableView tableview, nint section)
 		{

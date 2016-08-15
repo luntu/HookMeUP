@@ -20,7 +20,8 @@ namespace HookMeUP.iOS
 
 			int i = 0;
 
-			getPasswordButton.TouchUpInside += async(obj, evt) => {
+			getPasswordButton.TouchUpInside += async(obj, evt) => 
+			{
 				
 				i++;
 
@@ -94,6 +95,7 @@ namespace HookMeUP.iOS
 			};
 
 		}
+
 
 		public override void DidReceiveMemoryWarning()
 		{

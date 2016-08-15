@@ -119,6 +119,7 @@ namespace HookMeUP.iOS
 			tableNameUserInfo["Password"] = password;
 			tableNameUserInfo["Email"] = empNo;
 			tableNameUserInfo["Vouchers"] = vouchers;
+			tableNameUserInfo["IsAdmin"] = false;
 
 			await tableNameUserInfo.SaveAsync();
 
