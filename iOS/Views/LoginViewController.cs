@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Parse;
+﻿using Parse;
 namespace HookMeUP.iOS
 {
 	public partial class LoginViewController : ScreenViewController
@@ -11,7 +9,7 @@ namespace HookMeUP.iOS
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
-
+					
 			NavigationController.NavigationBarHidden = true;
 
 			DismissKeyboardOnBackgroundTap();

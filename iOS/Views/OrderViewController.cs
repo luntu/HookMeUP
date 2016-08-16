@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Foundation;
 using Parse;
 using UIKit;
@@ -40,9 +43,9 @@ namespace HookMeUP.iOS
 			};
 
 			Source.onCellDeselectedForPrice += (o, e) =>
-			 {
+			{
 				 DeductDeselectedOrderPrice(e);
-			 };
+			};
 
 		
 
@@ -91,10 +94,6 @@ namespace HookMeUP.iOS
 					}
 					else AlertPopUp("Error", "No order(s) selected", "OK");
 
-
-
-
-
 				}
 				catch (ArgumentOutOfRangeException)
 				{
@@ -118,60 +117,60 @@ namespace HookMeUP.iOS
 		{
 
 			List<string> items = new List<string>();
+
 			double prices = 0;
-			string elements = "";
+			string elementShow = "";
 
 			foreach (string orderElements in Source.ordersList)
 			{
 				
 				string[] splitElements = orderElements.Split('#');
-				elements += splitElements[0] + "\n";
+				elementShow += splitElements[0] + "\n";
 				items.Add(splitElements[0]);
 				prices += double.Parse(splitElements[1]);
 
 			}
 
-
 			UIAlertView alert = new UIAlertView();
 			alert.Title = "Orders selected";
-			alert.Message = elements.Trim();
+			alert.Message = elementShow.Trim();
 			alert.AddButton("Order");
 			alert.AddButton("Cancel");
 
-			alert.Clicked += async (o, e) =>
+			alert.Clicked +=  (o, e) =>
 			{
 				if (e.ButtonIndex == 0)
 				{
 					//submit datadase. Notify Vuyo
-
-
+					var queue = new QueueViewController();
 					orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
 					time = orderWaitTime.CalculateWaitTime();
 					AlertPopUp("Order on the way", "Your order will take about " + time + " minutes", "OK");
 
 					string[] arrSplit = VouchersLabel.Text.Split(' ');
 					voucherUpdate = int.Parse(arrSplit[0]);
-					System.Diagnostics.Debug.WriteLine(voucherUpdate);
+					queue.activeOrdersList = items;
 
-					loadingOverlay = new LoadingOverlay(bounds);
-					View.Add(loadingOverlay);
+					//loadingOverlay = new LoadingOverlay(bounds);
+					//View.Add(loadingOverlay);
+					//try
+					//{
 
-					try
-					{
-						
-						tableNameOrders["PersonOrdered"] = GetName;
-						tableNameOrders["OrderList"] = items;
-						tableNameOrders["Price"] = prices;
-						tableNameOrders["IsOrderDone"] = false;
-						CurrentUser["Vouchers"] = voucherUpdate;
-						await tableNameOrders.SaveAsync();
-						await CurrentUser.SaveAsync();
-					}
-					catch (ParseException q)
-					{
-						Console.WriteLine(q.StackTrace);
-					}
-					loadingOverlay.Hide();
+					//tableNameOrders["PersonOrdered"] = GetName;
+					//tableNameOrders["OrderList"] = items;
+					//tableNameOrders["Price"] = prices;
+					//tableNameOrders["IsOrderDone"] = false;
+					//CurrentUser["Vouchers"] = voucherUpdate;
+					//await tableNameOrders.SaveAsync();
+					//await CurrentUser.SaveAsync();
+
+					//}
+					//catch (ParseException q)
+					//{
+					//	 System.Diagnostics.Debug.WriteLine(q.StackTrace);
+					//}
+					//loadingOverlay.Hide();
+
 
 				}
 
@@ -335,8 +334,6 @@ namespace HookMeUP.iOS
 			return time;
 		}
 
-		public void UpdateToDB() { }
-		public int GetTimeFromDB { get; set; }
 	}
 
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Foundation;
 using UIKit;
 
 namespace HookMeUP.iOS
@@ -20,9 +20,6 @@ namespace HookMeUP.iOS
 	
 
 
-
-			 
-			//{  };
 		}
 
 		public override void DidReceiveMemoryWarning()
@@ -32,6 +29,19 @@ namespace HookMeUP.iOS
 		}
 
 
+	}
+
+	class TableSourceAdmin : UITableViewSource
+	{
+		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override nint RowsInSection(UITableView tableview, nint section)
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 
