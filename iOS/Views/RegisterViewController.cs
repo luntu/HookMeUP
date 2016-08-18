@@ -2,6 +2,8 @@
 using UIKit;
 using Parse;
 using ToastIOS;
+using CoreGraphics;
+using System;
 
 namespace HookMeUP.iOS
 {
@@ -9,9 +11,7 @@ namespace HookMeUP.iOS
 	{
 		
 		List<UITextField> fields = new List<UITextField>();
-		List<string> values = new List<string>();
-			
-
+		List<string> usernameCheck = new List<string>();
 
 
 		public override void ViewDidLoad()
@@ -32,22 +32,39 @@ namespace HookMeUP.iOS
 		
 			usernameTextR.EditingDidEnd += (sender, e) =>
 			{
-				if (values.Contains(usernameTextR.Text))
+				if (usernameCheck.Contains(usernameTextR.Text))
 				{
 					Toast.MakeText("Someone already has that username").Show();
-					usernameTextR.Layer.BorderColor = UIColor.Red.CGColor;
-					usernameTextR.Layer.BorderWidth = 1;
-					usernameTextR.Layer.CornerRadius = 3;
+					Border(UIColor.Red.CGColor, usernameTextR);
 				
 					submitButton.Enabled = false;
 				}
 				else
 				{
+					Border(UIColor.Clear.CGColor, usernameTextR);
 					submitButton.Enabled = true;
-					usernameTextR.Layer.BorderColor = UIColor.Clear.CGColor;
+			
 				}
 			};
 
+			verifyPasswordText.EditingDidEnd += (sender, e) => 
+			{
+				if (!passwordTextR.Text.Equals(verifyPasswordText.Text))
+				{
+					Toast.MakeText("Username and password don't match").Show();
+					Border(UIColor.Red.CGColor,passwordTextR, verifyPasswordText);
+
+					submitButton.Enabled = false;
+
+				}
+				else 
+				{
+					Border(UIColor.Clear.CGColor,passwordTextR,verifyPasswordText);	
+					submitButton.Enabled = true;
+
+				}
+
+			};
 
 
 			submitButton.TouchUpInside += (sender, evt) => 
@@ -61,24 +78,13 @@ namespace HookMeUP.iOS
 
 				if (!name.Equals("") && !surname.Equals("") && !username.Equals("") && !password.Equals("") && !verifyPasswordText.Text.Equals("") && !empNo.Equals(""))
 				{
-					if (password.Equals(verifyPasswordText.Text))
-					{
-						verifyPasswordText.Layer.BorderColor = UIColor.Clear.CGColor;
-						passwordTextR.Layer.BorderColor = UIColor.Clear.CGColor;
+					
 						AddToDB(name, surname, username, password, empNo,23);
 						NavigationController.PopViewController(true);
 						AlertPopUp("Done!!!", "Registration complete", "OK");
 						ClearFields(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
 						isRegisteredSuccessful = true;
-					}
-					else 
-					{
-						ErrorBorder(verifyPasswordText, passwordTextR);
-						AlertPopUp("Registering failed!!!", "passwords do not match", "OK");
-						passwordTextR.Highlighted = true;
-						verifyPasswordText.Highlighted = true;
-						isRegisteredSuccessful = false;
-					}
+				
 				}
 
 				else {
@@ -98,14 +104,15 @@ namespace HookMeUP.iOS
 			};
 		}
 
-		private void ErrorBorder(params UITextField[] textF) 
+		void Border(CGColor color, params UITextField[] textF) 
 		{
 			foreach (UITextField field in textF) {
-				field.Layer.BorderColor = UIColor.Red.CGColor;
+				field.Layer.BorderColor = color;
 				field.Layer.BorderWidth = 1;
 				field.Layer.CornerRadius = 3;
 			}
 		}
+
 		public bool isRegisteredSuccessful { get;set;}
 			
 		async void AddToDB(string name,string surname, string username, string password,string empNo,int vouchers)
@@ -161,7 +168,7 @@ namespace HookMeUP.iOS
 			foreach (ParseObject element in coll)
 			{
 
-				values.Add(element.Get<string>("Username"));
+				usernameCheck.Add(element.Get<string>("Username"));
 
 			}
 			loadingOverlay.Hide();

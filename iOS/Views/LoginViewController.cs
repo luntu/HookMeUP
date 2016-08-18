@@ -1,4 +1,5 @@
-﻿using Parse;
+﻿using System;
+using Parse;
 namespace HookMeUP.iOS
 {
 	public partial class LoginViewController : ScreenViewController
@@ -22,6 +23,8 @@ namespace HookMeUP.iOS
 
 			loadingOverlay = new LoadingOverlay(bounds);
 			View.Add(loadingOverlay);
+
+
 			const string APPLICATION_ID = "G7S25vITx0tfeOhODauYKwtauCvzityLwJFGYHPw";
 			const string DOT_NET_ID = "ypPxS2V2rTGl1lNbvEVKUEACKF8PRhWxkWQsbkFe";
 
@@ -96,6 +99,7 @@ namespace HookMeUP.iOS
 			registerButton.TouchUpInside += (o, e) =>
 			{
 
+
 				NavigationScreenController(registerViewController);
 				ClearFields(usernameText, passwordText);
 
@@ -103,6 +107,7 @@ namespace HookMeUP.iOS
 
 		}
 
+	
 		public override void DidReceiveMemoryWarning()
 		{
 			base.DidReceiveMemoryWarning();

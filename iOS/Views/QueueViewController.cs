@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Foundation;
+using Parse;
 using UIKit;
 
 namespace HookMeUP.iOS
@@ -8,43 +9,42 @@ namespace HookMeUP.iOS
 	public partial class QueueViewController : ScreenViewController
 	{
 
-		public List<string> activeOrdersList { get; set; }
+		public List<string> ActiveOrdersList = new List<string>();
 		public TableSourceActiveOrders Source { get; set; }
 
-		public override void ViewDidLoad()
+
+
+
+		public override async void ViewDidLoad()
 		{
 			base.ViewDidLoad();
-
 			// Perform any additional setup after loading the view, typically from a nib.
 
+			loadingOverlay = new LoadingOverlay(bounds);
+			View.Add(loadingOverlay);
+
+			ParseQuery<ParseObject> query = from ordersTB in ParseObject.GetQuery("Orders")
+											where ordersTB.Get<bool>("IsOrderDone") == false
+											select ordersTB;
+
+			IEnumerable<ParseObject> column = await query.FindAsync();
+			loadingOverlay.Hide();
+
+			foreach (ParseObject nameElements in column)
+			{
+				string nameOfCurrentUser = orderViewController.GetName;
+				string namesColumn = nameElements.Get<string>("PersonOrdered");
+				string replacedName = namesColumn.Replace(nameOfCurrentUser, "You");
+				string time = nameElements.Get<string>("Time");
+				ActiveOrdersList.Add(replacedName + "#" + time);
+			}
 
 
-			//loadingOverlay = new LoadingOverlay(bounds);
-			//View.Add(loadingOverlay);
-
-			//ParseQuery<ParseObject> query = from ordersTB in ParseObject.GetQuery("Orders")
-			//								where ordersTB.Get<bool>("IsOrderDone") == false
-			//								select ordersTB;
-
-			//IEnumerable<ParseObject> column = await query.FindAsync();
-			//loadingOverlay.Hide();
-
-			//foreach (ParseObject nameElements in column)
-			//{
-			//	string nameOfCurrentUser = orderViewController.GetName;
-			//	string namesColumn = nameElements.Get<string>("PersonOrdered");
-			//	string replacedName = namesColumn.Replace(nameOfCurrentUser, "You");
-			//	activeOrdersList.Add(replacedName);
-			//}
-
-
-		
-
-			Source = new TableSourceActiveOrders(activeOrdersList);
-			Source.GetTime = orderViewController.time;
+			Source = new TableSourceActiveOrders(ActiveOrdersList);
+			//            Source.GetTime = orderViewController.time;
 
 			ActiveOrdersTable.Source = Source;
-		
+
 
 			backOrdersButton.TouchUpInside += (o, e) =>
 			{
@@ -63,58 +63,56 @@ namespace HookMeUP.iOS
 
 
 
-	//public class TableSourceActiveOrders : UITableViewSource
-	//{
-	//	string cellIdentifier = "TableCell";
-	//	List<string> itemList;
+	public class TableSourceActiveOrders : UITableViewSource
+	{
+		string cellIdentifier = "TableCell";
+		List<string> itemList;
 
 	
-	//	public TableSourceActiveOrders(List<string> items)
-	//	{
-	//		itemList = items;
+		public TableSourceActiveOrders(List<string> items)
+		{
+			itemList = items;
 
-	//	}
-
-	//	public int GetTime { get; set; }
+		}
 	
-	//	public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
-	//	{
-	//		UITableViewCell cell = tableView.DequeueReusableCell(cellIdentifier);
-	//		string item = itemList[indexPath.Row];
+		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+		{
+			UITableViewCell cell = tableView.DequeueReusableCell(cellIdentifier);
+			string item = itemList[indexPath.Row];
+			string[] split = item.Split('#');
+			if (cell == null)
+			{
+				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
 
-	//		if (cell == null)
-	//		{
-	//			cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
+			}
 
-	//		}
+			if (split[0].Equals("You"))
+			{
+				cell.BackgroundColor = UIColor.Green;
+			}
+			else {
+				cell.BackgroundColor = UIColor.LightGray;
+			}
+			cell.Layer.CornerRadius = 3f;
+			cell.TextLabel.Text ="#" + (indexPath.Row + 1) + " " + split[0];
+			cell.DetailTextLabel.Text = "Time: " + split[1] + " minutes";
 
-	//		if (item.Equals("You"))
-	//		{
-	//			cell.BackgroundColor = UIColor.Green;
-	//		}
-	//		else {
-	//			cell.BackgroundColor = UIColor.LightGray;
-	//		}
-	//		cell.Layer.CornerRadius = 3f;
-	//		cell.TextLabel.Text ="#" + (indexPath.Row + 1) + " " + item;
-	//		cell.DetailTextLabel.Text = "Time: " + GetTime + " minutes";
-
-	//		return cell;
-	//	}
-
-
+			return cell;
+		}
 
 
-	//	public override nint RowsInSection(UITableView tableview, nint section)
-	//	{
-	//		return 1;//itemList.Count;
-	//	}
 
-	//	public override string TitleForHeader(UITableView tableView, nint section)
-	//	{
-	//		return "Active orders\n";
-	//	}
-	//}
+
+		public override nint RowsInSection(UITableView tableview, nint section)
+		{
+			return itemList.Count;
+		}
+
+		public override string TitleForHeader(UITableView tableView, nint section)
+		{
+			return "Active orders\n";
+		}
+	}
 }
 
 

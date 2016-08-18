@@ -1,25 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using Foundation;
 using UIKit;
 
 namespace HookMeUP.iOS
 {
-	public partial class AdminViewController : UIViewController
+	public partial class AdminViewController : ScreenViewController
 	{
 
 
-
-		public AdminViewController() : base("AdminViewController", null)
-		{
-		}
+		public List<string> AdminGetOrders { get; set; }
 
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
 	
-
-
 		}
 
 		public override void DidReceiveMemoryWarning()

@@ -12,6 +12,8 @@ namespace HookMeUP.iOS
 	public partial class ScreenViewController : UIViewController
 	{
 
+		public static AdminViewController adminViewController = new AdminViewController();
+		public static QueueViewController queueViewController = new QueueViewController();
 		public static RegisterViewController registerViewController = new RegisterViewController();
 		public static LoginViewController loginViewController = new LoginViewController();
 		public static ForgotPasswordViewController forgotPasswordViewController = new ForgotPasswordViewController();

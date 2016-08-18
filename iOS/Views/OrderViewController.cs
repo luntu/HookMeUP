@@ -17,6 +17,7 @@ namespace HookMeUP.iOS
 		double dynamicPrice = 0.00;
 		int voucherUpdate = 0;
 		public int time;
+		public List<string> items;
 		List<string> tableItems = new List<string>() { "Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00",
 		"Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00",
 		"Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00" };
@@ -116,7 +117,7 @@ namespace HookMeUP.iOS
 		void Order()
 		{
 
-			List<string> items = new List<string>();
+			items = new List<string>();
 
 			double prices = 0;
 			string elementShow = "";
@@ -137,44 +138,50 @@ namespace HookMeUP.iOS
 			alert.AddButton("Order");
 			alert.AddButton("Cancel");
 
-			alert.Clicked +=  (o, e) =>
-			{
-				if (e.ButtonIndex == 0)
-				{
-					//submit datadase. Notify Vuyo
-					var queue = new QueueViewController();
-					orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
-					time = orderWaitTime.CalculateWaitTime();
-					AlertPopUp("Order on the way", "Your order will take about " + time + " minutes", "OK");
-
-					string[] arrSplit = VouchersLabel.Text.Split(' ');
-					voucherUpdate = int.Parse(arrSplit[0]);
-					queue.activeOrdersList = items;
-
-					//loadingOverlay = new LoadingOverlay(bounds);
-					//View.Add(loadingOverlay);
-					//try
-					//{
-
-					//tableNameOrders["PersonOrdered"] = GetName;
-					//tableNameOrders["OrderList"] = items;
-					//tableNameOrders["Price"] = prices;
-					//tableNameOrders["IsOrderDone"] = false;
-					//CurrentUser["Vouchers"] = voucherUpdate;
-					//await tableNameOrders.SaveAsync();
-					//await CurrentUser.SaveAsync();
-
-					//}
-					//catch (ParseException q)
-					//{
-					//	 System.Diagnostics.Debug.WriteLine(q.StackTrace);
-					//}
-					//loadingOverlay.Hide();
+			alert.Clicked += async (o, e) =>
+		   {
+			   if (e.ButtonIndex == 0)
+			   {
+				   //submit datadase. Notify Vuyo
 
 
-				}
+				   orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
+				   time = orderWaitTime.CalculateWaitTime();
+				   AlertPopUp("Order on the way", "Your order will take about " + time + " minutes", "OK");
 
-			};
+
+				   //		var sendOrderToQueue = new QueueViewController(items);
+
+				   string[] arrSplit = VouchersLabel.Text.Split(' ');
+				   voucherUpdate = int.Parse(arrSplit[0]);
+
+
+				   loadingOverlay = new LoadingOverlay(bounds);
+				   View.Add(loadingOverlay);
+				  
+				   try
+				   {
+
+					   tableNameOrders["PersonOrdered"] = GetName;
+					   tableNameOrders["OrderList"] = items;
+					   tableNameOrders["Price"] = prices;
+					   tableNameOrders["IsOrderDone"] = false;
+					   tableNameOrders["Time"] = ""+time;
+					   CurrentUser["Vouchers"] = voucherUpdate;
+					   await tableNameOrders.SaveAsync();
+					   await CurrentUser.SaveAsync();
+
+				   }
+				   catch (ParseException q)
+				   {
+					   System.Diagnostics.Debug.WriteLine(q.StackTrace);
+				   }
+				   loadingOverlay.Hide();
+
+
+			   }
+
+		   };
 			alert.Show();
 
 		}
