@@ -23,8 +23,6 @@
 	<string>LaunchScreen</string>
 	<key>UIMainNibFile</key>
 	<string>LoginViewController</string>
-	<key>UIMainStoryboardFile~ipad</key>
-	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
