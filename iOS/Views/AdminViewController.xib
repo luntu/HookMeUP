@@ -16,16 +16,16 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Cct-L4-1Se">
-                    <rect key="frame" x="8" y="79" width="284" height="373"/>
+                    <rect key="frame" x="8" y="79" width="304" height="373"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
             </subviews>
             <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="Cct-L4-1Se" secondAttribute="trailing" constant="28" id="77f-jk-FfU"/>
-                <constraint firstAttribute="bottom" secondItem="Cct-L4-1Se" secondAttribute="bottom" constant="28" id="OU5-o3-Xmt"/>
-                <constraint firstItem="Cct-L4-1Se" firstAttribute="leading" secondItem="2" secondAttribute="leadingMargin" id="UDL-Eo-Dus"/>
-                <constraint firstItem="Cct-L4-1Se" firstAttribute="top" secondItem="2" secondAttribute="top" constant="79" id="nnn-wb-0MU"/>
+                <constraint firstItem="Cct-L4-1Se" firstAttribute="leading" secondItem="2" secondAttribute="leadingMargin" id="Bjq-nF-Aow"/>
+                <constraint firstItem="Cct-L4-1Se" firstAttribute="trailing" secondItem="2" secondAttribute="trailingMargin" id="DgC-8g-c7U"/>
+                <constraint firstItem="Cct-L4-1Se" firstAttribute="top" secondItem="2" secondAttribute="top" constant="79" id="jR1-Vj-4v1"/>
+                <constraint firstAttribute="bottom" secondItem="Cct-L4-1Se" secondAttribute="bottom" constant="28" id="z2X-WL-Blp"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
         </view>
