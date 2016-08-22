@@ -32,11 +32,6 @@
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="748" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h4k-2R-6ql">
-                                    <rect key="frame" x="20" y="371" width="137" height="26"/>
-                                    <fontDescription key="fontDescription" type="italicSystem" pointSize="15"/>
-                                    <state key="normal" title="Forgot password"/>
-                                </button>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2Gq-6q-nzf">
                                     <rect key="frame" x="169" y="319" width="132" height="30"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -79,6 +74,14 @@
                                     <color key="textColor" red="0.74827724358974357" green="0.60404121649914644" blue="0.34773039051255999" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="748" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h4k-2R-6ql">
+                                    <rect key="frame" x="20" y="371" width="137" height="26"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="137" id="KA5-IL-BLt"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="italicSystem" pointSize="15"/>
+                                    <state key="normal" title="Forgot password"/>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" red="1" green="0.97050247639999998" blue="0.89525226889999998" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
@@ -87,13 +90,13 @@
                                 <constraint firstItem="hF5-Gy-QFD" firstAttribute="leading" secondItem="VEK-C2-874" secondAttribute="leading" constant="26" id="1xi-CA-bKQ"/>
                                 <constraint firstItem="SK7-3s-bHt" firstAttribute="leading" secondItem="VEK-C2-874" secondAttribute="leading" constant="33" id="3nH-4m-wGs"/>
                                 <constraint firstItem="5at-Jx-nOV" firstAttribute="top" secondItem="Apa-M3-DLp" secondAttribute="bottom" constant="17" id="6b5-hh-zen"/>
+                                <constraint firstAttribute="bottom" secondItem="h4k-2R-6ql" secondAttribute="bottom" constant="83" id="7eA-rR-93w"/>
                                 <constraint firstItem="hF5-Gy-QFD" firstAttribute="top" secondItem="VEK-C2-874" secondAttribute="top" constant="71" id="8Et-xT-8pb"/>
                                 <constraint firstItem="Apa-M3-DLp" firstAttribute="centerX" secondItem="5at-Jx-nOV" secondAttribute="centerX" id="CYy-za-EcE"/>
                                 <constraint firstItem="4L5-9h-gOO" firstAttribute="top" secondItem="VEK-C2-874" secondAttribute="top" constant="26" id="Ff3-Ba-Z7O"/>
                                 <constraint firstAttribute="trailing" secondItem="4L5-9h-gOO" secondAttribute="trailing" constant="38" id="HSn-VE-WEe"/>
-                                <constraint firstItem="h4k-2R-6ql" firstAttribute="top" secondItem="1mZ-dW-wuH" secondAttribute="bottom" constant="22" id="Htx-ji-cPH"/>
                                 <constraint firstItem="1mZ-dW-wuH" firstAttribute="leading" secondItem="SK7-3s-bHt" secondAttribute="leading" id="JLU-qX-aGI"/>
-                                <constraint firstAttribute="trailing" secondItem="h4k-2R-6ql" secondAttribute="trailing" constant="163" id="NrL-Ca-oMa"/>
+                                <constraint firstItem="h4k-2R-6ql" firstAttribute="leading" secondItem="VEK-C2-874" secondAttribute="leading" constant="20" symbolic="YES" id="JpW-s6-Gp7"/>
                                 <constraint firstAttribute="trailing" secondItem="ani-iY-oSS" secondAttribute="trailing" constant="19" id="Nxb-bp-ga0"/>
                                 <constraint firstAttribute="bottom" secondItem="5at-Jx-nOV" secondAttribute="bottom" constant="47" id="OIq-1x-Ep5"/>
                                 <constraint firstItem="4L5-9h-gOO" firstAttribute="leading" secondItem="SK7-3s-bHt" secondAttribute="leading" constant="-7" id="X59-H1-Fl5"/>
@@ -105,11 +108,10 @@
                                 <constraint firstItem="Apa-M3-DLp" firstAttribute="trailing" secondItem="4L5-9h-gOO" secondAttribute="trailing" constant="7" id="goP-E6-7H0"/>
                                 <constraint firstItem="1mZ-dW-wuH" firstAttribute="trailing" secondItem="SK7-3s-bHt" secondAttribute="trailing" id="hF8-uH-6F9"/>
                                 <constraint firstItem="2Gq-6q-nzf" firstAttribute="leading" secondItem="1mZ-dW-wuH" secondAttribute="trailing" constant="57" id="kqn-Gd-rHQ"/>
+                                <constraint firstItem="h4k-2R-6ql" firstAttribute="top" secondItem="1mZ-dW-wuH" secondAttribute="bottom" constant="22" id="lcA-ct-ZWc"/>
                                 <constraint firstItem="1mZ-dW-wuH" firstAttribute="leading" secondItem="VEK-C2-874" secondAttribute="leading" constant="33" id="rgP-2R-LIi"/>
-                                <constraint firstAttribute="bottom" secondItem="h4k-2R-6ql" secondAttribute="bottom" constant="83" id="tsP-3r-ne3"/>
                                 <constraint firstItem="2Gq-6q-nzf" firstAttribute="leading" secondItem="ani-iY-oSS" secondAttribute="leading" id="uCU-8P-w7Y"/>
                                 <constraint firstItem="1mZ-dW-wuH" firstAttribute="top" secondItem="SK7-3s-bHt" secondAttribute="bottom" constant="26" id="vXw-Tl-ZEC"/>
-                                <constraint firstItem="h4k-2R-6ql" firstAttribute="leading" secondItem="VEK-C2-874" secondAttribute="leading" constant="20" id="zEb-zJ-leG"/>
                             </constraints>
                         </view>
                     </subviews>

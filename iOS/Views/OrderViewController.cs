@@ -103,11 +103,14 @@ namespace HookMeUP.iOS
 
 			};
 
-			viewOrderButton.TouchUpInside +=(o,e) =>{
-				NavigationScreenController(new QueueViewController());
+			viewOrderButton.TouchUpInside +=(o,e) =>
+			{
+				
+				NavigationScreenController(queueViewController);
 			};
 
 		}
+
 
 
 		public string GetName { get; set; } 
@@ -150,7 +153,7 @@ namespace HookMeUP.iOS
 				   AlertPopUp("Order on the way", "Your order will take about " + time + " minutes", "OK");
 
 
-				   //		var sendOrderToQueue = new QueueViewController(items);
+				   //	var sendOrderToQueue = new QueueViewController(items);
 
 				   string[] arrSplit = VouchersLabel.Text.Split(' ');
 				   voucherUpdate = int.Parse(arrSplit[0]);

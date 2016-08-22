@@ -15,13 +15,24 @@ namespace HookMeUP.iOS
 
 
 
-		public override async void ViewDidLoad()
+		public override  void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
 
+			backOrdersButton.TouchUpInside += (o, e) =>
+			{
+				NavigationController.PopViewController(true);
+			};
+		}
+
+		public async override void ViewDidAppear(bool animated)
+		{
+
 			loadingOverlay = new LoadingOverlay(bounds);
 			View.Add(loadingOverlay);
+
+			ActiveOrdersList.Clear();
 
 			ParseQuery<ParseObject> query = from ordersTB in ParseObject.GetQuery("Orders")
 											where ordersTB.Get<bool>("IsOrderDone") == false
@@ -39,18 +50,13 @@ namespace HookMeUP.iOS
 				ActiveOrdersList.Add(replacedName + "#" + time);
 			}
 
-
 			Source = new TableSourceActiveOrders(ActiveOrdersList);
-			//            Source.GetTime = orderViewController.time;
-
 			ActiveOrdersTable.Source = Source;
-
-
-			backOrdersButton.TouchUpInside += (o, e) =>
-			{
-				NavigationController.PopViewController(true);
-			};
+			ActiveOrdersTable.ReloadData();
 		}
+
+
+
 
 
 		public override void DidReceiveMemoryWarning()
@@ -112,6 +118,8 @@ namespace HookMeUP.iOS
 		{
 			return "Active orders\n";
 		}
+
+
 	}
 }
 
