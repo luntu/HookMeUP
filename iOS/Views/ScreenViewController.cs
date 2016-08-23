@@ -24,6 +24,10 @@ namespace HookMeUP.iOS
 		public CGRect bounds = UIScreen.MainScreen.Bounds;
 
 
+		public string TrimInput(string input) 
+		{
+			return input.Trim();
+		}
 
 		public void AlertPopUp(string title, string message, params string[] buttonText)
 		{

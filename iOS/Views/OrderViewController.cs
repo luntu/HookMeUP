@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using Foundation;
 using Parse;
@@ -14,7 +15,7 @@ namespace HookMeUP.iOS
 		int voucherUpdate = 0;
 		public int time;
 		public List<string> items;
-		List<string> tableItems = new List<string> {"Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00",
+		List<string> tableItems = new List<string> {"Espresso#15,00", "Red Espresso#15.50", "Cappuccino#19.00",
 		"Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00",
 		"Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00" };
 
@@ -148,13 +149,9 @@ namespace HookMeUP.iOS
 			   {
 				   //submit datadase. Notify Vuyo
 
-
 				   orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
 				   time = orderWaitTime.CalculateWaitTime();
 				   AlertPopUp("Order on the way", "Your order will take about " + time + " minutes", "OK");
-
-
-				   //	var sendOrderToQueue = new QueueViewController(items);
 
 				   string[] arrSplit = VouchersLabel.Text.Split(' ');
 				   voucherUpdate = int.Parse(arrSplit[0]);
@@ -178,7 +175,7 @@ namespace HookMeUP.iOS
 				   }
 				   catch (ParseException q)
 				   {
-					   System.Diagnostics.Debug.WriteLine(q.StackTrace);
+					  Debug.WriteLine(q.StackTrace);
 				   }
 
 				   loadingOverlay.Hide();
@@ -253,7 +250,7 @@ namespace HookMeUP.iOS
 
 			cell.TextLabel.Text = item;
 
-			List<string> images = new List<string>()
+			List<string> images = new List<string>
 			{
 				"cappuccino.jpg", "Cappuccino1.jpg", "cappuccino2.jpg",
 				"Cappuccino400.jpg", "CaramelFlan.jpg", "HazelnutCappuccino.jpg", "Unknown12.jpg","Pic1.jpg","Pic2.jpg",
@@ -285,11 +282,16 @@ namespace HookMeUP.iOS
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
 			ordersList.Add(tableItems[indexPath.Row]);
-			string[] splitForPrice = tableItems[indexPath.Row].Split('#');
-			 
-			string  priceAmount = FormatPrice(splitForPrice[1]);
 
-			price = double.Parse(priceAmount);
+			string[] splitForPrice = tableItems[indexPath.Row].Split('#');
+
+			string priceAmount = splitForPrice[1];
+
+			Debug.WriteLine(priceAmount);
+
+			price = Convert.ToDouble(priceAmount);
+
+			Debug.WriteLine(price);
 
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);

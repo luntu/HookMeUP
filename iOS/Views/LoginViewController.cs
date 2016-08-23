@@ -53,8 +53,8 @@ namespace HookMeUP.iOS
 							View.Add(loadingOverlay);
 
 							ParseQuery<ParseObject> query = from userInformation in ParseObject.GetQuery("UserInformation")
-														   	where userInformation.Get<string>("Username") == usernameText.Text
-															&& userInformation.Get<string>("Password") == passwordText.Text
+								                            where userInformation.Get<string>("Username") == TrimInput(usernameText.Text)
+							                                && userInformation.Get<string>("Password") == TrimInput(passwordText.Text)
 														   	select userInformation;
 							
 							ParseObject result = await query.FirstAsync();
@@ -67,7 +67,8 @@ namespace HookMeUP.iOS
 							NavigationScreenController(orderViewController);
 
 						   }
-						   catch (ParseException) {
+						   catch (ParseException)
+						   {
 							loadingOverlay.Hide();
 							   AlertPopUp("Login failed","Username or password incorrect","OK");
 
@@ -77,7 +78,7 @@ namespace HookMeUP.iOS
 								   BorderButton(registerButton, forgotPasswordButton);
 								   loginButton.Enabled = false;
 							   }
-							}
+						    }
 
 					   break;
 

@@ -32,7 +32,7 @@ namespace HookMeUP.iOS
 		
 			usernameTextR.EditingDidEnd += (sender, e) =>
 			{
-				if (usernameCheck.Contains(usernameTextR.Text))
+				if (usernameCheck.Contains(TrimInput(usernameTextR.Text)))
 				{
 					Toast.MakeText("Someone already has that username").Show();
 					Border(UIColor.Red.CGColor, usernameTextR);
@@ -49,7 +49,7 @@ namespace HookMeUP.iOS
 
 			verifyPasswordText.EditingDidEnd += (sender, e) => 
 			{
-				if (!passwordTextR.Text.Equals(verifyPasswordText.Text))
+				if (!TrimInput(passwordTextR.Text).Equals(TrimInput(verifyPasswordText.Text)))
 				{
 					Toast.MakeText("Username and password don't match").Show();
 					Border(UIColor.Red.CGColor,passwordTextR, verifyPasswordText);
@@ -70,11 +70,11 @@ namespace HookMeUP.iOS
 			submitButton.TouchUpInside += (sender, evt) => 
 			{
 				 
-				string name = nameText.Text;
-				string surname = surnameText.Text;
-				string username = usernameTextR.Text;
-				string password = passwordTextR.Text;
-				string empNo = emailText.Text;
+				string name = TrimInput(nameText.Text);
+				string surname = TrimInput(surnameText.Text);
+				string username = TrimInput(usernameTextR.Text);
+				string password = TrimInput(passwordTextR.Text);
+				string empNo = TrimInput(emailText.Text);
 
 				if (!name.Equals("") && !surname.Equals("") && !username.Equals("") && !password.Equals("") && !verifyPasswordText.Text.Equals("") && !empNo.Equals(""))
 				{
