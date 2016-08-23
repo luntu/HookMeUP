@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using Foundation;
 using Parse;
 using UIKit;
@@ -12,13 +9,12 @@ namespace HookMeUP.iOS
 {
 	public partial class OrderViewController : ScreenViewController
 	{
-
 		public TableSourceOrdering Source { get; set; }
 		double dynamicPrice = 0.00;
 		int voucherUpdate = 0;
 		public int time;
 		public List<string> items;
-		List<string> tableItems = new List<string>() { "Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00",
+		List<string> tableItems = new List<string> {"Espresso#15.00", "Red Espresso#15.50", "Cappuccino#19.00",
 		"Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00",
 		"Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00" };
 
@@ -48,38 +44,44 @@ namespace HookMeUP.iOS
 				 DeductDeselectedOrderPrice(e);
 			};
 
-		
+			int detectVoucher = 0;
 
 			Source.onCellSelectedForVouchers += (o, e) =>
 			{
 				e--;
 
-				if (e >= 0)
+
+				if (e < 0)
+				{
+					detectVoucher++;
+					ToastIOS.Toast.MakeText("Vouchers depleted\nCash Time").Show();
+
+				}
+				else 
 				{
 					VouchersLabel.Text = e + " Vouchers";
 					Source.Voucher = VouchersLabel.Text;
-
 				}
-				else
-				{
-					//disableCell(this, (UITableView)o);
-				
-				} 
-					
-					
-				};
+			};
 
 			Source.onCellDeselectedForVouchers += (o, e) =>
+			{
+
+				if (detectVoucher == 0)
 				{
 					e++;
 					VouchersLabel.Text = e + " Vouchers";
 					Source.Voucher = VouchersLabel.Text;
-				};
+					ordersTable.BackgroundColor = UIColor.Clear;
 
 
+				}
+				else detectVoucher--;
+
+			};
 
 
-
+		
 			hookMeUPButton.TouchUpInside += (obj, evt) =>
 			{
 				// getting orders
@@ -89,7 +91,6 @@ namespace HookMeUP.iOS
 					
 					if (Source.ordersList != null && !Source.ordersList[0].Equals(""))
 					{
-
 						Order();
 
 					}
@@ -142,7 +143,7 @@ namespace HookMeUP.iOS
 			alert.AddButton("Cancel");
 
 			alert.Clicked += async (o, e) =>
-		   {
+		    {
 			   if (e.ButtonIndex == 0)
 			   {
 				   //submit datadase. Notify Vuyo
@@ -179,28 +180,30 @@ namespace HookMeUP.iOS
 				   {
 					   System.Diagnostics.Debug.WriteLine(q.StackTrace);
 				   }
+
 				   loadingOverlay.Hide();
 
 
 			   }
 
-		   };
+		    };
 			alert.Show();
 
 		}
 
 		public void DisplaySelectedOrderPrice(double price)
 		{
+
 			dynamicPrice += price;
-			costText.Text = dynamicPrice.ToString("R 0.00");
+			costText.Text = "" + dynamicPrice;
 
 		}
+
 		public void DeductDeselectedOrderPrice(double price)
 		{
 			dynamicPrice -= price;
-			costText.Text = dynamicPrice.ToString("R 0.00");
+			costText.Text = "" + dynamicPrice;
 		}
-
 
 	}
 
@@ -228,7 +231,11 @@ namespace HookMeUP.iOS
 			tableItems = items;
 		}
 
-
+		public int NumberOfItemsForCash 
+		{
+			get;
+			set;
+		}
 
 		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
 		{
@@ -279,7 +286,11 @@ namespace HookMeUP.iOS
 		{
 			ordersList.Add(tableItems[indexPath.Row]);
 			string[] splitForPrice = tableItems[indexPath.Row].Split('#');
-			price = double.Parse(splitForPrice[1]);
+			 
+			string  priceAmount = FormatPrice(splitForPrice[1]);
+
+			price = double.Parse(priceAmount);
+
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);
 
@@ -299,8 +310,10 @@ namespace HookMeUP.iOS
 		{
 
 			string[] split = tableItems[indexPath.Row].Split('#');
-			price = double.Parse(split[1]);
 
+			string priceAmount = FormatPrice(split[1]);
+			price = double.Parse(priceAmount);
+		
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);
 		
@@ -321,6 +334,10 @@ namespace HookMeUP.iOS
 		public override string TitleForHeader(UITableView tableView, nint section)
 		{
 			return "Order List\n";
+		}
+
+		string FormatPrice(string s) {
+			return s.Replace(".", ",");
 		}
 
 	}
