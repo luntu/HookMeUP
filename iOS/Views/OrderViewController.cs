@@ -15,9 +15,13 @@ namespace HookMeUP.iOS
 		int voucherUpdate = 0;
 		public int time;
 		public List<string> items;
-		List<string> tableItems = new List<string> {"Espresso#15,00", "Red Espresso#15.50", "Cappuccino#19.00",
-		"Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00", "Latte#22.50", "Red Latte#20.00",
-		"Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00" };
+		public int detectVoucher = 0;
+		public double getPrice;
+		List<string> tableItems = new List<string> 
+		{
+			"Espresso#15,00", "Red Espresso#15.50", "Cappuccino#19.00","Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00",
+			"Latte#22.50", "Red Latte#20.00", "Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00"
+		};
 
 		OrderWaitTime orderWaitTime = new OrderWaitTime();
 
@@ -29,7 +33,8 @@ namespace HookMeUP.iOS
 			// Perform any additional setup after loading the view, typically from a nib.
 
 			//inserting cells into the table
-
+			string[] splitCost = costText.Text.Split(' ');
+			getPrice = double.Parse(splitCost[1]);
 			VouchersLabel.Text = GetVouchers + " vouchers";
 			Source = new TableSourceOrdering(tableItems);
 			Source.Voucher = VouchersLabel.Text;
@@ -45,8 +50,6 @@ namespace HookMeUP.iOS
 				 DeductDeselectedOrderPrice(e);
 			};
 
-			int detectVoucher = 0;
-
 			Source.onCellSelectedForVouchers += (o, e) =>
 			{
 				e--;
@@ -54,9 +57,8 @@ namespace HookMeUP.iOS
 
 				if (e < 0)
 				{
-					detectVoucher++;
+					detectVoucher ++;
 					ToastIOS.Toast.MakeText("Vouchers depleted\nCash Time").Show();
-
 				}
 				else 
 				{
@@ -75,9 +77,8 @@ namespace HookMeUP.iOS
 					Source.Voucher = VouchersLabel.Text;
 					ordersTable.BackgroundColor = UIColor.Clear;
 
-
 				}
-				else detectVoucher--;
+				else detectVoucher --;
 
 			};
 
@@ -107,7 +108,6 @@ namespace HookMeUP.iOS
 
 			viewOrderButton.TouchUpInside +=(o,e) =>
 			{
-				
 				NavigationScreenController(queueViewController);
 			};
 
@@ -115,9 +115,17 @@ namespace HookMeUP.iOS
 
 
 
-		public string GetName { get; set; } 
+		public string GetName 
+		{
+			get;
+			set;
+		} 
 		
-		public ParseObject CurrentUser { get; set; }
+		public ParseObject CurrentUser 
+		{
+			get;
+			set;
+		}
 
 		void Order()
 		{
@@ -133,7 +141,7 @@ namespace HookMeUP.iOS
 				string[] splitElements = orderElements.Split('#');
 				elementShow += splitElements[0] + "\n";
 				items.Add(splitElements[0]);
-				prices += double.Parse(splitElements[1]);
+				prices += double.Parse(Source.FormatPrice(splitElements[1]));
 
 			}
 
@@ -179,9 +187,7 @@ namespace HookMeUP.iOS
 				   }
 
 				   loadingOverlay.Hide();
-
-
-			   }
+				}
 
 		    };
 			alert.Show();
@@ -190,21 +196,18 @@ namespace HookMeUP.iOS
 
 		public void DisplaySelectedOrderPrice(double price)
 		{
-
 			dynamicPrice += price;
-			costText.Text = "" + dynamicPrice;
-
+			costText.Text = dynamicPrice.ToString("R 0.00");
 		}
 
 		public void DeductDeselectedOrderPrice(double price)
 		{
 			dynamicPrice -= price;
-			costText.Text = "" + dynamicPrice;
+			costText.Text = dynamicPrice.ToString("R 0.00");
 		}
 
 	}
 
-	//==================================================================================================================
 	//==================================================================================================================
 	//==================================================================================================================
 	//==================================================================================================================
@@ -278,6 +281,7 @@ namespace HookMeUP.iOS
 			UIGraphics.EndImageContext();
 			return imageResult;
 		}
+		OrderViewController order = new OrderViewController();
 
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
@@ -285,18 +289,16 @@ namespace HookMeUP.iOS
 
 			string[] splitForPrice = tableItems[indexPath.Row].Split('#');
 
-			string priceAmount = splitForPrice[1];
+			string priceAmount = FormatPrice(splitForPrice[1]);
+					
+			price = double.Parse(priceAmount);
 
-			Debug.WriteLine(priceAmount);
 
-			price = Convert.ToDouble(priceAmount);
-
-			Debug.WriteLine(price);
 
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);
 
-			if (onCellSelectedForPrice != null)
+			if (onCellSelectedForPrice != null && order.getPrice == 0.00)
 			{
 				onCellSelectedForPrice(tableView, price);
 
@@ -338,7 +340,8 @@ namespace HookMeUP.iOS
 			return "Order List\n";
 		}
 
-		string FormatPrice(string s) {
+		public string FormatPrice(string s) 
+		{
 			return s.Replace(".", ",");
 		}
 

@@ -12,6 +12,7 @@ namespace HookMeUP.iOS
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
+
 			usernameTextForgot.BecomeFirstResponder();
 			DismissKeyboardOnBackgroundTap();
 			RegisterForKeyboardNotifications();
@@ -35,8 +36,8 @@ namespace HookMeUP.iOS
 							View.Add(loadingOverlay);
 
 							ParseQuery<ParseObject> query = from userInfo in ParseObject.GetQuery("UserInformation")
-															where userInfo.Get<string>("Username") == usernameTextForgot.Text
-															&& userInfo.Get<string>("Email") == emailTextForgot.Text
+								                            where userInfo.Get<string>("Username") == TrimInput(usernameTextForgot.Text)
+							                                && userInfo.Get<string>("Email") == TrimInput(emailTextForgot.Text)
 															select userInfo;
 							
 							ParseObject objQ = await query.FirstAsync();
@@ -68,6 +69,7 @@ namespace HookMeUP.iOS
 						}
 						catch (ParseException)
 						{
+							loadingOverlay.Hide();
 							AlertPopUp("Error", "Username and email do not match", "OK");
 							if (i == 3)
 							{

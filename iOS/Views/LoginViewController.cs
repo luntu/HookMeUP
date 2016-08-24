@@ -1,5 +1,4 @@
-﻿using System;
-using Parse;
+﻿using Parse;
 namespace HookMeUP.iOS
 {
 	public partial class LoginViewController : ScreenViewController
