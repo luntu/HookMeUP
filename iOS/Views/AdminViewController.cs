@@ -18,8 +18,7 @@ namespace HookMeUP.iOS
 		{
 			base.ViewDidLoad();
 
-
-		
+			AdminGetOrders.Clear();		
 
 			try
 			{
@@ -112,7 +111,7 @@ namespace HookMeUP.iOS
 			string s = "";
 		
 			foreach (string e in orders.Split(' ')) {
-				s = e+"\n";
+				s += e+"\n";
 
 			}
 			alert.Message = s.Trim();
