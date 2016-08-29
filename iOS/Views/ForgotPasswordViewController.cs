@@ -42,12 +42,12 @@ namespace HookMeUP.iOS
 
 							ParseObject objQ = await query.FirstAsync();
 
-							string name = objQ.Get<string>("Name");
-							string email = objQ.Get<string>("Email");
-							string password = objQ.Get<string>("Password");
+							//string name = objQ.Get<string>("Name");
+							//string email = objQ.Get<string>("Email");
+							//string password = objQ.Get<string>("Password");
 
 							//string emailSender = "luntu@cowboyaliens.com";
-							//string passwordSender = "******************";
+							//string passwordSender = "********************";
 
 							//MailMessage mail = new MailMessage();
 							//SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");

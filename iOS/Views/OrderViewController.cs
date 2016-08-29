@@ -16,6 +16,8 @@ namespace HookMeUP.iOS
 		public int time;
 		public List<string> items;
 		public int detectVoucher = 0;
+
+
 		public double getPrice;
 		List<string> tableItems = new List<string> 
 		{
@@ -38,58 +40,27 @@ namespace HookMeUP.iOS
 			Source = new TableSourceOrdering(tableItems);
 			Source.Voucher = VouchersLabel.Text;
 			ordersTable.Source = Source;
-
-			//Source.onCellSelectedForPrice += (o, e) =>
-			//{
-			//	if (detectVoucher > 0) 
-			//	{
-			//		dynamicPrice += e;
-			//	}
-
-			//};
-
-			//Source.onCellDeselectedForPrice += (o, e) =>
-			//{
-
-			//	dynamicPrice -= e;
-
-			//};
-
-			//Source.onCellSelected += (sender, evt) =>
-			//{
-			//	if (detectVoucher > 0)
-			//	{ 
-			//		costText.Text = dynamicPrice.ToString("R 0.00");
-			//	}
-			//};
-
-			//Source.onCellDeselected += (sender, evt) => 
-			//{
-			//	if (detectVoucher <= 0) 
-			//	{
-			//		costText.Text = dynamicPrice.ToString("R 0.00");
-			//	}
-			//};
-
+					
 			Source.onCellSelectedForVouchers += (o, e) =>
 			{
-				e--; //reduce voucher by 1  3
+				e--;
 
-				if (e == 0)  //false
+				if (e == 0)  
 				{
 					VouchersLabel.Text = e + " Vouchers";
 				}
-				if (e < 0) // false
+				if (e < 0) 
 				{
 					detectVoucher++;
 				}
 				else 
 				{
+					
 					VouchersLabel.Text = e + " Vouchers";
 					Source.Voucher = VouchersLabel.Text;
 				}
 			};
-
+			int s = 0;
 			Source.onCellDeselectedForVouchers += (o, e) =>
 			{
 
@@ -102,12 +73,48 @@ namespace HookMeUP.iOS
 					ordersTable.BackgroundColor = UIColor.Clear;
 
 				}
-			
-				else detectVoucher --; //detect voucher is > 0, meaning vouchers are negative. so reduce it until it hits zero to increase the vouchers
 
+				else 
+				{
+					s = detectVoucher;
+					detectVoucher--; //detect voucher is > 0, meaning vouchers are negative. so reduce it until it hits zero to increase the vouchers
+
+
+				}
 			};
 
 
+
+			Source.onCellSelectedForPrice += (o, e) =>
+			{
+				
+				if (detectVoucher != 0)
+				{
+					dynamicPrice += e;
+					costText.Text = dynamicPrice.ToString("R 0.00");
+				}
+
+
+			};
+
+			Source.onCellDeselectedForPrice += (o, e) =>
+			{
+
+
+				if (detectVoucher == 0 && s == 1) 
+				{
+			
+					dynamicPrice -= e;
+					costText.Text = "R 0,00";
+				}
+
+				if (detectVoucher < 0 || detectVoucher != 0)
+				{
+					dynamicPrice -= e;
+					costText.Text = dynamicPrice.ToString("R 0.00");
+				}
+			
+			};
 		
 			hookMeUPButton.TouchUpInside += (obj, evt) =>
 			{
@@ -236,8 +243,7 @@ namespace HookMeUP.iOS
 		public event EventHandler<double> onCellDeselectedForPrice;
 		public event EventHandler<int> onCellSelectedForVouchers;
 		public event EventHandler<int> onCellDeselectedForVouchers;
-		public event EventHandler onCellSelected;
-		public event EventHandler onCellDeselected;
+
 		public List<string> ordersList = new List<string>();
 
 
@@ -288,15 +294,6 @@ namespace HookMeUP.iOS
 			return tableItems.Count;
 		}
 
-		UIImage ResizeImage(UIImage imageSource, float width, float height)
-		{
-			UIGraphics.BeginImageContext(new SizeF(width, height));
-			imageSource.Draw(new RectangleF(0, 0, width, height));
-			var imageResult = UIGraphics.GetImageFromCurrentImageContext();
-			UIGraphics.EndImageContext();
-			return imageResult;
-		}
-	
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
 			ordersList.Add(tableItems[indexPath.Row]);
@@ -307,10 +304,13 @@ namespace HookMeUP.iOS
 					
 			price = double.Parse(priceAmount);
 
-
-
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);
+
+			if (onCellSelectedForVouchers != null)
+			{
+				onCellSelectedForVouchers(tableView, voucherNumber);
+			}
 
 			if (onCellSelectedForPrice != null)
 			{
@@ -318,16 +318,6 @@ namespace HookMeUP.iOS
 
 			}
 
-			if (onCellSelectedForVouchers != null)
-			{
-				onCellSelectedForVouchers(tableView, voucherNumber);
-			}
-
-			if (onCellSelected != null)
-			{
-				onCellSelected(tableView, null);
-			}
-		
 		}
 
 		public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
@@ -341,6 +331,11 @@ namespace HookMeUP.iOS
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);
 		
+			if (onCellDeselectedForVouchers != null)
+			{
+				onCellDeselectedForVouchers(tableView, voucherNumber);
+			}
+
 			if (onCellDeselectedForPrice != null)
 			{
 				onCellDeselectedForPrice(tableView, price);
@@ -348,15 +343,6 @@ namespace HookMeUP.iOS
 
 			ordersList.Remove(tableItems[indexPath.Row]);
 
-			if (onCellDeselectedForVouchers != null)
-			{
-				onCellDeselectedForVouchers(tableView, voucherNumber);
-			}
-
-			if (onCellDeselected != null) 
-			{
-				onCellDeselected(tableView, null);
-			}
 		}
 
 		public override string TitleForHeader(UITableView tableView, nint section)
@@ -368,6 +354,16 @@ namespace HookMeUP.iOS
 		{
 			return s.Replace(".", ",");
 		}
+
+		UIImage ResizeImage(UIImage imageSource, float width, float height)
+		{
+			UIGraphics.BeginImageContext(new SizeF(width, height));
+			imageSource.Draw(new RectangleF(0, 0, width, height));
+			var imageResult = UIGraphics.GetImageFromCurrentImageContext();
+			UIGraphics.EndImageContext();
+			return imageResult;
+		}
+
 
 	}
 

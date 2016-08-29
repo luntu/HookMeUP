@@ -53,7 +53,6 @@ namespace HookMeUP.iOS
 		{
 			if (button != null)
 			{
-
 				foreach (UIButton element in button)
 				{
 					element.Layer.BorderWidth = 1;

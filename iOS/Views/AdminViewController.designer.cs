@@ -12,9 +12,15 @@ namespace HookMeUP.iOS
 	[Register ("AdminViewController")]
 	partial class AdminViewController
 	{
+		[Outlet]
+		UIKit.UITableView AminOrdersTable { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (AminOrdersTable != null) {
+				AminOrdersTable.Dispose ();
+				AminOrdersTable = null;
+			}
 		}
 	}
 }

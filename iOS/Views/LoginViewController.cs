@@ -57,13 +57,16 @@ namespace HookMeUP.iOS
 														   	select userInformation;
 							
 							ParseObject result = await query.FirstAsync();
+
 							orderViewController.GetName = result.Get<string>("Name");
+							bool isAdmin = result.Get<bool>("IsAdmin");
 							orderViewController.CurrentUser = result;
 							int vouchers = result.Get<int>("Vouchers");
 							orderViewController.GetVouchers = vouchers;
 							loadingOverlay.Hide();
 
-							NavigationScreenController(orderViewController);
+							if (isAdmin) NavigationScreenController(adminViewController);
+							else NavigationScreenController(orderViewController);
 
 						   }
 						   catch (ParseException)

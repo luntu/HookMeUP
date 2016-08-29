@@ -3,7 +3,6 @@ using UIKit;
 using Parse;
 using ToastIOS;
 using CoreGraphics;
-using System;
 
 namespace HookMeUP.iOS
 {
