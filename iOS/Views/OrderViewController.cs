@@ -349,6 +349,10 @@ namespace HookMeUP.iOS
 		{
 			return "Order List\n";
 		}
+		public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+		{
+			return 60f;
+		}
 
 		public string FormatPrice(string s) 
 		{

@@ -27,19 +27,21 @@ namespace HookMeUP.iOS
 
 				ParseQuery<ParseObject> query = ParseObject.GetQuery("Orders");
 				query.Include("PersonOrdered").Include("OrderList");
-				var coll = await query.FindAsync();
+				IEnumerable coll = await query.FindAsync();
+			
 				string orderConcat = "";
-				foreach (var parseObject in coll) 
+
+				foreach (ParseObject parseObject in coll) 
 				{
 					string personOrdered = parseObject.Get<string>("PersonOrdered");
 					IList orderItems = parseObject.Get<IList>("OrderList");
 
 					foreach (string e in orderItems) {
-						orderConcat += e + " ";
+						orderConcat += e + "+";
 					}
 
-					AdminGetOrders.Add(personOrdered + " # " + orderConcat.Trim());
-
+					AdminGetOrders.Add(personOrdered + "#" + orderConcat.Trim());
+					orderConcat = String.Empty;
             	}
 
 
@@ -73,7 +75,8 @@ namespace HookMeUP.iOS
 
 		List<string> items;
 
-		string orders;
+		List<string> orders= new List<string>();
+	
 
 		public TableSourceAdmin(List<string> items) {
 			this.items = items;
@@ -87,12 +90,12 @@ namespace HookMeUP.iOS
 			if (cell == null)
 			{
 				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
-
 			}
 			string[] split = items[indexPath.Row].Split('#');
 
 			string personOrdered = split[0];
-			orders = split[1];
+			orders.Add(split[1]);
+
 			cell.TextLabel.Text = personOrdered;
 
 			return cell;
@@ -108,15 +111,45 @@ namespace HookMeUP.iOS
 			UIAlertView alert = new UIAlertView();
 			alert.Title = "Order items";
 
-			string s = "";
-		
-			foreach (string e in orders.Split(' ')) {
-				s += e+"\n";
 
+			string[] split = orders[indexPath.Row].Split('+');
+			string s = "";
+			foreach (string elements in split) 
+			{
+				s += elements+"\n";
 			}
 			alert.Message = s.Trim();
 			alert.AddButton("OK");
 			alert.Show();
+		}
+
+		public override void CommitEditingStyle(UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
+		{
+			switch (editingStyle)
+			{ 
+				case UITableViewCellEditingStyle.Delete:
+					items.RemoveAt(indexPath.Row);
+					tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
+					break;
+					
+				case UITableViewCellEditingStyle.None:
+					Debug.WriteLine("Nothing");
+					break;
+			}
+		}
+
+		public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
+		{
+			return true;
+		}
+
+		public override string TitleForDeleteConfirmation(UITableView tableView, NSIndexPath indexPath)
+		{
+			return "Done";
+		}
+		public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+		{
+			return 70f;
 		}
 	}
 
