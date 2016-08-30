@@ -26,10 +26,14 @@ namespace HookMeUP.iOS
 				loadingOverlay = new LoadingOverlay(bounds);
 				View.Add(loadingOverlay);
 
-				ParseQuery<ParseObject> query = ParseObject.GetQuery("Orders");
-				query.Include("objectId").Include("PersonOrdered").Include("OrderList");
+				ParseQuery<ParseObject> query = from ordersTb in ParseObject.GetQuery("Orders")
+												where ordersTb.Get<bool>("IsOrderDone") == false
+												select ordersTb;
 
-				IEnumerable coll = await query.FindAsync();
+//	ParseObject.GetQuery("Orders");
+//query.Include("objectId").Include("PersonOrdered").Include("OrderList");
+
+IEnumerable coll = await query.FindAsync();
 			
 				string orderConcat = "";
 
