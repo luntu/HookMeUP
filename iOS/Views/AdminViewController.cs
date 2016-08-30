@@ -13,7 +13,8 @@ namespace HookMeUP.iOS
 
 		public TableSourceAdmin Source { get; set; }
 		public List<string> AdminGetOrders { get; set; } = new List<string>();
-
+		IList orderItems = null;
+	
 		public override async void ViewDidLoad()
 		{
 			base.ViewDidLoad();
@@ -26,25 +27,28 @@ namespace HookMeUP.iOS
 				View.Add(loadingOverlay);
 
 				ParseQuery<ParseObject> query = ParseObject.GetQuery("Orders");
-				query.Include("PersonOrdered").Include("OrderList");
+				query.Include("objectId").Include("PersonOrdered").Include("OrderList");
+
 				IEnumerable coll = await query.FindAsync();
 			
 				string orderConcat = "";
 
 				foreach (ParseObject parseObject in coll) 
 				{
-					string personOrdered = parseObject.Get<string>("PersonOrdered");
-					IList orderItems = parseObject.Get<IList>("OrderList");
+					string objectId = parseObject.ObjectId;
 
-					foreach (string e in orderItems) {
+					string personOrdered = parseObject.Get<string>("PersonOrdered");
+					orderItems = parseObject.Get<IList>("OrderList");
+					Debug.WriteLine(objectId +"\t" +personOrdered );
+
+					foreach (string e in orderItems) 
+					{
 						orderConcat += e + "+";
 					}
 
-					AdminGetOrders.Add(personOrdered + "#" + orderConcat.Trim());
+					AdminGetOrders.Add(objectId+ "#" +personOrdered + "#" + orderConcat.Trim());
 					orderConcat = String.Empty;
             	}
-
-
 
 				loadingOverlay.Hide();
 			}
@@ -53,8 +57,12 @@ namespace HookMeUP.iOS
 				loadingOverlay.Hide();
 				Debug.WriteLine(e.StackTrace);
 			}
+			if (orderItems != null)
+			{
+				Source = new TableSourceAdmin(AdminGetOrders, orderItems);
+			}
+			else  Debug.WriteLine("Order items is null");
 
-			Source = new TableSourceAdmin(AdminGetOrders);
 			AminOrdersTable.Source = Source;
 			AminOrdersTable.ReloadData();
 
@@ -69,18 +77,27 @@ namespace HookMeUP.iOS
 
 	}
 
+
+	//==================================================================================================================
+	//==================================================================================================================
+	//==================================================================================================================
+
+
 	public class TableSourceAdmin : UITableViewSource
 	{
 		string cellIdentifier = "TableCell";
+		string objectId = "";
 
 		List<string> items;
-
 		List<string> orders= new List<string>();
-	
+		IList orderItems;
+		string PersonOrderedName = "";
 
-		public TableSourceAdmin(List<string> items) {
+		public TableSourceAdmin(List<string> items, IList orderItems) {
 			this.items = items;
+			this.orderItems = orderItems;
 		}
+
 
 		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
 		{
@@ -92,9 +109,9 @@ namespace HookMeUP.iOS
 				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
 			}
 			string[] split = items[indexPath.Row].Split('#');
-
-			string personOrdered = split[0];
-			orders.Add(split[1]);
+			string objectIdd = split[0];
+			string personOrdered = split[1];
+			orders.Add(objectIdd+"-"+personOrdered + "-" + split[2]);
 
 			cell.TextLabel.Text = personOrdered;
 
@@ -111,10 +128,12 @@ namespace HookMeUP.iOS
 			UIAlertView alert = new UIAlertView();
 			alert.Title = "Order items";
 
-
-			string[] split = orders[indexPath.Row].Split('+');
+			string[] split = orders[indexPath.Row].Split('-');
+			objectId = split[0];
+			PersonOrderedName = split[1];
+			string[] split1 = split[2].Split('+');
 			string s = "";
-			foreach (string elements in split) 
+			foreach (string elements in split1) 
 			{
 				s += elements+"\n";
 			}
@@ -123,15 +142,32 @@ namespace HookMeUP.iOS
 			alert.Show();
 		}
 
-		public override void CommitEditingStyle(UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
+		public override async void CommitEditingStyle(UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
 		{
 			switch (editingStyle)
-			{ 
+			{
 				case UITableViewCellEditingStyle.Delete:
+					Debug.WriteLine(PersonOrderedName);
+
 					items.RemoveAt(indexPath.Row);
 					tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
+
+					//try
+					//{
+					ParseQuery<ParseObject> queryForUpdate = from ordersTB in ParseObject.GetQuery("Orders")
+						                                     where ordersTB.Get<string>("objectId") == objectId//&& ordersTB.Get<string>("PersonOrdered") == PersonOrderedName
+															 select ordersTB;
+
+						ParseObject obj =  await queryForUpdate.FirstAsync();
+						obj["OrderList"] = true;
+						await obj.SaveAsync();
+					//}
+					//catch (ParseException e)
+					//{
+						//Debug.WriteLine(e.StackTrace);	
+					//}
 					break;
-					
+
 				case UITableViewCellEditingStyle.None:
 					Debug.WriteLine("Nothing");
 					break;
