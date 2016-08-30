@@ -59,7 +59,7 @@ namespace HookMeUP.iOS
 			}
 			if (orderItems != null)
 			{
-				Source = new TableSourceAdmin(AdminGetOrders, orderItems);
+				Source = new TableSourceAdmin(AdminGetOrders);
 			}
 			else  Debug.WriteLine("Order items is null");
 
@@ -86,16 +86,16 @@ namespace HookMeUP.iOS
 	public class TableSourceAdmin : UITableViewSource
 	{
 		string cellIdentifier = "TableCell";
-		string objectId = "";
+	
 
 		List<string> items;
 		List<string> orders= new List<string>();
-		IList orderItems;
+
 		string PersonOrderedName = "";
 
-		public TableSourceAdmin(List<string> items, IList orderItems) {
+		public TableSourceAdmin(List<string> items) {
 			this.items = items;
-			this.orderItems = orderItems;
+		
 		}
 
 
@@ -129,14 +129,16 @@ namespace HookMeUP.iOS
 			alert.Title = "Order items";
 
 			string[] split = orders[indexPath.Row].Split('-');
-			objectId = split[0];
+			//string objectId = split[0];
 			PersonOrderedName = split[1];
 			string[] split1 = split[2].Split('+');
 			string s = "";
+
 			foreach (string elements in split1) 
 			{
 				s += elements+"\n";
 			}
+
 			alert.Message = s.Trim();
 			alert.AddButton("OK");
 			alert.Show();
@@ -149,17 +151,22 @@ namespace HookMeUP.iOS
 				case UITableViewCellEditingStyle.Delete:
 					Debug.WriteLine(PersonOrderedName);
 
+					string[] split = items[indexPath.Row].Split('#');
+					string objectID = split[0];
+
+					Debug.WriteLine(objectID);
+
 					items.RemoveAt(indexPath.Row);
 					tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
 
 					//try
 					//{
 					ParseQuery<ParseObject> queryForUpdate = from ordersTB in ParseObject.GetQuery("Orders")
-						                                     where ordersTB.Get<string>("objectId") == objectId//&& ordersTB.Get<string>("PersonOrdered") == PersonOrderedName
+						                                     where ordersTB.Get<string>("objectId") == objectID
 															 select ordersTB;
 
 						ParseObject obj =  await queryForUpdate.FirstAsync();
-						obj["OrderList"] = true;
+						obj["IsOrderDone"] = true;
 						await obj.SaveAsync();
 					//}
 					//catch (ParseException e)
