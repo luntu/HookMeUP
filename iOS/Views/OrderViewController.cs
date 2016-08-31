@@ -19,10 +19,16 @@ namespace HookMeUP.iOS
 
 
 		public double getPrice;
-		List<string> tableItems = new List<string> 
+		//List<string> tableItems = new List<string> 
+		//{
+		//	"Espresso#15,00", "Red Espresso#15.50", "Cappuccino#19.00","Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00",
+		//	"Latte#22.50", "Red Latte#20.00", "Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00"
+		//};
+
+		List<Coffee> coffeeItems = new List<Coffee>
 		{
-			"Espresso#15,00", "Red Espresso#15.50", "Cappuccino#19.00","Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00",
-			"Latte#22.50", "Red Latte#20.00", "Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00"
+			new Coffee("Espresso", "cappuccino.jpg", "15.00"),
+			new Coffee("Red Espresso", "Cappuccino1.jpg", "15.50")
 		};
 
 		OrderWaitTime orderWaitTime = new OrderWaitTime();
@@ -32,30 +38,50 @@ namespace HookMeUP.iOS
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
-			// Perform any additional setup after loading the view, typically from a nib.
+			SetupView();
+		}
 
-			//inserting cells into the table
+		public override void ViewWillAppear(bool animated)
+		{
+			base.ViewWillAppear(animated);
+			ResetTableView();
+		}
 
+		public string GetName 
+		{
+			get;
+			set;
+		} 
+		
+		public ParseObject CurrentUser 
+		{
+			get;
+			set;
+		}
+
+		void SetupView()
+		{
 			VouchersLabel.Text = GetVouchers + " vouchers";
-			Source = new TableSourceOrdering(tableItems);
+			//Source = new TableSourceOrdering(tableItems);
+			Source = new TableSourceOrdering(coffeeItems);
 			Source.Voucher = VouchersLabel.Text;
 			ordersTable.Source = Source;
-					
+
 			Source.onCellSelectedForVouchers += (o, e) =>
 			{
 				e--;
 
-				if (e == 0)  
+				if (e == 0)
 				{
 					VouchersLabel.Text = e + " Vouchers";
 				}
-				if (e < 0) 
+				if (e < 0)
 				{
 					detectVoucher++;
 				}
-				else 
+				else
 				{
-					
+
 					VouchersLabel.Text = e + " Vouchers";
 					Source.Voucher = VouchersLabel.Text;
 				}
@@ -74,7 +100,7 @@ namespace HookMeUP.iOS
 
 				}
 
-				else 
+				else
 				{
 					s = detectVoucher;
 					detectVoucher--; //detect voucher is > 0, meaning vouchers are negative. so reduce it until it hits zero to increase the vouchers
@@ -87,7 +113,7 @@ namespace HookMeUP.iOS
 
 			Source.onCellSelectedForPrice += (o, e) =>
 			{
-				
+
 				if (detectVoucher != 0)
 				{
 					dynamicPrice += e;
@@ -101,9 +127,9 @@ namespace HookMeUP.iOS
 			{
 
 
-				if (detectVoucher == 0 && s == 1) 
+				if (detectVoucher == 0 && s == 1)
 				{
-			
+
 					dynamicPrice -= e;
 					costText.Text = "R 0,00";
 				}
@@ -113,16 +139,16 @@ namespace HookMeUP.iOS
 					dynamicPrice -= e;
 					costText.Text = dynamicPrice.ToString("R 0.00");
 				}
-			
+
 			};
-		
+
 			hookMeUPButton.TouchUpInside += (obj, evt) =>
 			{
 				// getting orders
 
 				try
 				{
-					
+
 					if (Source.ordersList != null && !Source.ordersList[0].Equals(""))
 					{
 						Order();
@@ -138,25 +164,15 @@ namespace HookMeUP.iOS
 
 			};
 
-			viewOrderButton.TouchUpInside +=(o,e) =>
-			{
-				NavigationScreenController(queueViewController);
-			};
-
+			viewOrderButton.TouchUpInside += (o, e) =>
+			 {
+				 NavigationScreenController(queueViewController);
+			 };
 		}
 
-
-
-		public string GetName 
+		void ResetTableView()
 		{
-			get;
-			set;
-		} 
-		
-		public ParseObject CurrentUser 
-		{
-			get;
-			set;
+			ordersTable.ReloadData();
 		}
 
 		void Order()
@@ -167,13 +183,17 @@ namespace HookMeUP.iOS
 			double prices = 0;
 			string elementShow = "";
 
-			foreach (string orderElements in Source.ordersList)
+			foreach (Coffee orderElements in Source.ordersList)
 			{
-				
-				string[] splitElements = orderElements.Split('#');
-				elementShow += splitElements[0] + "\n";
-				items.Add(splitElements[0]);
-				prices += double.Parse(Source.FormatPrice(splitElements[1]));
+				string orderName = orderElements.Title;
+				elementShow = orderElements.Title;
+
+				items.Add(orderName);
+				prices = double.Parse(Source.FormatPrice(orderElements.Price));
+				//string[] splitElements = orderElements.Split('#');
+				//elementShow += splitElements[0] + "\n";
+				//items.Add(splitElements[0]);
+				//prices += double.Parse(Source.FormatPrice(splitElements[1]));
 
 			}
 
@@ -235,7 +255,8 @@ namespace HookMeUP.iOS
 
 	public class TableSourceOrdering : UITableViewSource
 	{
-		List<string> tableItems;
+		//List<string> tableItems;
+		List<Coffee> coffeeItems;
 		string cellIdentifier = "TableCell";
 		public string Voucher { get; set; }
 		double price = 0;
@@ -244,12 +265,17 @@ namespace HookMeUP.iOS
 		public event EventHandler<int> onCellSelectedForVouchers;
 		public event EventHandler<int> onCellDeselectedForVouchers;
 
-		public List<string> ordersList = new List<string>();
+		public List<Coffee> ordersList = new List<Coffee>();
 
 
-		public TableSourceOrdering(List<string> items)
+		//public TableSourceOrdering(List<string> items)
+		//{
+		//	tableItems = items;
+		//}
+
+		public TableSourceOrdering(List<Coffee> items)
 		{
-			tableItems = items;
+			coffeeItems = items;
 		}
 
 		public int NumberOfItemsForCash 
@@ -260,88 +286,145 @@ namespace HookMeUP.iOS
 
 		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
 		{
+			Coffee item = coffeeItems[indexPath.Row];
 
 			UITableViewCell cell = tableView.DequeueReusableCell(cellIdentifier);
-
 
 			if (cell == null)
 			{
 				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
-
 			}
-			string[] split = tableItems[indexPath.Row].Split('#');
-			string item = split[0];
 
-			cell.TextLabel.Text = item;
-
-			List<string> images = new List<string>
-			{
-				"cappuccino.jpg", "Cappuccino1.jpg", "cappuccino2.jpg",
-				"Cappuccino400.jpg", "CaramelFlan.jpg", "HazelnutCappuccino.jpg", "Unknown12.jpg","Pic1.jpg","Pic2.jpg",
-				"Pic3.jpg","Pic4.jpg","Pic5.jpg","Pic6.jpg","Pic7.jpg","Pic8.jpg"
-			};
-
-			Random randomIndex = new Random();
-			int index = randomIndex.Next(0, images.Count);
-			UIImage image = UIImage.FromFile("TableImages/" + images[index]);
+			cell.TextLabel.Text = item.Title;
+			var directory = "TableImages/";
+			UIImage image = UIImage.FromFile(directory + item.ImageName);
 			cell.ImageView.Image = ResizeImage(image, 80, 80);
 
 			return cell;
+
+			//string[] split = tableItems[indexPath.Row].Split('#');
+			//string item = split[0];
+			//cell.TextLabel.Text = item;
+
+
+			//List<string> images = new List<string>
+			//{
+			//	"cappuccino.jpg", 
+			//	"Cappuccino1.jpg", 
+			//	"cappuccino2.jpg",
+			//	"Cappuccino400.jpg", 
+			//	"CaramelFlan.jpg", 
+			//	"HazelnutCappuccino.jpg", 
+			//	"Unknown12.jpg",
+			//	"Pic1.jpg",
+			//	"Pic2.jpg",
+			//	"Pic3.jpg",
+			//	"Pic4.jpg",
+			//	"Pic5.jpg",
+			//	"Pic6.jpg",
+			//	"Pic7.jpg",
+			//	"Pic8.jpg"
+			//};
+
+			//Random randomIndex = new Random();
+			//int index = randomIndex.Next(0, images.Count);
+			//UIImage image = UIImage.FromFile("TableImages/" + images[index]);
+			//cell.ImageView.Image = ResizeImage(image, 80, 80);
+
+			//return cell;
 		}
 
 		public override nint RowsInSection(UITableView tableview, nint section)
 		{
-			return tableItems.Count;
+			//return tableItems.Count;
+			return coffeeItems.Count;
 		}
 
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
-			ordersList.Add(tableItems[indexPath.Row]);
-
-			string[] splitForPrice = tableItems[indexPath.Row].Split('#');
-
-			string priceAmount = FormatPrice(splitForPrice[1]);
-					
-			price = double.Parse(priceAmount);
-
+			Coffee coffeeItem = coffeeItems[indexPath.Row];
+			
+			ordersList.Add(coffeeItem);
+			
+			price = double.Parse(FormatPrice(coffeeItem.Price));
+			
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);
-
+			
 			if (onCellSelectedForVouchers != null)
 			{
 				onCellSelectedForVouchers(tableView, voucherNumber);
 			}
-
+			
 			if (onCellSelectedForPrice != null)
 			{
 				onCellSelectedForPrice(tableView, price);
-
 			}
+
+			//ordersList.Add(tableItems[indexPath.Row]);
+
+			//string[] splitForPrice = tableItems[indexPath.Row].Split('#');
+
+			//string priceAmount = FormatPrice(splitForPrice[1]);
+
+			//price = double.Parse(priceAmount);
+
+			//string[] splitForVoucher = Voucher.Split(' ');
+
+			//if (onCellSelectedForVouchers != null)
+			//{
+			//	onCellSelectedForVouchers(tableView, voucherNumber);
+			//}
+
+			//if (onCellSelectedForPrice != null)
+			//{
+			//	onCellSelectedForPrice(tableView, price);
+
+			//}
+
 
 		}
 
 		public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
 		{
 
-			string[] split = tableItems[indexPath.Row].Split('#');
-
-			string priceAmount = FormatPrice(split[1]);
-			price = double.Parse(priceAmount);
-		
+			Coffee coffeItem = coffeeItems[indexPath.Row];
+			
+			price = double.Parse(FormatPrice(coffeItem.Price));
+			
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);
-		
+			
 			if (onCellDeselectedForVouchers != null)
 			{
 				onCellDeselectedForVouchers(tableView, voucherNumber);
 			}
-
+			
 			if (onCellDeselectedForPrice != null)
 			{
 				onCellDeselectedForPrice(tableView, price);
 			}
 
-			ordersList.Remove(tableItems[indexPath.Row]);
+			//string[] split = tableItems[indexPath.Row].Split('#');
+
+			//string priceAmount = FormatPrice(split[1]);
+			//price = double.Parse(priceAmount);
+		
+			//string[] splitForVoucher = Voucher.Split(' ');
+			//int voucherNumber = int.Parse(splitForVoucher[0]);
+		
+			//if (onCellDeselectedForVouchers != null)
+			//{
+			//	onCellDeselectedForVouchers(tableView, voucherNumber);
+			//}
+
+			//if (onCellDeselectedForPrice != null)
+			//{
+			//	onCellDeselectedForPrice(tableView, price);
+			//}
+
+			//ordersList.Remove(tableItems[indexPath.Row]);
+
 
 		}
 

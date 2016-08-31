@@ -1,4 +1,5 @@
-﻿using Parse;
+﻿using System.Diagnostics;
+using Parse;
 namespace HookMeUP.iOS
 {
 	public partial class LoginViewController : ScreenViewController
@@ -48,31 +49,33 @@ namespace HookMeUP.iOS
 				case true:
 						   try
 						   {
-							loadingOverlay = new LoadingOverlay(bounds);
-							View.Add(loadingOverlay);
+							   loadingOverlay = new LoadingOverlay(bounds);
+							   View.Add(loadingOverlay);
 
-							ParseQuery<ParseObject> query = from userInformation in ParseObject.GetQuery("UserInformation")
-								                            where userInformation.Get<string>("Username") == TrimInput(usernameText.Text)
-							                                && userInformation.Get<string>("Password") == TrimInput(passwordText.Text)
+							   ParseQuery<ParseObject> query = from userInformation in ParseObject.GetQuery("UserInformation")
+															   where userInformation.Get<string>("Username") == TrimInput(usernameText.Text)
+															   && userInformation.Get<string>("Password") == TrimInput(passwordText.Text)
 														   	select userInformation;
-							
-							ParseObject result = await query.FirstAsync();
 
-							orderViewController.GetName = result.Get<string>("Name");
-							bool isAdmin = result.Get<bool>("IsAdmin");
-							orderViewController.CurrentUser = result;
-							int vouchers = result.Get<int>("Vouchers");
-							orderViewController.GetVouchers = vouchers;
-							loadingOverlay.Hide();
+							   ParseObject result = await query.FirstAsync();
 
-							if (isAdmin) NavigationScreenController(adminViewController);
-							else NavigationScreenController(orderViewController);
+							   orderViewController.GetName = result.Get<string>("Name");
+							   bool isAdmin = result.Get<bool>("IsAdmin");
+							   orderViewController.CurrentUser = result;
+							   int vouchers = result.Get<int>("Vouchers");
+							   orderViewController.GetVouchers = vouchers;
+							   loadingOverlay.Hide();
+
+							   if (isAdmin) NavigationScreenController(adminViewController);
+							   else NavigationScreenController(orderViewController);
 
 						   }
-						   catch (ParseException)
+						   catch (ParseException ex)
 						   {
-							loadingOverlay.Hide();
-							   AlertPopUp("Login failed","Username or password incorrect","OK");
+
+							   Debug.WriteLine(ex.GetType());
+							   loadingOverlay.Hide();
+							   AlertPopUp("Login failed", "Username or password incorrect", "OK");
 
 							   if (i == 3)
 							   {
@@ -80,7 +83,13 @@ namespace HookMeUP.iOS
 								   BorderButton(registerButton, forgotPasswordButton);
 								   loginButton.Enabled = false;
 							   }
-						    }
+						   }
+						   catch (System.NullReferenceException) 
+						   {
+							   AlertPopUp("Connection error", "Can't connect", "");				
+						   }
+
+
 
 					   break;
 

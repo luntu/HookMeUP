@@ -33,7 +33,7 @@ namespace HookMeUP.iOS
 //	ParseObject.GetQuery("Orders");
 //query.Include("objectId").Include("PersonOrdered").Include("OrderList");
 
-IEnumerable coll = await query.FindAsync();
+				IEnumerable coll = await query.FindAsync();
 			
 				string orderConcat = "";
 
@@ -157,14 +157,13 @@ IEnumerable coll = await query.FindAsync();
 
 					string[] split = items[indexPath.Row].Split('#');
 					string objectID = split[0];
-
-					Debug.WriteLine(objectID);
+								
 
 					items.RemoveAt(indexPath.Row);
 					tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
 
-					//try
-					//{
+					try
+					{
 					ParseQuery<ParseObject> queryForUpdate = from ordersTB in ParseObject.GetQuery("Orders")
 						                                     where ordersTB.Get<string>("objectId") == objectID
 															 select ordersTB;
@@ -172,11 +171,11 @@ IEnumerable coll = await query.FindAsync();
 						ParseObject obj =  await queryForUpdate.FirstAsync();
 						obj["IsOrderDone"] = true;
 						await obj.SaveAsync();
-					//}
-					//catch (ParseException e)
-					//{
-						//Debug.WriteLine(e.StackTrace);	
-					//}
+					}
+					catch (ParseException e)
+					{
+						Debug.WriteLine(e.StackTrace);	
+					}
 					break;
 
 				case UITableViewCellEditingStyle.None:

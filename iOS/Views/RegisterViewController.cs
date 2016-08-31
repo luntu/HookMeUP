@@ -18,10 +18,13 @@ namespace HookMeUP.iOS
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
 			//NSNotificationCenter.DefaultCenter.AddObserver
+
 			NavigationController.NavigationBarHidden = true;
 			DismissKeyboardOnBackgroundTap();
 			RegisterForKeyboardNotifications();
 			nameText.BecomeFirstResponder();
+			UpdateOrders();
+
 			SetFields();
 			submitButton.Enabled = true;
 			Values();
@@ -174,7 +177,42 @@ namespace HookMeUP.iOS
 
 		}
 
+
+
+
+
+		async void UpdateOrders()
+		{
+
+			List<string> arr = new List<string>
+			{"Espresso#15,00",
+			"Red Espresso#15,50",
+			"Cappuccino#19,00",
+			"Red Cappuccino#19,50",
+			"Vanilla Cappuccino#28,00",
+			"Hazelnut Cappuccino#28,00",
+			"Latte#22,50",
+			"Red Latte#20,00",
+			"Vanilla Latte#30,00",
+			"Hazelnut Latte#30,00",
+			"Cafe Americano#18,50",
+			"Cafe Mocha#24,50",
+			"Hot Chocolate#20,00"};
+
+			foreach (string e in arr)
+			{
+				ParseObject pObj = new ParseObject("Coffees");
+				string[] split = e.Split('#');
+				pObj["Title"] = split[0];
+				pObj["Price"] = double.Parse(split[1]);
+
+				await pObj.SaveAsync();
+			}
+		}
+
 	}
+
+
 
 }
 
