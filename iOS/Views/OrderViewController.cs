@@ -19,11 +19,6 @@ namespace HookMeUP.iOS
 
 
 		public double getPrice;
-		//List<string> tableItems = new List<string> 
-		//{
-		//	"Espresso#15,00", "Red Espresso#15.50", "Cappuccino#19.00","Red Cappuccino#19.50", "Vanilla Cappuccino#28.00", "Hazelnut Cappuccino#28.00",
-		//	"Latte#22.50", "Red Latte#20.00", "Vanilla Latte#30.00", "Hazelnut Latte#30.00", "Cafe Americano#18.50", "Cafe Mocha#24.50", "Hot Chocolate#20.00"
-		//};
 
 		List<Coffee> coffeeItems = new List<Coffee>
 		{
@@ -62,7 +57,6 @@ namespace HookMeUP.iOS
 		void SetupView()
 		{
 			VouchersLabel.Text = GetVouchers + " vouchers";
-			//Source = new TableSourceOrdering(tableItems);
 			Source = new TableSourceOrdering(coffeeItems);
 			Source.Voucher = VouchersLabel.Text;
 			ordersTable.Source = Source;
@@ -190,11 +184,7 @@ namespace HookMeUP.iOS
 
 				items.Add(orderName);
 				prices = double.Parse(Source.FormatPrice(orderElements.Price));
-				//string[] splitElements = orderElements.Split('#');
-				//elementShow += splitElements[0] + "\n";
-				//items.Add(splitElements[0]);
-				//prices += double.Parse(Source.FormatPrice(splitElements[1]));
-
+			
 			}
 
 			UIAlertView alert = new UIAlertView();
@@ -267,12 +257,6 @@ namespace HookMeUP.iOS
 
 		public List<Coffee> ordersList = new List<Coffee>();
 
-
-		//public TableSourceOrdering(List<string> items)
-		//{
-		//	tableItems = items;
-		//}
-
 		public TableSourceOrdering(List<Coffee> items)
 		{
 			coffeeItems = items;
@@ -302,36 +286,6 @@ namespace HookMeUP.iOS
 
 			return cell;
 
-			//string[] split = tableItems[indexPath.Row].Split('#');
-			//string item = split[0];
-			//cell.TextLabel.Text = item;
-
-
-			//List<string> images = new List<string>
-			//{
-			//	"cappuccino.jpg", 
-			//	"Cappuccino1.jpg", 
-			//	"cappuccino2.jpg",
-			//	"Cappuccino400.jpg", 
-			//	"CaramelFlan.jpg", 
-			//	"HazelnutCappuccino.jpg", 
-			//	"Unknown12.jpg",
-			//	"Pic1.jpg",
-			//	"Pic2.jpg",
-			//	"Pic3.jpg",
-			//	"Pic4.jpg",
-			//	"Pic5.jpg",
-			//	"Pic6.jpg",
-			//	"Pic7.jpg",
-			//	"Pic8.jpg"
-			//};
-
-			//Random randomIndex = new Random();
-			//int index = randomIndex.Next(0, images.Count);
-			//UIImage image = UIImage.FromFile("TableImages/" + images[index]);
-			//cell.ImageView.Image = ResizeImage(image, 80, 80);
-
-			//return cell;
 		}
 
 		public override nint RowsInSection(UITableView tableview, nint section)
@@ -360,29 +314,6 @@ namespace HookMeUP.iOS
 			{
 				onCellSelectedForPrice(tableView, price);
 			}
-
-			//ordersList.Add(tableItems[indexPath.Row]);
-
-			//string[] splitForPrice = tableItems[indexPath.Row].Split('#');
-
-			//string priceAmount = FormatPrice(splitForPrice[1]);
-
-			//price = double.Parse(priceAmount);
-
-			//string[] splitForVoucher = Voucher.Split(' ');
-
-			//if (onCellSelectedForVouchers != null)
-			//{
-			//	onCellSelectedForVouchers(tableView, voucherNumber);
-			//}
-
-			//if (onCellSelectedForPrice != null)
-			//{
-			//	onCellSelectedForPrice(tableView, price);
-
-			//}
-
-
 		}
 
 		public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
@@ -404,27 +335,6 @@ namespace HookMeUP.iOS
 			{
 				onCellDeselectedForPrice(tableView, price);
 			}
-
-			//string[] split = tableItems[indexPath.Row].Split('#');
-
-			//string priceAmount = FormatPrice(split[1]);
-			//price = double.Parse(priceAmount);
-		
-			//string[] splitForVoucher = Voucher.Split(' ');
-			//int voucherNumber = int.Parse(splitForVoucher[0]);
-		
-			//if (onCellDeselectedForVouchers != null)
-			//{
-			//	onCellDeselectedForVouchers(tableView, voucherNumber);
-			//}
-
-			//if (onCellDeselectedForPrice != null)
-			//{
-			//	onCellDeselectedForPrice(tableView, price);
-			//}
-
-			//ordersList.Remove(tableItems[indexPath.Row]);
-
 
 		}
 

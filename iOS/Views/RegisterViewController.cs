@@ -23,7 +23,7 @@ namespace HookMeUP.iOS
 			DismissKeyboardOnBackgroundTap();
 			RegisterForKeyboardNotifications();
 			nameText.BecomeFirstResponder();
-			UpdateOrders();
+			//UpdateOrders();
 
 			SetFields();
 			submitButton.Enabled = true;
@@ -181,34 +181,36 @@ namespace HookMeUP.iOS
 
 
 
-		async void UpdateOrders()
-		{
+		//async void UpdateOrders()
+		//{
 
-			List<string> arr = new List<string>
-			{"Espresso#15,00",
-			"Red Espresso#15,50",
-			"Cappuccino#19,00",
-			"Red Cappuccino#19,50",
-			"Vanilla Cappuccino#28,00",
-			"Hazelnut Cappuccino#28,00",
-			"Latte#22,50",
-			"Red Latte#20,00",
-			"Vanilla Latte#30,00",
-			"Hazelnut Latte#30,00",
-			"Cafe Americano#18,50",
-			"Cafe Mocha#24,50",
-			"Hot Chocolate#20,00"};
 
-			foreach (string e in arr)
-			{
-				ParseObject pObj = new ParseObject("Coffees");
-				string[] split = e.Split('#');
-				pObj["Title"] = split[0];
-				pObj["Price"] = double.Parse(split[1]);
+		//	List<string> arr = new List<string>
+		//	{"Espresso#15,00#cappuccino.jpg",
+		//	"Red Espresso#15,50#Cappuccino1.jpg",
+		//	"Cappuccino#19,00#cappuccino2.jpg",
+		//	"Red Cappuccino#19,50#Cappuccino400.jpg",
+		//	"Vanilla Cappuccino#28,00#CaramelFlan.jpg",
+		//	"Hazelnut Cappuccino#28,00#HazelnutCappuccino.jpg",
+		//	"Latte#22,50#Unknown12.jpg",
+		//	"Red Latte#20,00#Pic3.jpg",
+		//	"Vanilla Latte#30,00#Pic4.jpg",
+		//	"Hazelnut Latte#30,00#Pic5.jpg",
+		//	"Cafe Americano#18,50#Pic6.jpg",
+		//	"Cafe Mocha#24,50#Pic7.jpg",
+		//	"Hot Chocolate#20,00#Pic8.jpg"};
 
-				await pObj.SaveAsync();
-			}
-		}
+		//	foreach (string e in arr)
+		//	{
+		//		ParseObject pObj = new ParseObject("Coffees");
+		//		string[] split = e.Split('#');
+		//		pObj["Title"] = split[0];
+		//		pObj["Price"] = double.Parse(split[1]);
+		//		pObj["ImageName"] = split[2];
+
+		//		await pObj.SaveAsync();
+		//	}
+		//}
 
 	}
 
