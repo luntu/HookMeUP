@@ -34,6 +34,8 @@ namespace HookMeUP.iOS
 		{
 			base.ViewDidLoad();
 			SetupView();
+			LoadTable();
+
 		}
 
 		public override void ViewWillAppear(bool animated)
@@ -162,6 +164,22 @@ namespace HookMeUP.iOS
 			 {
 				 NavigationScreenController(queueViewController);
 			 };
+		}
+
+		void LoadTable()
+		{
+			
+
+			try 
+			{
+				loadingOverlay = new LoadingOverlay(bounds);
+				
+			}
+			catch (ParseException)
+			{
+				loadingOverlay.Hide();
+				AlertPopUp("Error", "Connection error", "OK");
+			}
 		}
 
 		void ResetTableView()
