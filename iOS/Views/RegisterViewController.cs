@@ -3,6 +3,7 @@ using UIKit;
 using Parse;
 using ToastIOS;
 using CoreGraphics;
+using System;
 
 namespace HookMeUP.iOS
 {
@@ -11,7 +12,8 @@ namespace HookMeUP.iOS
 		
 		List<UITextField> fields = new List<UITextField>();
 		List<string> usernameCheck = new List<string>();
-
+		List<AliensEmployees> employees = new List<AliensEmployees>();
+		AuthanticateUser userAuthentication;
 
 		public override void ViewDidLoad()
 		{
@@ -23,86 +25,110 @@ namespace HookMeUP.iOS
 			DismissKeyboardOnBackgroundTap();
 			RegisterForKeyboardNotifications();
 			nameText.BecomeFirstResponder();
-			//UpdateOrders();
 
 			SetFields();
 			submitButton.Enabled = true;
 			Values();
+			Employees();
 
 			TextFieldKeyboardIteration(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
-		
-		
+
+			TextEditing();
+			InitializeButtons();
+		}
+
+		void InitializeButtons()
+		{
+			submitButton.TouchUpInside += (sender, evt) =>
+			{
+
+				string name = TrimInput(nameText.Text);
+				string surname = TrimInput(surnameText.Text);
+				string username = TrimInput(usernameTextR.Text);
+				string password = TrimInput(passwordTextR.Text);
+				string email = TrimInput(emailText.Text);
+
+				if (!name.Equals("") && !surname.Equals("") && !username.Equals("") && !password.Equals("") && !verifyPasswordText.Text.Equals("") && !email.Equals(""))
+				{
+					userAuthentication = new AuthanticateUser(employees, name, email);
+					if (userAuthentication.IsAlienEmployee())
+					{
+						AddToDB(name, surname, username, password, email, 23);
+						NavigationController.PopViewController(true);
+						AlertPopUp("Done!!!", "Registration complete", "OK");
+						ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
+
+					}
+					else AlertPopUp("Error", "Invalid user", "OK");
+				}
+				else
+				{
+					AlertPopUp("Error", "please complete all fields", "OK", "Cancel");
+				}
+
+			};
+
+			backButtonRegister.TouchUpInside += (obj, evt) =>
+			{
+
+				ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
+				NavigationController.PopViewController(true);
+
+			};
+		}
+
+		void TextEditing()
+		{
 			usernameTextR.EditingDidEnd += (sender, e) =>
 			{
 				if (usernameCheck.Contains(TrimInput(usernameTextR.Text)))
 				{
 					Toast.MakeText("Someone already has that username").Show();
 					Border(UIColor.Red.CGColor, usernameTextR);
-				
+
 					submitButton.Enabled = false;
 				}
 				else
 				{
 					Border(UIColor.Clear.CGColor, usernameTextR);
 					submitButton.Enabled = true;
-			
+
 				}
 			};
 
-			verifyPasswordText.EditingDidEnd += (sender, e) => 
+			verifyPasswordText.EditingDidEnd += (sender, e) =>
 			{
 				if (!TrimInput(passwordTextR.Text).Equals(TrimInput(verifyPasswordText.Text)))
 				{
 					Toast.MakeText("Username and password don't match").Show();
-					Border(UIColor.Red.CGColor,passwordTextR, verifyPasswordText);
+					Border(UIColor.Red.CGColor, passwordTextR, verifyPasswordText);
 
 					submitButton.Enabled = false;
 
 				}
-				else 
+				else
 				{
-					Border(UIColor.Clear.CGColor,passwordTextR,verifyPasswordText);	
+					Border(UIColor.Clear.CGColor, passwordTextR, verifyPasswordText);
 					submitButton.Enabled = true;
 
 				}
 
 			};
 
-
-			submitButton.TouchUpInside += (sender, evt) => 
+			emailText.EditingDidEnd += (sender, e) =>
 			{
-				 
-				string name = TrimInput(nameText.Text);
-				string surname = TrimInput(surnameText.Text);
-				string username = TrimInput(usernameTextR.Text);
-				string password = TrimInput(passwordTextR.Text);
-				string empNo = TrimInput(emailText.Text);
-
-				if (!name.Equals("") && !surname.Equals("") && !username.Equals("") && !password.Equals("") && !verifyPasswordText.Text.Equals("") && !empNo.Equals(""))
+				if (!TrimInput(emailText.Text).ToLower().Contains("@cowboyaliens.com"))
 				{
-					
-						AddToDB(name, surname, username, password, empNo,23);
-						NavigationController.PopViewController(true);
-						AlertPopUp("Done!!!", "Registration complete", "OK");
-						ClearFields(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
-						isRegisteredSuccessful = true;
-				
+					Toast.MakeText("Invalid email address").Show();
+					Border(UIColor.Red.CGColor, emailText);
+
+					submitButton.Enabled = false;
 				}
-
-				else {
-
-					AlertPopUp("Error","please complete all fields","OK","Cancel");
-					isRegisteredSuccessful = false;
-					}
-
-				};
-
-			backButtonRegister.TouchUpInside += (obj, evt) => 
-			{ 
-			
-				ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
-				NavigationController.PopViewController(true);
-
+				else
+				{
+					Border(UIColor.Clear.CGColor, emailText);
+					submitButton.Enabled = true;
+				}
 			};
 		}
 
@@ -115,8 +141,6 @@ namespace HookMeUP.iOS
 			}
 		}
 
-		public bool isRegisteredSuccessful { get;set;}
-			
 		async void AddToDB(string name,string surname, string username, string password,string empNo,int vouchers)
 		{
 			loadingOverlay = new LoadingOverlay(bounds);
@@ -169,52 +193,75 @@ namespace HookMeUP.iOS
 
 			foreach (ParseObject element in coll)
 			{
-
 				usernameCheck.Add(element.Get<string>("Username"));
-
 			}
 			loadingOverlay.Hide();
 
 		}
 
+		async void Employees()
+		{
+			LoadingOverlay loadO = new LoadingOverlay(bounds);
+			View.Add(loadingOverlay);
 
+			var query = ParseObject.GetQuery("AliensEmployees");
+			query.Include("Name").Include("Email").Include("IsRegistered");
 
+			var iEnumerablecoll = await query.FindAsync();
 
+			foreach (var parseObj in iEnumerablecoll) 
+			{
+				string emplName = parseObj.Get<string>("Name");
+				string email = parseObj.Get<string>("Email");
+				bool isRegistered = parseObj.Get<bool>("IsRegistered");
+				employees.Add(new AliensEmployees(emplName, email, isRegistered));
+			}
 
-		//async void UpdateOrders()
-		//{
+			loadO.Hide();
 
-
-		//	List<string> arr = new List<string>
-		//	{"Espresso#15,00#cappuccino.jpg",
-		//	"Red Espresso#15,50#Cappuccino1.jpg",
-		//	"Cappuccino#19,00#cappuccino2.jpg",
-		//	"Red Cappuccino#19,50#Cappuccino400.jpg",
-		//	"Vanilla Cappuccino#28,00#CaramelFlan.jpg",
-		//	"Hazelnut Cappuccino#28,00#HazelnutCappuccino.jpg",
-		//	"Latte#22,50#Unknown12.jpg",
-		//	"Red Latte#20,00#Pic3.jpg",
-		//	"Vanilla Latte#30,00#Pic4.jpg",
-		//	"Hazelnut Latte#30,00#Pic5.jpg",
-		//	"Cafe Americano#18,50#Pic6.jpg",
-		//	"Cafe Mocha#24,50#Pic7.jpg",
-		//	"Hot Chocolate#20,00#Pic8.jpg"};
-
-		//	foreach (string e in arr)
-		//	{
-		//		ParseObject pObj = new ParseObject("Coffees");
-		//		string[] split = e.Split('#');
-		//		pObj["Title"] = split[0];
-		//		pObj["Price"] = double.Parse(split[1]);
-		//		pObj["ImageName"] = split[2];
-
-		//		await pObj.SaveAsync();
-		//	}
-		//}
+		}
 
 	}
 
+	class AuthanticateUser // Check if the user is an Alien employee and that he cannot create multiple accounts 
+	{
+	
+		public string Name { get; private set; }
+		public string Email { get; private set; }
+		public List<AliensEmployees> Employees;
 
+		public AuthanticateUser(List<AliensEmployees>employees, string name, string email) 
+		{
+			Employees = employees;
+			Name = name.ToLower();
+			Email = email.ToLower();
+
+		}
+
+		bool Authanticate() 
+		{
+			foreach (AliensEmployees employeeElements in Employees) 
+			{
+				string name = employeeElements.Name.ToLower();
+				string email = employeeElements.Email.ToLower();
+				bool isRegistered = employeeElements.IsRegistered;
+
+				if (name.Equals(Name) && email.Equals(Email))
+				{
+					return true;
+				}
+
+			}
+			return false;
+		}
+
+		public bool IsAlienEmployee() 
+		{
+			if (Authanticate()) return true;
+			else return false;
+		}
+
+	}
 
 }
 

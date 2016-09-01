@@ -30,6 +30,7 @@ namespace HookMeUP.iOS
 			base.ViewDidLoad();
 			SetupView();
 			LoadTableFuctionality();
+			costText.Text = "R 0,00";
 		}
 
 		public override void ViewWillAppear(bool animated)
@@ -40,6 +41,7 @@ namespace HookMeUP.iOS
 			try
 			{
 				Source.ordersList.Clear();
+				costText.Text = "R 0,00";
 			}
 			catch (NullReferenceException ex)
 			{

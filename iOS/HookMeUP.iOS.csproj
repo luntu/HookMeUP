@@ -172,6 +172,7 @@
       <DependentUpon>QueueViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Coffee.cs" />
+    <Compile Include="Models\AliensEmployees.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
