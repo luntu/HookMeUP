@@ -4,16 +4,45 @@ using Parse;
 using ToastIOS;
 using CoreGraphics;
 using System;
+using System.IO;
 
 namespace HookMeUP.iOS
 {
 	public partial class RegisterViewController : ScreenViewController
 	{
-		
+
 		List<UITextField> fields = new List<UITextField>();
 		List<string> usernameCheck = new List<string>();
 		List<AliensEmployees> employees = new List<AliensEmployees>();
+		List<ParseObject> employeeObjs = new List<ParseObject>();
 		AuthanticateUser userAuthentication;
+
+		string GetNameTxt { get; set; }
+		string GetEmailTxt { get; set; }
+
+		async void UpdateEmployees()
+		{
+			LoadingOverlay LO = new LoadingOverlay(bounds);
+			View.Add(LO);
+			ParseObject pObj;
+			var text = File.ReadLines("TempFile/AliensTeam.txt");
+
+			foreach (string lines in text)
+			{
+				string[] split = lines.Split('@');
+				string name = split[0];
+				string domain = name+"@" + split[1];
+
+				pObj = new ParseObject("AliensEmployees");
+				pObj["Name"] = name;
+				pObj["Email"] = domain;
+				pObj["IsRegistered"] = false;
+
+				await pObj.SaveAsync();
+
+			}
+			LO.Hide();
+		}
 
 		public override void ViewDidLoad()
 		{
@@ -25,6 +54,8 @@ namespace HookMeUP.iOS
 			DismissKeyboardOnBackgroundTap();
 			RegisterForKeyboardNotifications();
 			nameText.BecomeFirstResponder();
+
+			UpdateEmployees();
 
 			SetFields();
 			submitButton.Enabled = true;
@@ -43,21 +74,24 @@ namespace HookMeUP.iOS
 			{
 
 				string name = TrimInput(nameText.Text);
+				GetNameTxt = name;
 				string surname = TrimInput(surnameText.Text);
 				string username = TrimInput(usernameTextR.Text);
 				string password = TrimInput(passwordTextR.Text);
 				string email = TrimInput(emailText.Text);
+				GetEmailTxt = email;
 
 				if (!name.Equals("") && !surname.Equals("") && !username.Equals("") && !password.Equals("") && !verifyPasswordText.Text.Equals("") && !email.Equals(""))
 				{
 					userAuthentication = new AuthanticateUser(employees, name, email);
+
 					if (userAuthentication.IsAlienEmployee())
 					{
 						AddToDB(name, surname, username, password, email, 23);
 						NavigationController.PopViewController(true);
 						AlertPopUp("Done!!!", "Registration complete", "OK");
 						ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
-
+						UpdateRegistered();
 					}
 					else AlertPopUp("Error", "Invalid user", "OK");
 				}
@@ -75,6 +109,21 @@ namespace HookMeUP.iOS
 				NavigationController.PopViewController(true);
 
 			};
+		}
+
+		async void UpdateRegistered()
+		{
+			foreach (ParseObject employeeObjsElements in employeeObjs) 
+			{
+				string empName = employeeObjsElements.Get<string>("Name");
+				string empEmail = employeeObjsElements.Get<string>("Email");
+
+				if (GetNameTxt.Equals(empName) && GetEmailTxt.Equals(empEmail)) 
+				{
+					employeeObjsElements["IsRegistered"] = true;
+					await employeeObjsElements.SaveAsync();
+				}
+			}
 		}
 
 		void TextEditing()
@@ -215,6 +264,7 @@ namespace HookMeUP.iOS
 				string email = parseObj.Get<string>("Email");
 				bool isRegistered = parseObj.Get<bool>("IsRegistered");
 				employees.Add(new AliensEmployees(emplName, email, isRegistered));
+				employeeObjs.Add(parseObj);
 			}
 
 			loadO.Hide();

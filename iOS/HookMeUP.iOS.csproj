@@ -118,6 +118,7 @@
     <Folder Include="Views\" />
     <Folder Include="TableImages\" />
     <Folder Include="Models\" />
+    <Folder Include="TempFile\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -196,6 +197,7 @@
     <BundleResource Include="Resources\coffee-cup-clip-art-ldxgvdj.png" />
     <BundleResource Include="Resources\lock_and_key_coffee_mug-r00da98d73f744b8cad8dc62f64638b27_x7jg5_8byvr_324.jpg" />
     <BundleResource Include="Resources\Default-568h%402x.png" />
+    <BundleResource Include="TempFile\AliensTeam.txt" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Views\RegisterViewController.xib" />
