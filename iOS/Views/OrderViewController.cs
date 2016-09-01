@@ -14,17 +14,12 @@ namespace HookMeUP.iOS
 		double dynamicPrice = 0.00;
 		int voucherUpdate = 0;
 		public int time;
-		public List<string> items;
+		List<string> items = new List<string>();
+		List<Coffee> coffeeItems = new List<Coffee>();
+
 		public int detectVoucher = 0;
-
-
 		public double getPrice;
-
-		List<Coffee> coffeeItems = new List<Coffee>
-		{
-			new Coffee("Espresso", "cappuccino.jpg", "15.00"),
-			new Coffee("Red Espresso", "Cappuccino1.jpg", "15.50")
-		};
+		string showOrders = "";
 
 		OrderWaitTime orderWaitTime = new OrderWaitTime();
 
@@ -34,14 +29,22 @@ namespace HookMeUP.iOS
 		{
 			base.ViewDidLoad();
 			SetupView();
-			LoadTable();
-
+			LoadTableFuctionality();
 		}
 
 		public override void ViewWillAppear(bool animated)
 		{
 			base.ViewWillAppear(animated);
 			ResetTableView();
+			//showOrders = string.Empty;
+			try
+			{
+				Source.ordersList.Clear();
+			}
+			catch (NullReferenceException ex)
+			{
+				Debug.WriteLine(ex.Source);
+			}
 		}
 
 		public string GetName 
@@ -59,9 +62,68 @@ namespace HookMeUP.iOS
 		void SetupView()
 		{
 			VouchersLabel.Text = GetVouchers + " vouchers";
+
+			hookMeUPButton.TouchUpInside += (obj, evt) =>
+			{
+				// getting orders
+
+				try
+				{
+
+					if (Source.ordersList != null && !Source.ordersList[0].Equals(""))
+					{
+						Order();
+					}
+					else AlertPopUp("Error", "No order(s) selected", "OK");
+
+				}
+				catch (ArgumentOutOfRangeException)
+				{
+					AlertPopUp("Error", "No order(s) selected", "OK");
+				}
+
+			};
+
+			viewOrderButton.TouchUpInside += (o, e) =>
+			 {
+				 NavigationScreenController(queueViewController);
+			 };
+		}
+
+		async void LoadTableFuctionality()
+		{
+			try
+			{
+				loadingOverlay = new LoadingOverlay(bounds);
+				View.Add(loadingOverlay);
+				ParseQuery<ParseObject> query = ParseObject.GetQuery("Coffees");
+				query.Include("Title").Include("Price").Include("ImageName");
+
+				var iEnumerableColl = await query.FindAsync();
+
+				foreach (ParseObject coffeeElements in iEnumerableColl) 
+				{
+					string coffeeName = coffeeElements.Get<string>("Title");
+					string imageName = coffeeElements.Get<string>("ImageName");
+					double price = coffeeElements.Get<double>("Price");
+
+					coffeeItems.Add(new Coffee(coffeeName,imageName,""+price));
+				
+				}
+
+				loadingOverlay.Hide();
+
+			}
+			catch (ParseException)
+			{
+				loadingOverlay.Hide();
+				AlertPopUp("Error", "Connection error", "OK");
+			}
+
 			Source = new TableSourceOrdering(coffeeItems);
 			Source.Voucher = VouchersLabel.Text;
 			ordersTable.Source = Source;
+			ordersTable.ReloadData();
 
 			Source.onCellSelectedForVouchers += (o, e) =>
 			{
@@ -82,6 +144,7 @@ namespace HookMeUP.iOS
 					Source.Voucher = VouchersLabel.Text;
 				}
 			};
+
 			int s = 0;
 			Source.onCellDeselectedForVouchers += (o, e) =>
 			{
@@ -137,68 +200,23 @@ namespace HookMeUP.iOS
 				}
 
 			};
-
-			hookMeUPButton.TouchUpInside += (obj, evt) =>
-			{
-				// getting orders
-
-				try
-				{
-
-					if (Source.ordersList != null && !Source.ordersList[0].Equals(""))
-					{
-						Order();
-
-					}
-					else AlertPopUp("Error", "No order(s) selected", "OK");
-
-				}
-				catch (ArgumentOutOfRangeException)
-				{
-					AlertPopUp("Error", "No order(s) selected", "OK");
-				}
-
-			};
-
-			viewOrderButton.TouchUpInside += (o, e) =>
-			 {
-				 NavigationScreenController(queueViewController);
-			 };
-		}
-
-		void LoadTable()
-		{
-			
-
-			try 
-			{
-				loadingOverlay = new LoadingOverlay(bounds);
-				
-			}
-			catch (ParseException)
-			{
-				loadingOverlay.Hide();
-				AlertPopUp("Error", "Connection error", "OK");
-			}
 		}
 
 		void ResetTableView()
 		{
 			ordersTable.ReloadData();
+			items.Clear();
 		}
 
 		void Order()
 		{
-
-			items = new List<string>();
-
 			double prices = 0;
-			string elementShow = "";
+
 
 			foreach (Coffee orderElements in Source.ordersList)
 			{
 				string orderName = orderElements.Title;
-				elementShow = orderElements.Title;
+				showOrders += orderName+"\n";
 
 				items.Add(orderName);
 				prices = double.Parse(Source.FormatPrice(orderElements.Price));
@@ -207,7 +225,8 @@ namespace HookMeUP.iOS
 
 			UIAlertView alert = new UIAlertView();
 			alert.Title = "Orders selected";
-			alert.Message = elementShow.Trim();
+			alert.Message = showOrders.Trim();
+			showOrders = string.Empty;
 			alert.AddButton("Order");
 			alert.AddButton("Cancel");
 
@@ -354,12 +373,15 @@ namespace HookMeUP.iOS
 				onCellDeselectedForPrice(tableView, price);
 			}
 
+			ordersList.Remove(coffeItem);
+
 		}
 
 		public override string TitleForHeader(UITableView tableView, nint section)
 		{
 			return "Order List\n";
 		}
+
 		public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
 		{
 			return 60f;

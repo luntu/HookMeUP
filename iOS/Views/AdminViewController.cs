@@ -30,8 +30,6 @@ namespace HookMeUP.iOS
 												where ordersTb.Get<bool>("IsOrderDone") == false
 												select ordersTb;
 
-//	ParseObject.GetQuery("Orders");
-//query.Include("objectId").Include("PersonOrdered").Include("OrderList");
 
 				IEnumerable coll = await query.FindAsync();
 			
