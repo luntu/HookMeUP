@@ -20,29 +20,29 @@ namespace HookMeUP.iOS
 		string GetNameTxt { get; set; }
 		string GetEmailTxt { get; set; }
 
-		async void UpdateEmployees()
-		{
-			LoadingOverlay LO = new LoadingOverlay(bounds);
-			View.Add(LO);
-			ParseObject pObj;
-			var text = File.ReadLines("TempFile/AliensTeam.txt");
+		//async void UpdateEmployees()
+		//{
+		//	LoadingOverlay LO = new LoadingOverlay(bounds);
+		//	View.Add(LO);
+		//	ParseObject pObj;
+		//	var text = File.ReadLines("TempFile/AliensTeam.txt");
 
-			foreach (string lines in text)
-			{
-				string[] split = lines.Split('@');
-				string name = split[0];
-				string domain = name+"@" + split[1];
+		//	foreach (string lines in text)
+		//	{
+		//		string[] split = lines.Split('@');
+		//		string name = split[0];
+		//		string domain = name+"@" + split[1];
 
-				pObj = new ParseObject("AliensEmployees");
-				pObj["Name"] = name;
-				pObj["Email"] = domain;
-				pObj["IsRegistered"] = false;
+		//		pObj = new ParseObject("AliensEmployees");
+		//		pObj["Name"] = name;
+		//		pObj["Email"] = domain;
+		//		pObj["IsRegistered"] = false;
 
-				await pObj.SaveAsync();
+		//		await pObj.SaveAsync();
 
-			}
-			LO.Hide();
-		}
+		//	}
+		//	LO.Hide();
+		//}
 
 		public override void ViewDidLoad()
 		{
@@ -55,7 +55,7 @@ namespace HookMeUP.iOS
 			RegisterForKeyboardNotifications();
 			nameText.BecomeFirstResponder();
 
-			UpdateEmployees();
+			//UpdateEmployees();
 
 			SetFields();
 			submitButton.Enabled = true;
@@ -87,11 +87,15 @@ namespace HookMeUP.iOS
 
 					if (userAuthentication.IsAlienEmployee())
 					{
-						AddToDB(name, surname, username, password, email, 23);
-						NavigationController.PopViewController(true);
-						AlertPopUp("Done!!!", "Registration complete", "OK");
-						ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
-						UpdateRegistered();
+						if (!userAuthentication.AccountAvailable())
+						{
+							AddToDB(name, surname, username, password, email, 23);
+							NavigationController.PopViewController(true);
+							AlertPopUp("Done!!!", "Registration complete", "OK");
+							ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
+							UpdateRegistered();
+						}
+						else AlertPopUp("Error","Account already available","Ok");
 					}
 					else AlertPopUp("Error", "Invalid user", "OK");
 				}
@@ -279,6 +283,7 @@ namespace HookMeUP.iOS
 		public string Name { get; private set; }
 		public string Email { get; private set; }
 		public List<AliensEmployees> Employees;
+		bool isAvailable = false;
 
 		public AuthanticateUser(List<AliensEmployees>employees, string name, string email) 
 		{
@@ -298,6 +303,10 @@ namespace HookMeUP.iOS
 
 				if (name.Equals(Name) && email.Equals(Email))
 				{
+					if (isRegistered) 
+					{
+						isAvailable = isRegistered;
+					}
 					return true;
 				}
 
@@ -309,6 +318,12 @@ namespace HookMeUP.iOS
 		{
 			if (Authanticate()) return true;
 			else return false;
+		}
+
+
+		public bool AccountAvailable()
+		{
+			return isAvailable;
 		}
 
 	}
