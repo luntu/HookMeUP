@@ -3,8 +3,6 @@ using UIKit;
 using Parse;
 using ToastIOS;
 using CoreGraphics;
-using System;
-using System.IO;
 
 namespace HookMeUP.iOS
 {
@@ -20,29 +18,6 @@ namespace HookMeUP.iOS
 		string GetNameTxt { get; set; }
 		string GetEmailTxt { get; set; }
 
-		//async void UpdateEmployees()
-		//{
-		//	LoadingOverlay LO = new LoadingOverlay(bounds);
-		//	View.Add(LO);
-		//	ParseObject pObj;
-		//	var text = File.ReadLines("TempFile/AliensTeam.txt");
-
-		//	foreach (string lines in text)
-		//	{
-		//		string[] split = lines.Split('@');
-		//		string name = split[0];
-		//		string domain = name+"@" + split[1];
-
-		//		pObj = new ParseObject("AliensEmployees");
-		//		pObj["Name"] = name;
-		//		pObj["Email"] = domain;
-		//		pObj["IsRegistered"] = false;
-
-		//		await pObj.SaveAsync();
-
-		//	}
-		//	LO.Hide();
-		//}
 
 		public override void ViewDidLoad()
 		{
@@ -202,13 +177,7 @@ namespace HookMeUP.iOS
 			};
 		}
 
-		void ValidateTextInput(params UITextField[] fields) 
-		{
-			foreach (var txtF in fields) 
-			{
-				//string
-			}
-		}
+	
 
 		void Border(CGColor color, params UITextField[] textF) 
 		{

@@ -19,7 +19,7 @@ namespace HookMeUP.iOS
 		public static ForgotPasswordViewController forgotPasswordViewController = new ForgotPasswordViewController();
 		public static OrderViewController orderViewController = new OrderViewController();
 		public ParseObject tableNameUserInfo = new ParseObject("UserInformation");
-		public ParseObject tableNameOrders = new ParseObject("Orders");
+
 		public LoadingOverlay loadingOverlay;
 		public CGRect bounds = UIScreen.MainScreen.Bounds;
 

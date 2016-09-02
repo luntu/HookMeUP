@@ -10,12 +10,13 @@ namespace HookMeUP.iOS
 {
 	public partial class OrderViewController : ScreenViewController
 	{
-		public TableSourceOrdering Source { get; set; }
+		public TableSourceOrdering Source { get;private set; }
 		double dynamicPrice = 0.00;
 		int voucherUpdate = 0;
 		public int time;
 		List<string> items = new List<string>();
 		List<Coffee> coffeeItems = new List<Coffee>();
+		ParseObject tableNameOrders;
 
 		public int detectVoucher = 0;
 		public double getPrice;
@@ -37,7 +38,7 @@ namespace HookMeUP.iOS
 		{
 			base.ViewWillAppear(animated);
 			ResetTableView();
-			//showOrders = string.Empty;
+			//tableNameOrders = new ParseObject("Orders");
 			try
 			{
 				Source.ordersList.Clear();
@@ -248,10 +249,11 @@ namespace HookMeUP.iOS
 
 				   loadingOverlay = new LoadingOverlay(bounds);
 				   View.Add(loadingOverlay);
-				  
+
+				   
 				   try
 				   {
-
+					   tableNameOrders = new ParseObject("Orders");
 					   tableNameOrders["PersonOrdered"] = GetName;
 					   tableNameOrders["OrderList"] = items;
 					   tableNameOrders["Price"] = prices;
@@ -260,7 +262,7 @@ namespace HookMeUP.iOS
 					   CurrentUser["Vouchers"] = voucherUpdate;
 					   await tableNameOrders.SaveAsync();
 					   await CurrentUser.SaveAsync();
-
+						items.Clear();
 				   }
 				   catch (ParseException q)
 				   {

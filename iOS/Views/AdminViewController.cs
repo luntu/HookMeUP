@@ -11,7 +11,7 @@ namespace HookMeUP.iOS
 	public partial class AdminViewController : ScreenViewController
 	{
 
-		public TableSourceAdmin Source { get; set; }
+		public TableSourceAdmin Source { get;private set; }
 		public List<string> AdminGetOrders { get; set; } = new List<string>();
 		IList orderItems = null;
 	

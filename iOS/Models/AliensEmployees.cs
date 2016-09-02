@@ -1,5 +1,4 @@
-﻿using System;
-namespace HookMeUP.iOS
+﻿namespace HookMeUP.iOS
 {
 	public class AliensEmployees
 	{

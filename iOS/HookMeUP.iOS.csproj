@@ -119,6 +119,7 @@
     <Folder Include="TableImages\" />
     <Folder Include="Models\" />
     <Folder Include="TempFile\" />
+    <Folder Include="ValidateInput\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -174,6 +175,7 @@
     </Compile>
     <Compile Include="Models\Coffee.cs" />
     <Compile Include="Models\AliensEmployees.cs" />
+    <Compile Include="ValidateInput\ValidateInput.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
