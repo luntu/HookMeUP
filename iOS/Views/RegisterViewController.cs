@@ -59,8 +59,8 @@ namespace HookMeUP.iOS
 
 			SetFields();
 			submitButton.Enabled = true;
-			Values();
-			Employees();
+			LoadUsernames();
+			LoadEmployees();
 
 			TextFieldKeyboardIteration(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
 
@@ -87,15 +87,22 @@ namespace HookMeUP.iOS
 
 					if (userAuthentication.IsAlienEmployee())
 					{
+						Border(UIColor.Clear.CGColor, emailText);
+
 						if (!userAuthentication.AccountAvailable())
 						{
+							
+							UpdateRegistered();
 							AddToDB(name, surname, username, password, email, 23);
 							NavigationController.PopViewController(true);
 							AlertPopUp("Done!!!", "Registration complete", "OK");
 							ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
-							UpdateRegistered();
 						}
-						else AlertPopUp("Error","Account already available","Ok");
+						else 
+						{
+							Border(UIColor.Red.CGColor, emailText);
+							AlertPopUp("Error", "Account already available", "Ok");
+						}
 					}
 					else AlertPopUp("Error", "Invalid user", "OK");
 				}
@@ -117,17 +124,22 @@ namespace HookMeUP.iOS
 
 		async void UpdateRegistered()
 		{
+			LoadingOverlay ldOvly = new LoadingOverlay(bounds);
+			View.Add(ldOvly);
+
 			foreach (ParseObject employeeObjsElements in employeeObjs) 
 			{
 				string empName = employeeObjsElements.Get<string>("Name");
 				string empEmail = employeeObjsElements.Get<string>("Email");
 
-				if (GetNameTxt.Equals(empName) && GetEmailTxt.Equals(empEmail)) 
+				if (GetNameTxt.ToLower().Equals(empName.ToLower()) && GetEmailTxt.ToLower().Equals(empEmail.ToLower())) 
 				{
 					employeeObjsElements["IsRegistered"] = true;
 					await employeeObjsElements.SaveAsync();
 				}
 			}
+
+			ldOvly.Hide();
 		}
 
 		void TextEditing()
@@ -177,12 +189,25 @@ namespace HookMeUP.iOS
 
 					submitButton.Enabled = false;
 				}
+				else if (emailText.Text == string.Empty)
+				{
+					Border(UIColor.Clear.CGColor, emailText);
+					submitButton.Enabled = true;
+				}
 				else
 				{
 					Border(UIColor.Clear.CGColor, emailText);
 					submitButton.Enabled = true;
 				}
 			};
+		}
+
+		void ValidateTextInput(params UITextField[] fields) 
+		{
+			foreach (var txtF in fields) 
+			{
+				//string
+			}
 		}
 
 		void Border(CGColor color, params UITextField[] textF) 
@@ -233,7 +258,7 @@ namespace HookMeUP.iOS
 			fields.Add(emailText);
 		}
 
-		async void Values()
+		async void LoadUsernames()
 		{
 
 			loadingOverlay = new LoadingOverlay(bounds);
@@ -252,7 +277,7 @@ namespace HookMeUP.iOS
 
 		}
 
-		async void Employees()
+		async void LoadEmployees()
 		{
 			LoadingOverlay loadO = new LoadingOverlay(bounds);
 			View.Add(loadingOverlay);
