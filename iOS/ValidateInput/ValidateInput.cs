@@ -13,49 +13,95 @@ namespace HookMeUP.iOS
 			'.','!', '#', '%', '^', '(', ')', '_', '-', '=', '+', ',', '\'', '/', '?',';',':','\"'
 		};
 
-		public ValidateInput(params UITextField[] fields)
+		bool IsValid { get; set; } = false;
+		UIButton Button { get; set; }
+
+		public ValidateInput(UIButton button, params UITextField[] fields)
 		{
+			Button = button;
 			foreach (UITextField txtFields in fields) 
 			{
 				textFields.Add(txtFields);
 			}
 		}
 
-		void ValidateTextInput()
+		public void ValidateTextInput()
 		{
+			bool hasIllegalCharacter = false;
+
 			foreach (var f in textFields) 
 			{
-				switch (f.Text) 
+				switch (f.Tag) 
 				{
-					case "Name":
-						if (f.Text.Length <= 10) IsValid = true;
-						else IsValid = false;
+					case 0:                                //name length < 10
+						f.EditingDidEnd += (sender, e) => 
+						{
+							if (f.Text.Length <= 10) IsValid = true;
+							else IsValid = false;
+							CheckValidation(IsValid, f);
+							ButtonEnable(IsValid);
+						};
 
 						break;
-					case "Surname":
-						bool hasIllegalCharacter = false;
-						foreach (char c in illegalCharacters) 
+						
+					case 1:                             //Surname lenght < 15
+						f.EditingDidEnd += (sender, e) =>
 						{
-							if (f.Text.Contains("" + c)){
+							if (f.Text.Length <= 15) IsValid = true;
+							else IsValid = false;
+							CheckValidation(IsValid, f);
+							ButtonEnable(IsValid);
+						};
+						break;
+						
+					case 2:                            //Enter text of length >= 5 and <=8 and no illegal characters
+						foreach (char c in illegalCharacters)
+						{
+							if (f.Text.Contains("" + c))
+							{
 								hasIllegalCharacter = true;
 								break;
-							}	
+							}
 						}
-						if (!hasIllegalCharacter && f.Text.Length <=15) 
+
+						f.EditingDidEnd += (sender, e) =>
 						{
-						}
+							if (!hasIllegalCharacter && (f.Text.Length <= 8 && f.Text.Length >= 5)) IsValid = true;
+							else IsValid = false;
+							CheckValidation(IsValid, f);
+							ButtonEnable(IsValid);
+						};
 						break;
-					case "Username":
 						
+					case 3:                            //Password can have illegal character but its length must be between 5 and 10 inclusive
+
+						f.EditingDidEnd += (sender, e) =>
+						{
+							if ((f.Text.Length >= 5 && f.Text.Length <= 10)) IsValid = true;
+							else IsValid = false;
+							CheckValidation(IsValid, f);
+							ButtonEnable(IsValid);
+						};
 						break;
-					case "Password":
-						
+
+					case 4:
+						f.EditingDidEnd += (sender, e) =>
+						{
+							if ((f.Text.Length >= 5 && f.Text.Length <= 10)) IsValid = true;
+							else IsValid = false;
+							CheckValidation(IsValid, f);
+							ButtonEnable(IsValid);
+						};
 						break;
-					case "Verify password":
 						
-						break;
-					case "Email":
-						
+					case 5:
+						f.EditingDidEnd += (sender, e) =>
+						{
+							if ((f.Text.Length >= 20 && f.Text.Length <= 35)) IsValid = true;
+							else IsValid = false;
+							CheckValidation(IsValid, f);
+							ButtonEnable(IsValid);
+						};
 						break;
 
 					default:
@@ -65,7 +111,23 @@ namespace HookMeUP.iOS
 			}
 		}
 
-		public bool IsValid { get; private set; } = false;
+
+
+		void CheckValidation(bool valid, UITextField f) 
+		{
+			if (!valid) 
+			{ 
+				f.Layer.BorderColor = UIColor.Red.CGColor;
+				f.Layer.BorderWidth = 1;
+				f.Layer.CornerRadius = 3;
+			}
+			else f.Layer.BorderColor = UIColor.Clear.CGColor;
+
+		}
+
+		void ButtonEnable(bool valid) {
+			Button.Enabled = valid;
+		}
 	}
 }
 

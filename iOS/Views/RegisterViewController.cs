@@ -3,6 +3,7 @@ using UIKit;
 using Parse;
 using ToastIOS;
 using CoreGraphics;
+using System;
 
 namespace HookMeUP.iOS
 {
@@ -40,7 +41,14 @@ namespace HookMeUP.iOS
 			TextFieldKeyboardIteration(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
 
 			TextEditing();
+			InputTextEditingValidation();
 			InitializeButtons();
+		}
+
+		void InputTextEditingValidation()
+		{
+			ValidateInput validate = new ValidateInput(submitButton,nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
+			validate.ValidateTextInput();
 		}
 
 		void InitializeButtons()
