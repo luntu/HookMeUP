@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using Foundation;
 using Parse;
+using ToastIOS;
 using UIKit;
 
 namespace HookMeUP.iOS
@@ -128,81 +129,81 @@ namespace HookMeUP.iOS
 			ordersTable.Source = Source;
 			ordersTable.ReloadData();
 
-			Source.onCellSelectedForVouchers += (o, e) =>
-			{
-				e--;
+			//Source.onCellSelectedForVouchers += (o, e) =>
+			//{
+			//	e--;
 
-				if (e == 0)
-				{
-					VouchersLabel.Text = e + " Vouchers";
-				}
-				if (e < 0)
-				{
-					detectVoucher++;
-				}
-				else
-				{
+			//	if (e == 0)
+			//	{
+			//		VouchersLabel.Text = e + " Vouchers";
+			//	}
+			//	if (e < 0)
+			//	{
+			//		detectVoucher++;
+			//	}
+			//	else
+			//	{
 
-					VouchersLabel.Text = e + " Vouchers";
-					Source.Voucher = VouchersLabel.Text;
-				}
-			};
+			//		VouchersLabel.Text = e + " Vouchers";
+			//		Source.Voucher = VouchersLabel.Text;
+			//	}
+			//};
 
-			int s = 0;
-			Source.onCellDeselectedForVouchers += (o, e) =>
-			{
-
-
-				if (detectVoucher == 0) // if vouchers are not negative because detect vouchers increment negatively.
-				{
-					e++;
-					VouchersLabel.Text = e + " Vouchers";
-					Source.Voucher = VouchersLabel.Text;
-					ordersTable.BackgroundColor = UIColor.Clear;
-
-				}
-
-				else
-				{
-					s = detectVoucher;
-					detectVoucher--; //detect voucher is > 0, meaning vouchers are negative. so reduce it until it hits zero to increase the vouchers
+			//int s = 0;
+			//Source.onCellDeselectedForVouchers += (o, e) =>
+			//{
 
 
-				}
-			};
+			//	if (detectVoucher == 0) // if vouchers are not negative because detect vouchers increment negatively.
+			//	{
+			//		e++;
+			//		VouchersLabel.Text = e + " Vouchers";
+			//		Source.Voucher = VouchersLabel.Text;
+			//		ordersTable.BackgroundColor = UIColor.Clear;
+
+			//	}
+
+			//	else
+			//	{
+			//		s = detectVoucher;
+			//		detectVoucher--; //detect voucher is > 0, meaning vouchers are negative. so reduce it until it hits zero to increase the vouchers
+
+
+			//	}
+			//};
 
 
 
-			Source.onCellSelectedForPrice += (o, e) =>
-			{
+			//Source.onCellSelectedForPrice += (o, e) =>
+			//{
 
-				if (detectVoucher != 0)
-				{
-					dynamicPrice += e;
-					costText.Text = dynamicPrice.ToString("R 0.00");
-				}
-
-
-			};
-
-			Source.onCellDeselectedForPrice += (o, e) =>
-			{
+			//	if (detectVoucher != 0)
+			//	{
+			//		dynamicPrice += e;
+			//		costText.Text = dynamicPrice.ToString("R 0.00");
+			//	}
 
 
-				if (detectVoucher == 0 && s == 1)
-				{
+			//};
 
-					dynamicPrice -= e;
-					costText.Text = "R 0,00";
-				}
+			//Source.onCellDeselectedForPrice += (o, e) =>
+			//{
 
-				if (detectVoucher < 0 || detectVoucher != 0)
-				{
-					dynamicPrice -= e;
-					costText.Text = dynamicPrice.ToString("R 0.00");
-				}
 
-			};
+			//	if (detectVoucher == 0 && s == 1)
+			//	{
+
+			//		dynamicPrice -= e;
+			//		costText.Text = "R 0,00";
+			//	}
+
+			//	if (detectVoucher < 0 || detectVoucher != 0)
+			//	{
+			//		dynamicPrice -= e;
+			//		costText.Text = dynamicPrice.ToString("R 0.00");
+			//	}
+
+			//};
 		}
 
 		void ResetTableView()
@@ -414,7 +415,7 @@ namespace HookMeUP.iOS
 	//==============================================================================================================
 
 
-	public class OrderWaitTime
+	class OrderWaitTime
 	{
 
 		const int AVERAGE_ORDER_TIME = 2;
@@ -427,6 +428,48 @@ namespace HookMeUP.iOS
 			return time;
 		}
 
+	}
+
+	class VoucherAndPriceCount 
+	{
+		TableSourceOrdering Source;
+		UITextField CostText;
+		UILabel VoucherLabel;
+		public double Price;
+
+		int detectChange = 0;
+
+		public VoucherAndPriceCount(TableSourceOrdering Source, UITextField CostText, UILabel VoucherLabel) 
+		{
+			this.Source = Source;
+			this.CostText = CostText;
+			this.VoucherLabel = VoucherLabel;
+
+		}
+
+		public int ChengeInVouchers() 
+		{
+			int Vouchers = 0;
+			Source.onCellSelectedForVouchers += (sender, e) =>  
+			{
+				--e;
+				Vouchers = e;
+
+			};
+			Source.onCellDeselectedForVouchers += (sender, e) =>
+			{
+				Vouchers = ++e;
+			};
+			return Vouchers;
+		}
+
+		public void Save() 
+		{
+			
+		}
+
+
+	
 	}
 
 }
