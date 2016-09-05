@@ -129,7 +129,7 @@ namespace HookMeUP.iOS
 			return View.FindFirstResponder();
 		}
 
-		private void OnKeyboardNotification(NSNotification notification)
+		void OnKeyboardNotification(NSNotification notification)
 		{
 			if (!IsViewLoaded) return;
 
