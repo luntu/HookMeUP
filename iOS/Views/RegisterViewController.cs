@@ -37,11 +37,12 @@ namespace HookMeUP.iOS
 			submitButton.Enabled = true;
 			LoadUsernames();
 			LoadEmployees();
+
 			TextFieldKeyboardIteration(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
+
 			TextEditing();
 			InputTextEditingValidation();
 			InitializeButtons();
-
 		}
 
 		void InputTextEditingValidation()
@@ -100,7 +101,7 @@ namespace HookMeUP.iOS
 
 				ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
 				NavigationController.PopViewController(true);
-				Border(UIColor.Clear.CGColor, nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
+
 			};
 		}
 

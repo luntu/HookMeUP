@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using UIKit;
-using ToastIOS;
 
 namespace HookMeUP.iOS
 {
@@ -11,7 +10,7 @@ namespace HookMeUP.iOS
 		List<UITextField> textFields = new List<UITextField>();
 		List<char> illegalCharacters = new List<char> 
 		{
-			'.','!', '#', '%', '^', '(', ')', '_', '-', '=', '+', ',', '\'', '/', '?',';',':','\"',' '
+			'.','!', '#', '%', '^', '(', ')', '_', '-', '=', '+', ',', '\'', '/', '?',';',':','\"'
 		};
 
 		bool IsValid { get; set; } = false;
@@ -41,8 +40,6 @@ namespace HookMeUP.iOS
 							else IsValid = false;
 							CheckValidation(IsValid, f);
 							ButtonEnable(IsValid);
-							if(!IsValid)
-								ErrorMessage(f, "");
 						};
 
 						break;
@@ -54,12 +51,10 @@ namespace HookMeUP.iOS
 							else IsValid = false;
 							CheckValidation(IsValid, f);
 							ButtonEnable(IsValid);
-							if (!IsValid)
-								ErrorMessage(f, "");
 						};
 						break;
 						
-					case 2:                            //Enter username of length >= 5 and <=8 and no illegal characters
+					case 2:                            //Enter text of length >= 5 and <=8 and no illegal characters
 						foreach (char c in illegalCharacters)
 						{
 							if (f.Text.Contains("" + c))
@@ -73,11 +68,8 @@ namespace HookMeUP.iOS
 						{
 							if (!hasIllegalCharacter && (f.Text.Length <= 8 && f.Text.Length >= 5)) IsValid = true;
 							else IsValid = false;
-							
 							CheckValidation(IsValid, f);
 							ButtonEnable(IsValid);
-							if (!IsValid)
-								ErrorMessage(f, "");
 						};
 						break;
 						
@@ -89,8 +81,6 @@ namespace HookMeUP.iOS
 							else IsValid = false;
 							CheckValidation(IsValid, f);
 							ButtonEnable(IsValid);
-							if (!IsValid)
-								ErrorMessage(f, "");
 						};
 						break;
 
@@ -101,8 +91,6 @@ namespace HookMeUP.iOS
 							else IsValid = false;
 							CheckValidation(IsValid, f);
 							ButtonEnable(IsValid);
-							if (!IsValid)
-								ErrorMessage(f, "");
 						};
 						break;
 						
@@ -113,8 +101,6 @@ namespace HookMeUP.iOS
 							else IsValid = false;
 							CheckValidation(IsValid, f);
 							ButtonEnable(IsValid);
-							if (!IsValid)
-								ErrorMessage(f, "");
 						};
 						break;
 
@@ -139,16 +125,9 @@ namespace HookMeUP.iOS
 
 		}
 
-		void ButtonEnable(bool valid) 
-		{
+		void ButtonEnable(bool valid) {
 			Button.Enabled = valid;
 		}
-
-		void ErrorMessage(UITextField field, string message) //Display toast message above keyboard
-		{
-			Toast.MakeText(message).Show();
-		}
-
 	}
 }
 
