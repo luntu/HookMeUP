@@ -125,7 +125,8 @@ namespace HookMeUP.iOS
 
 		}
 
-		void ButtonEnable(bool valid) {
+		void ButtonEnable(bool valid) 
+		{
 			Button.Enabled = valid;
 		}
 	}
