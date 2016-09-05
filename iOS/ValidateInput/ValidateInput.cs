@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using UIKit;
 
@@ -10,7 +9,7 @@ namespace HookMeUP.iOS
 		List<UITextField> textFields = new List<UITextField>();
 		List<char> illegalCharacters = new List<char> 
 		{
-			'.','!', '#', '%', '^', '(', ')', '_', '-', '=', '+', ',', '\'', '/', '?',';',':','\"'
+			'.','!', '#', '%', '^', '(', ')', '_', '-', '=', '+', ',', '\'', '/', '?',';',':','\"', ' ' 
 		};
 
 		bool IsValid { get; set; } = false;
@@ -54,7 +53,7 @@ namespace HookMeUP.iOS
 						};
 						break;
 						
-					case 2:                            //Enter text of length >= 5 and <=8 and no illegal characters
+					case 2:                            //Enter text of length >= 5 and <=10 and no illegal characters
 						foreach (char c in illegalCharacters)
 						{
 							if (f.Text.Contains("" + c))
@@ -66,7 +65,7 @@ namespace HookMeUP.iOS
 
 						f.EditingDidEnd += (sender, e) =>
 						{
-							if (!hasIllegalCharacter && (f.Text.Length <= 8 && f.Text.Length >= 5)) IsValid = true;
+							if (!hasIllegalCharacter && (f.Text.Length <= 10 && f.Text.Length >= 5)) IsValid = true;
 							else IsValid = false;
 							CheckValidation(IsValid, f);
 							ButtonEnable(IsValid);
