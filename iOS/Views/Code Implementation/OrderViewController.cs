@@ -4,15 +4,26 @@ using System.Diagnostics;
 using System.Drawing;
 using Foundation;
 using Parse;
-using ToastIOS;
 using UIKit;
 
 namespace HookMeUP.iOS
 {
 	public partial class OrderViewController : ScreenViewController
 	{
-		public TableSourceOrdering Source { get;private set; }
-		double dynamicPrice = 0.00;
+		public TableSourceOrdering Source 
+		{ 
+			get;
+			private set;
+		}
+		VoucherCount VoucherCount = new VoucherCount();
+
+		PriceCount PriceCount 
+		{
+			get;
+			set;
+		}
+
+		//double dynamicPrice = 0.00;
 		int voucherUpdate = 0;
 		public int time;
 		List<string> items = new List<string>();
@@ -38,17 +49,8 @@ namespace HookMeUP.iOS
 		public override void ViewWillAppear(bool animated)
 		{
 			base.ViewWillAppear(animated);
-			ResetTableView();
-			//tableNameOrders = new ParseObject("Orders");
-			try
-			{
-				Source.ordersList.Clear();
-				costText.Text = "R 0,00";
-			}
-			catch (NullReferenceException ex)
-			{
-				Debug.WriteLine(ex.Source);
-			}
+			ResetScreen();
+
 		}
 
 		public string GetName 
@@ -63,10 +65,11 @@ namespace HookMeUP.iOS
 			set;
 		}
 
+
 		void SetupView()
 		{
 			VouchersLabel.Text = GetVouchers + " vouchers";
-
+			PriceCount = new PriceCount(costText);
 			hookMeUPButton.TouchUpInside += (obj, evt) =>
 			{
 				// getting orders
@@ -129,81 +132,52 @@ namespace HookMeUP.iOS
 			ordersTable.Source = Source;
 			ordersTable.ReloadData();
 
-			//Source.onCellSelectedForVouchers += (o, e) =>
-			//{
-			//	e--;
+			Source.onCellSelectedForVouchers += (sender, e) => 
+			{
+				VoucherCount.Voucher = e;
+				VoucherCount.IsSelected = true;
+				VoucherCount.IsDeselected = false;
+				DisplayAndSaveVouchers();
+			};
 
-			//	if (e == 0)
-			//	{
-			//		VouchersLabel.Text = e + " Vouchers";
-			//	}
-			//	if (e < 0)
-			//	{
-			//		detectVoucher++;
-			//	}
-			//	else
-			//	{
+			Source.onCellDeselectedForVouchers += (sender, e) =>
+			{
+				VoucherCount.Voucher = e;
+				VoucherCount.IsDeselected = true;
+				VoucherCount.IsSelected = false;
+				DisplayAndSaveVouchers();
+			};
 
-			//		VouchersLabel.Text = e + " Vouchers";
-			//		Source.Voucher = VouchersLabel.Text;
-			//	}
-			//};
+			Source.onCellSelectedForPrice += (sender, e) =>
+			{
+				PriceCount.Price = e;
+				PriceCount.Selected = true;
+				PriceCount.Deselected = false;
+				//PriceCount
 
-			//int s = 0;
-			//Source.onCellDeselectedForVouchers += (o, e) =>
-			//{
-
-
-			//	if (detectVoucher == 0) // if vouchers are not negative because detect vouchers increment negatively.
-			//	{
-			//		e++;
-			//		VouchersLabel.Text = e + " Vouchers";
-			//		Source.Voucher = VouchersLabel.Text;
-			//		ordersTable.BackgroundColor = UIColor.Clear;
-
-			//	}
-
-			//	else
-			//	{
-			//		s = detectVoucher;
-			//		detectVoucher--; //detect voucher is > 0, meaning vouchers are negative. so reduce it until it hits zero to increase the vouchers
+			};
 
 
-			//	}
-			//};
+		}
+		void DisplayAndSaveVouchers() 
+		{
+			VoucherCount.VoucherChange();
+			VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
+			Source.Voucher = VouchersLabel.Text;
+		}
 
-
-
-			//Source.onCellSelectedForPrice += (o, e) =>
-			//{
-
-			//	if (detectVoucher != 0)
-			//	{
-			//		dynamicPrice += e;
-			//		costText.Text = dynamicPrice.ToString("R 0.00");
-			//	}
-
-
-			//};
-
-			//Source.onCellDeselectedForPrice += (o, e) =>
-			//{
-
-
-			//	if (detectVoucher == 0 && s == 1)
-			//	{
-
-			//		dynamicPrice -= e;
-			//		costText.Text = "R 0,00";
-			//	}
-
-			//	if (detectVoucher < 0 || detectVoucher != 0)
-			//	{
-			//		dynamicPrice -= e;
-			//		costText.Text = dynamicPrice.ToString("R 0.00");
-			//	}
-
-			//};
+		void ResetScreen() 
+		{
+			ResetTableView();
+			try
+			{
+				Source.ordersList.Clear();
+				costText.Text = "R 0,00";
+			}
+			catch (NullReferenceException ex)
+			{
+				Debug.WriteLine(ex.Source);
+			}
 		}
 
 		void ResetTableView()
@@ -269,7 +243,7 @@ namespace HookMeUP.iOS
 				   {
 					  Debug.WriteLine(q.StackTrace);
 				   }
-
+					ResetScreen();
 				   loadingOverlay.Hide();
 				}
 
@@ -430,46 +404,124 @@ namespace HookMeUP.iOS
 
 	}
 
-	class VoucherAndPriceCount 
+	//==============================================================================================================
+	//==============================================================================================================
+	//==============================================================================================================
+	//==============================================================================================================
+
+	class VoucherCount
 	{
-		TableSourceOrdering Source;
-		UITextField CostText;
-		UILabel VoucherLabel;
-		public double Price;
 
-		int detectChange = 0;
-
-		public VoucherAndPriceCount(TableSourceOrdering Source, UITextField CostText, UILabel VoucherLabel) 
+		bool IsVoucherDepleted 
 		{
-			this.Source = Source;
-			this.CostText = CostText;
-			this.VoucherLabel = VoucherLabel;
-
+			get;
+			set;
+		}
+		bool IsVoucherNegative 
+		{ 
+			get;
+			set;
 		}
 
-		public int ChengeInVouchers() 
+		public int Voucher
 		{
-			int Vouchers = 0;
-			Source.onCellSelectedForVouchers += (sender, e) =>  
-			{
-				--e;
-				Vouchers = e;
-
-			};
-			Source.onCellDeselectedForVouchers += (sender, e) =>
-			{
-				Vouchers = ++e;
-			};
-			return Vouchers;
+			get;
+			set;
 		}
 
-		public void Save() 
+		public double Price
 		{
+			get;
+			set;
+		}
+
+		public bool IsSelected
+		{
+			get;
+			set;
+		}
+
+		public bool IsDeselected
+		{
+			get;
+			set;
+		}
+
+		public void VoucherChange()
+		{
+			if (Voucher > 0)
+			{
+				if (IsSelected) --Voucher;
+				if (IsDeselected) ++Voucher;
+
+			}
+			else if (Voucher == 0) IsVoucherDepleted = true;
+			else
+			{
+				IsVoucherNegative = true;
+
+			}
+		}
+
+		public int GetVoucher()
+		{
+			return Voucher;
+		}
+	}
+
+	//==================================================================================================================
+	//==================================================================================================================
+	//==================================================================================================================
+	//==================================================================================================================
+
+	class PriceCount
+	{
+		public double Price
+		{
+			get;
+			set;
+		}
+
+		public bool Selected 
+		{
+			get;
+			set;
+		}
+
+		public bool Deselected
+		{
+			get;
+			set;
+		}
+
+		bool Depleted 
+		{
+			get;
+			set;
+		}
+
+		bool Negative
+		{
+			get;
+			set;
+		}
+
+		int NegativeVouchers
+		{ 
+			get;
+			set;
+		}
+		UITextField CostText 
+		{
+			get;
+			set;
+		}
+
+		public PriceCount(UITextField costText) 
+		{
+			CostText = costText;
+		}
 			
-		}
-
-
-	
 	}
 
 }
