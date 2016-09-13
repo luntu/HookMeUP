@@ -122,6 +122,7 @@
     <Folder Include="ValidateInput\" />
     <Folder Include="Views\Design\" />
     <Folder Include="Views\Code Implementation\" />
+    <Folder Include="OrderingFunction\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -162,10 +163,6 @@
     <Compile Include="Views\Code Implementation\LoginViewController.designer.cs">
       <DependentUpon>LoginViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Code Implementation\OrderViewController.cs" />
-    <Compile Include="Views\Code Implementation\OrderViewController.designer.cs">
-      <DependentUpon>OrderViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Code Implementation\QueueViewController.cs" />
     <Compile Include="Views\Code Implementation\QueueViewController.designer.cs">
       <DependentUpon>QueueViewController.cs</DependentUpon>
@@ -178,6 +175,14 @@
     <Compile Include="Views\Code Implementation\ScreenViewController.designer.cs">
       <DependentUpon>ScreenViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Code Implementation\OrderViewController.cs" />
+    <Compile Include="Views\Code Implementation\OrderViewController.designer.cs">
+      <DependentUpon>OrderViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrderingFunction\TableSourceOrdering.cs" />
+    <Compile Include="OrderingFunction\OrderWaitTime.cs" />
+    <Compile Include="OrderingFunction\VoucherCount.cs" />
+    <Compile Include="OrderingFunction\PriceCount.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
