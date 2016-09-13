@@ -49,12 +49,11 @@ namespace HookMeUP.iOS
 
 		public void VoucherChange()
 		{
+			
 			if (Voucher > 0)
 			{
 				IsVoucherNegative = false;
 				IsVoucherDepleted = false;
-				if (IsSelected) --Voucher;
-				if (IsDeselected) ++Voucher;
 
 			}
 			//else if (Voucher == 0) IsVoucherDepleted = true;
@@ -63,6 +62,9 @@ namespace HookMeUP.iOS
 				IsVoucherNegative = true;
 				IsVoucherDepleted = false;
 			}
+
+			if (IsSelected && !IsVoucherNegative) --Voucher;
+			if (IsDeselected) ++Voucher;
 		}
 
 		public int GetVoucher()

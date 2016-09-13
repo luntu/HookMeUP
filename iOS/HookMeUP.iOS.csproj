@@ -124,6 +124,9 @@
     <Folder Include="Views\CoffeeAppHookMeUp\" />
     <Folder Include="Views\CoffeeAppHookMeUp\Design\" />
     <Folder Include="Views\CoffeeAppHookMeUp\Code Implementation\" />
+    <Folder Include="Views\FireEvacuation\" />
+    <Folder Include="Views\FireEvacuation\Design\" />
+    <Folder Include="Views\FireEvacuation\Code Implementation\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -147,14 +150,6 @@
     <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AdminViewController.cs" />
     <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AdminViewController.designer.cs">
       <DependentUpon>..\..\Code Implementation\AdminViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AliensTrackerListViewController.cs" />
-    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AliensTrackerListViewController.designer.cs">
-      <DependentUpon>..\..\Code Implementation\AliensTrackerListViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AliensTrackerRegisterViewController.cs" />
-    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AliensTrackerRegisterViewController.designer.cs">
-      <DependentUpon>..\..\Code Implementation\AliensTrackerRegisterViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\ForgotPasswordViewController.cs" />
     <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\ForgotPasswordViewController.designer.cs">
@@ -184,6 +179,14 @@
     <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\ScreenViewController.designer.cs">
       <DependentUpon>..\..\Code Implementation\ScreenViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\FireEvacuation\Code Implementation\AliensTrackerListViewController.cs" />
+    <Compile Include="Views\FireEvacuation\Code Implementation\AliensTrackerListViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\AliensTrackerListViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FireEvacuation\Code Implementation\AliensTrackerRegisterViewController.cs" />
+    <Compile Include="Views\FireEvacuation\Code Implementation\AliensTrackerRegisterViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\AliensTrackerRegisterViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
@@ -211,14 +214,14 @@
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\AdminViewController.xib" />
-    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\AliensTrackerListViewController.xib" />
-    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\AliensTrackerRegisterViewController.xib" />
     <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\ForgotPasswordViewController.xib" />
     <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\HomeViewController.xib" />
     <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\LoginViewController.xib" />
     <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\OrderViewController.xib" />
     <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\QueueViewController.xib" />
     <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\RegisterViewController.xib" />
+    <InterfaceDefinition Include="Views\FireEvacuation\Design\AliensTrackerListViewController.xib" />
+    <InterfaceDefinition Include="Views\FireEvacuation\Design\AliensTrackerRegisterViewController.xib" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="parse">

@@ -56,9 +56,9 @@ namespace HookMeUP.iOS
 			if (Selected) ReturnPrice += Price;
 			if (Deselected) ReturnPrice -= Price;
 
-			if (ReturnPrice == 0) Depleted = true;
+			if (ReturnPrice <= 0) Depleted = true;
 			else Depleted = false;
-			Debug.WriteLine(Depleted);
+			Debug.WriteLine(ReturnPrice+"\n"+Depleted);
 		}
 
 		public double GetPrice()

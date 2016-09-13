@@ -145,10 +145,13 @@ namespace HookMeUP.iOS
 			{
 				if (PriceCount.Depleted)
 				{
-					VoucherCount.Voucher = e;
+					//VoucherCount.Voucher = e;
 					VoucherCount.IsDeselected = true;
 					VoucherCount.IsSelected = false;
-					DisplayAndSaveVouchers();
+					VoucherCount.VoucherChange();
+					VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
+					Source.Voucher = VouchersLabel.Text;
+					//DisplayAndSaveVouchers();
 				}
 			};
 
