@@ -1,16 +1,24 @@
 ﻿using System;
+using System.Diagnostics;
+
 namespace HookMeUP.iOS
 {
 	class VoucherCount
 	{
 
-		bool IsVoucherDepleted
+		public bool IsVoucherDepleted
 		{
 			get;
-			set;
+			private set;
 		}
-		bool IsVoucherNegative
+		public bool IsVoucherNegative
 		{
+			get;
+			private set;
+		}
+
+		bool HasTag
+		{ 
 			get;
 			set;
 		}
@@ -43,15 +51,17 @@ namespace HookMeUP.iOS
 		{
 			if (Voucher > 0)
 			{
+				IsVoucherNegative = false;
+				IsVoucherDepleted = false;
 				if (IsSelected) --Voucher;
 				if (IsDeselected) ++Voucher;
 
 			}
-			else if (Voucher == 0) IsVoucherDepleted = true;
+			//else if (Voucher == 0) IsVoucherDepleted = true;
 			else
 			{
 				IsVoucherNegative = true;
-
+				IsVoucherDepleted = false;
 			}
 		}
 

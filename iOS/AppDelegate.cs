@@ -1,4 +1,7 @@
-﻿using Foundation;
+﻿using System;
+using System.Diagnostics;
+using Foundation;
+using Parse;
 using UIKit;
 
 namespace HookMeUP.iOS
@@ -22,14 +25,60 @@ namespace HookMeUP.iOS
 			// If not required for your application you can safely delete this method
 
 			// Code to start the Xamarin Test Cloud Agent
+			const string APPLICATION_ID = "G7S25vITx0tfeOhODauYKwtauCvzityLwJFGYHPw";
+			const string DOT_NET_ID = "ypPxS2V2rTGl1lNbvEVKUEACKF8PRhWxkWQsbkFe";
 
-			this.Window = new UIWindow(UIScreen.MainScreen.Bounds);
+			ParseClient.Initialize(APPLICATION_ID, DOT_NET_ID);
+
+			//Register for remote notifications.
+			if (Convert.ToInt16(UIDevice.CurrentDevice.SystemVersion.Split('.')[0].ToString()) < 8)
+			{
+				UIRemoteNotificationType notificationTypes = UIRemoteNotificationType.Alert | UIRemoteNotificationType.Badge | UIRemoteNotificationType.Sound;
+				UIApplication.SharedApplication.RegisterForRemoteNotificationTypes(notificationTypes);
+			}
+			else 
+			{
+				UIUserNotificationType notificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound;
+				var settings = UIUserNotificationSettings.GetSettingsForTypes(notificationTypes, new NSSet(new string[] { }));
+				UIApplication.SharedApplication.RegisterUserNotificationSettings(settings);
+				UIApplication.SharedApplication.RegisterForRemoteNotifications();
+			}
+
+			//Handle Parse Push notifications.
+
+			ParsePush.ParsePushNotificationReceived += (sender, e) =>
+			{
+				Debug.WriteLine("You have received a notification");			
+			};
+
+			Window = new UIWindow(UIScreen.MainScreen.Bounds);
 			UIViewController loginController = new LoginViewController();
 			UINavigationController navigationController = new UINavigationController(loginController);
 			Window.RootViewController = navigationController;
 			Window.MakeKeyAndVisible();
 
 			return true;
+		}
+
+		public override void DidRegisterUserNotificationSettings(UIApplication application, UIUserNotificationSettings notificationSettings)
+		{
+			base.DidRegisterUserNotificationSettings(application, notificationSettings);
+			application.RegisterForRemoteNotifications();
+		}
+
+		public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
+		{
+			base.RegisteredForRemoteNotifications(application, deviceToken);
+			ParseInstallation installation = ParseInstallation.CurrentInstallation;
+			installation.SetDeviceTokenFromData(deviceToken);
+
+			installation.SaveAsync();
+		}
+
+		public override void ReceivedRemoteNotification(UIApplication application, NSDictionary userInfo)
+		{
+			base.ReceivedRemoteNotification(application, userInfo);
+			ParsePush.HandlePush(userInfo);
 		}
 
 		public override void OnResignActivation(UIApplication application)

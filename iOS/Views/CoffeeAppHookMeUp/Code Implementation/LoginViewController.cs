@@ -20,17 +20,6 @@ namespace HookMeUP.iOS
 			ShouldReturn(usernameText, passwordText);
 			TextFieldKeyboardIteration(usernameText, passwordText);
 
-
-			loadingOverlay = new LoadingOverlay(bounds);
-			View.Add(loadingOverlay);
-
-
-			const string APPLICATION_ID = "G7S25vITx0tfeOhODauYKwtauCvzityLwJFGYHPw";
-			const string DOT_NET_ID = "ypPxS2V2rTGl1lNbvEVKUEACKF8PRhWxkWQsbkFe";
-
-			ParseClient.Initialize(APPLICATION_ID, DOT_NET_ID);
-			loadingOverlay.Hide();
-
 			forgotPasswordButton.TouchUpInside += (o, e) =>
 			{
 				ClearFields(usernameText, passwordText);

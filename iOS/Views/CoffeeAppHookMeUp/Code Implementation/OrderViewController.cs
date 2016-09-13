@@ -21,7 +21,6 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		//double dynamicPrice = 0.00;
 		int voucherUpdate = 0;
 		public int time;
 		List<string> items = new List<string>();
@@ -34,7 +33,11 @@ namespace HookMeUP.iOS
 
 		OrderWaitTime orderWaitTime = new OrderWaitTime();
 
-		public int GetVouchers { get; set; }
+		public int GetVouchers 
+		{ 
+			get;
+			set;
+		}
 
 		public override void ViewDidLoad()
 		{
@@ -140,19 +143,39 @@ namespace HookMeUP.iOS
 
 			Source.onCellDeselectedForVouchers += (sender, e) =>
 			{
-				VoucherCount.Voucher = e;
-				VoucherCount.IsDeselected = true;
-				VoucherCount.IsSelected = false;
-				DisplayAndSaveVouchers();
+				if (PriceCount.Depleted)
+				{
+					VoucherCount.Voucher = e;
+					VoucherCount.IsDeselected = true;
+					VoucherCount.IsSelected = false;
+					DisplayAndSaveVouchers();
+				}
 			};
 
 			Source.onCellSelectedForPrice += (sender, e) =>
 			{
-				PriceCount.Price = e;
-				PriceCount.Selected = true;
-				PriceCount.Deselected = false;
-				//PriceCount
+				
+				if (VoucherCount.IsVoucherNegative)
+				{
+					PriceCount.Price = e;
+					PriceCount.Selected = true;
+					PriceCount.Deselected = false;
+					PriceCount.PriceChange();
+					costText.Text = PriceCount.GetPrice().ToString("R 0.00");
+				}
 
+			};
+
+			Source.onCellDeselectedForPrice += (sender, e) => 
+			{
+				if (VoucherCount.IsVoucherNegative)
+				{
+					PriceCount.Price = e;
+					PriceCount.Selected = false;
+					PriceCount.Deselected = true;
+					PriceCount.PriceChange();
+					costText.Text = PriceCount.GetPrice().ToString("R 0.00");
+				}
 			};
 
 
@@ -226,15 +249,15 @@ namespace HookMeUP.iOS
 				   
 				   try
 				   {
-					   tableNameOrders = new ParseObject("Orders");
-					   tableNameOrders["PersonOrdered"] = GetName;
-					   tableNameOrders["OrderList"] = items;
-					   tableNameOrders["Price"] = prices;
-					   tableNameOrders["IsOrderDone"] = false;
-					   tableNameOrders["Time"] = ""+time;
-					   CurrentUser["Vouchers"] = voucherUpdate;
-					   await tableNameOrders.SaveAsync();
-					   await CurrentUser.SaveAsync();
+						tableNameOrders = new ParseObject("Orders");
+						tableNameOrders["PersonOrdered"] = GetName;
+						tableNameOrders["OrderList"] = items;
+					   	tableNameOrders["Price"] = prices;
+					   	tableNameOrders["IsOrderDone"] = false;
+					   	tableNameOrders["Time"] = ""+time;
+					   	CurrentUser["Vouchers"] = voucherUpdate;
+					   	await tableNameOrders.SaveAsync();
+					   	await CurrentUser.SaveAsync();
 						items.Clear();
 				   }
 				   catch (ParseException q)
@@ -242,7 +265,7 @@ namespace HookMeUP.iOS
 					  Debug.WriteLine(q.StackTrace);
 				   }
 					ResetScreen();
-				   loadingOverlay.Hide();
+				  	loadingOverlay.Hide();
 				}
 
 		    };

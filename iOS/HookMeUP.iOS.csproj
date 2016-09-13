@@ -120,9 +120,10 @@
     <Folder Include="Models\" />
     <Folder Include="TempFile\" />
     <Folder Include="ValidateInput\" />
-    <Folder Include="Views\Design\" />
-    <Folder Include="Views\Code Implementation\" />
     <Folder Include="OrderingFunction\" />
+    <Folder Include="Views\CoffeeAppHookMeUp\" />
+    <Folder Include="Views\CoffeeAppHookMeUp\Design\" />
+    <Folder Include="Views\CoffeeAppHookMeUp\Code Implementation\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -139,50 +140,50 @@
     <Compile Include="Models\Coffee.cs" />
     <Compile Include="Models\AliensEmployees.cs" />
     <Compile Include="ValidateInput\ValidateInput.cs" />
-    <Compile Include="Views\Code Implementation\AdminViewController.cs" />
-    <Compile Include="Views\Code Implementation\AdminViewController.designer.cs">
-      <DependentUpon>AdminViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Code Implementation\AliensTrackerListViewController.cs" />
-    <Compile Include="Views\Code Implementation\AliensTrackerListViewController.designer.cs">
-      <DependentUpon>AliensTrackerListViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Code Implementation\AliensTrackerRegisterViewController.cs" />
-    <Compile Include="Views\Code Implementation\AliensTrackerRegisterViewController.designer.cs">
-      <DependentUpon>AliensTrackerRegisterViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Code Implementation\ForgotPasswordViewController.cs" />
-    <Compile Include="Views\Code Implementation\ForgotPasswordViewController.designer.cs">
-      <DependentUpon>ForgotPasswordViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Code Implementation\HomeViewController.cs" />
-    <Compile Include="Views\Code Implementation\HomeViewController.designer.cs">
-      <DependentUpon>HomeViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Code Implementation\LoginViewController.cs" />
-    <Compile Include="Views\Code Implementation\LoginViewController.designer.cs">
-      <DependentUpon>LoginViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Code Implementation\QueueViewController.cs" />
-    <Compile Include="Views\Code Implementation\QueueViewController.designer.cs">
-      <DependentUpon>QueueViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Code Implementation\RegisterViewController.cs" />
-    <Compile Include="Views\Code Implementation\RegisterViewController.designer.cs">
-      <DependentUpon>RegisterViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Code Implementation\ScreenViewController.cs" />
-    <Compile Include="Views\Code Implementation\ScreenViewController.designer.cs">
-      <DependentUpon>ScreenViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Code Implementation\OrderViewController.cs" />
-    <Compile Include="Views\Code Implementation\OrderViewController.designer.cs">
-      <DependentUpon>OrderViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="OrderingFunction\TableSourceOrdering.cs" />
     <Compile Include="OrderingFunction\OrderWaitTime.cs" />
     <Compile Include="OrderingFunction\VoucherCount.cs" />
     <Compile Include="OrderingFunction\PriceCount.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AdminViewController.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AdminViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\AdminViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AliensTrackerListViewController.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AliensTrackerListViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\AliensTrackerListViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AliensTrackerRegisterViewController.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\AliensTrackerRegisterViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\AliensTrackerRegisterViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\ForgotPasswordViewController.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\ForgotPasswordViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\ForgotPasswordViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\HomeViewController.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\HomeViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\HomeViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\LoginViewController.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\LoginViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\LoginViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\OrderViewController.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\OrderViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\OrderViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\QueueViewController.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\QueueViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\QueueViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\RegisterViewController.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\RegisterViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\RegisterViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\ScreenViewController.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\ScreenViewController.designer.cs">
+      <DependentUpon>..\..\Code Implementation\ScreenViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
@@ -209,15 +210,15 @@
     <BundleResource Include="TempFile\AliensTeam.txt" />
   </ItemGroup>
   <ItemGroup>
-    <InterfaceDefinition Include="Views\Design\AdminViewController.xib" />
-    <InterfaceDefinition Include="Views\Design\AliensTrackerListViewController.xib" />
-    <InterfaceDefinition Include="Views\Design\AliensTrackerRegisterViewController.xib" />
-    <InterfaceDefinition Include="Views\Design\ForgotPasswordViewController.xib" />
-    <InterfaceDefinition Include="Views\Design\HomeViewController.xib" />
-    <InterfaceDefinition Include="Views\Design\LoginViewController.xib" />
-    <InterfaceDefinition Include="Views\Design\OrderViewController.xib" />
-    <InterfaceDefinition Include="Views\Design\QueueViewController.xib" />
-    <InterfaceDefinition Include="Views\Design\RegisterViewController.xib" />
+    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\AdminViewController.xib" />
+    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\AliensTrackerListViewController.xib" />
+    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\AliensTrackerRegisterViewController.xib" />
+    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\ForgotPasswordViewController.xib" />
+    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\HomeViewController.xib" />
+    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\LoginViewController.xib" />
+    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\OrderViewController.xib" />
+    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\QueueViewController.xib" />
+    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\RegisterViewController.xib" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="parse">

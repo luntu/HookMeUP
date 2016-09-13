@@ -1,10 +1,17 @@
-﻿using UIKit;
+﻿using System.Diagnostics;
+using UIKit;
 
 namespace HookMeUP.iOS
 {
 	class PriceCount
 	{
 		public double Price
+		{
+			get;
+			set;
+		}
+
+		double ReturnPrice
 		{
 			get;
 			set;
@@ -22,16 +29,10 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		bool Depleted
+		public bool Depleted
 		{
 			get;
-			set;
-		}
-
-		bool Negative
-		{
-			get;
-			set;
+			private set;
 		}
 
 		int NegativeVouchers
@@ -50,6 +51,20 @@ namespace HookMeUP.iOS
 			CostText = costText;
 		}
 
+		public void PriceChange() 
+		{
+			if (Selected) ReturnPrice += Price;
+			if (Deselected) ReturnPrice -= Price;
+
+			if (ReturnPrice == 0) Depleted = true;
+			else Depleted = false;
+			Debug.WriteLine(Depleted);
+		}
+
+		public double GetPrice()
+		{
+			return ReturnPrice;
+		}
 	}
 }
 
