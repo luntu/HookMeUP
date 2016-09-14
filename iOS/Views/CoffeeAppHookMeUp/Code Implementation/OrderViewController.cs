@@ -48,7 +48,7 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		string OrderName
+		string CellName
 		{
 			get;
 			set;
@@ -142,9 +142,9 @@ namespace HookMeUP.iOS
 			ordersTable.Source = Source;
 			ordersTable.ReloadData();
 
-			Source.onCellSelectedForOrderName += (sender, e) =>
+			Source.onCellForOrderName += (sender, e) =>
 			{
-				OrderName = e;
+				CellName = e;
 			};
 
 			Source.onCellSelectedForVouchers += (sender, e) => 
@@ -158,19 +158,28 @@ namespace HookMeUP.iOS
 
 				bool tag = false;
 
-				if (!VoucherCount.IsVoucherNegative)
+				if (!VoucherCount.IsVoucherNegative)  // tag all the orders purchased by vouchers
 				{
-					Debug.WriteLine("Not Negative");
 					tag = true;
-					TagOrder t = new TagOrder(OrderName, tag);
-					Debug.WriteLine(t.OrderName);
-					taggedOrders.Add(t);
+					taggedOrders.Add(new TagOrder(CellName, tag));
+					Debug.WriteLine("Added");
 				}
 
 			};
 
 			Source.onCellDeselectedForVouchers += (sender, e) =>
 			{
+				//increments voucher if its a tagged order
+			
+
+				foreach (TagOrder order in taggedOrders)
+				{
+					if (order.OrderName.Equals(CellName)) 
+					{
+						Debug.WriteLine("That was tagged");//increment voucher
+					}
+				}
+
 				if (PriceCount.Depleted)
 				{
 					VoucherCount.IsDeselected = true;
@@ -215,6 +224,7 @@ namespace HookMeUP.iOS
 			ResetTableView();
 			try
 			{
+				taggedOrders.Clear();
 				Source.ordersList.Clear();
 				costText.Text = "R 0,00";
 			}
