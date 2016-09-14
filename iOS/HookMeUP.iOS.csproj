@@ -132,6 +132,7 @@
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
     <None Include="packages.config" />
+    <None Include="TempFile\BackUpCode.rtf" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />

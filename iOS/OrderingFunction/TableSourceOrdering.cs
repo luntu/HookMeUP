@@ -17,6 +17,7 @@ namespace HookMeUP.iOS
 		public event EventHandler<double> onCellDeselectedForPrice;
 		public event EventHandler<int> onCellSelectedForVouchers;
 		public event EventHandler<int> onCellDeselectedForVouchers;
+		public event EventHandler<string> onCellSelectedForOrderName;
 
 		public List<Coffee> ordersList = new List<Coffee>();
 
@@ -68,15 +69,17 @@ namespace HookMeUP.iOS
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);
 
+			if (onCellSelectedForOrderName != null)
+				onCellSelectedForOrderName(tableView, coffeeItem.Title);
+			
+
 			if (onCellSelectedForVouchers != null)
-			{
 				onCellSelectedForVouchers(tableView, voucherNumber);
-			}
+			
 
 			if (onCellSelectedForPrice != null)
-			{
 				onCellSelectedForPrice(tableView, price);
-			}
+			
 		}
 
 		public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
@@ -90,14 +93,12 @@ namespace HookMeUP.iOS
 			int voucherNumber = int.Parse(splitForVoucher[0]);
 
 			if (onCellDeselectedForVouchers != null)
-			{
 				onCellDeselectedForVouchers(tableView, voucherNumber);
-			}
+			
 
 			if (onCellDeselectedForPrice != null)
-			{
 				onCellDeselectedForPrice(tableView, price);
-			}
+			
 
 			ordersList.Remove(coffeItem);
 

@@ -13,7 +13,6 @@ namespace HookMeUP.iOS
 			get;
 			private set;
 		}
-		VoucherCount VoucherCount = new VoucherCount();
 
 		PriceCount PriceCount 
 		{
@@ -21,23 +20,46 @@ namespace HookMeUP.iOS
 			set;
 		}
 
+		public ParseObject CurrentUser
+		{
+			get;
+			set;
+		}
+
 		int voucherUpdate = 0;
 		public int time;
+
 		List<string> items = new List<string>();
 		List<Coffee> coffeeItems = new List<Coffee>();
+		List<TagOrder> taggedOrders = new List<TagOrder>();
+		VoucherCount VoucherCount = new VoucherCount();
+		OrderWaitTime orderWaitTime = new OrderWaitTime();
+
 		ParseObject tableNameOrders;
 
 		public int detectVoucher = 0;
 		public double getPrice;
 		string showOrders = "";
 
-		OrderWaitTime orderWaitTime = new OrderWaitTime();
 
 		public int GetVouchers 
 		{ 
 			get;
 			set;
 		}
+
+		string OrderName
+		{
+			get;
+			set;
+		}
+
+		public string GetName
+		{
+			get;
+			set;
+		}
+
 
 		public override void ViewDidLoad()
 		{
@@ -53,19 +75,6 @@ namespace HookMeUP.iOS
 			ResetScreen();
 
 		}
-
-		public string GetName 
-		{
-			get;
-			set;
-		} 
-		
-		public ParseObject CurrentUser 
-		{
-			get;
-			set;
-		}
-
 
 		void SetupView()
 		{
@@ -133,25 +142,42 @@ namespace HookMeUP.iOS
 			ordersTable.Source = Source;
 			ordersTable.ReloadData();
 
+			Source.onCellSelectedForOrderName += (sender, e) =>
+			{
+				OrderName = e;
+			};
+
 			Source.onCellSelectedForVouchers += (sender, e) => 
 			{
 				VoucherCount.Voucher = e;
 				VoucherCount.IsSelected = true;
 				VoucherCount.IsDeselected = false;
-				DisplayAndSaveVouchers();
+				VoucherCount.VoucherChange();
+				VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
+				Source.Voucher = VouchersLabel.Text;
+
+				bool tag = false;
+
+				if (!VoucherCount.IsVoucherNegative)
+				{
+					Debug.WriteLine("Not Negative");
+					tag = true;
+					TagOrder t = new TagOrder(OrderName, tag);
+					Debug.WriteLine(t.OrderName);
+					taggedOrders.Add(t);
+				}
+
 			};
 
 			Source.onCellDeselectedForVouchers += (sender, e) =>
 			{
 				if (PriceCount.Depleted)
 				{
-					//VoucherCount.Voucher = e;
 					VoucherCount.IsDeselected = true;
 					VoucherCount.IsSelected = false;
 					VoucherCount.VoucherChange();
 					VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
 					Source.Voucher = VouchersLabel.Text;
-					//DisplayAndSaveVouchers();
 				}
 			};
 
@@ -182,12 +208,6 @@ namespace HookMeUP.iOS
 			};
 
 
-		}
-		void DisplayAndSaveVouchers() 
-		{
-			VoucherCount.VoucherChange();
-			VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
-			Source.Voucher = VouchersLabel.Text;
 		}
 
 		void ResetScreen() 

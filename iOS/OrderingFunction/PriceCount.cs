@@ -58,7 +58,7 @@ namespace HookMeUP.iOS
 
 			if (ReturnPrice <= 0) Depleted = true;
 			else Depleted = false;
-			Debug.WriteLine(ReturnPrice+"\n"+Depleted);
+
 		}
 
 		public double GetPrice()

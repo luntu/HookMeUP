@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-
+﻿using System.Collections.Generic;
 namespace HookMeUP.iOS
 {
 	class VoucherCount
@@ -15,12 +13,6 @@ namespace HookMeUP.iOS
 		{
 			get;
 			private set;
-		}
-
-		bool HasTag
-		{ 
-			get;
-			set;
 		}
 
 		public int Voucher
@@ -49,7 +41,7 @@ namespace HookMeUP.iOS
 
 		public void VoucherChange()
 		{
-			
+
 			if (Voucher > 0)
 			{
 				IsVoucherNegative = false;
@@ -71,6 +63,28 @@ namespace HookMeUP.iOS
 		{
 			return Voucher;
 		}
+	}
+
+	public class TagOrder
+	{
+		public bool HasTag
+		{
+			get;
+			set;
+		}
+
+		public string OrderName
+		{
+			get;
+			set;
+		}
+
+		public TagOrder(string orderName, bool hasTag)
+		{
+			OrderName = orderName;
+			HasTag = hasTag;		
+		}
+
 	}
 }
 
