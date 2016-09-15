@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using UIKit;
+﻿using UIKit;
 
 namespace HookMeUP.iOS
 {
@@ -17,6 +16,12 @@ namespace HookMeUP.iOS
 			set;
 		}
 
+		public bool Depleted
+		{
+			get;
+			private set;
+		}
+
 		public bool Selected
 		{
 			get;
@@ -29,32 +34,11 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		public bool Depleted
-		{
-			get;
-			private set;
-		}
-
-		int NegativeVouchers
-		{
-			get;
-			set;
-		}
-		UITextField CostText
-		{
-			get;
-			set;
-		}
-
-		public PriceCount(UITextField costText)
-		{
-			CostText = costText;
-		}
 
 		public void PriceChange() 
 		{
 			if (Selected) ReturnPrice += Price;
-			if (Deselected) ReturnPrice -= Price;
+			if (Deselected && !Depleted) ReturnPrice -= Price;
 
 			if (ReturnPrice <= 0) Depleted = true;
 			else Depleted = false;

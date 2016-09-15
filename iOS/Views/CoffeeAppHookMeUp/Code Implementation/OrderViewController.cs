@@ -14,11 +14,7 @@ namespace HookMeUP.iOS
 			private set;
 		}
 
-		PriceCount PriceCount 
-		{
-			get;
-			set;
-		}
+
 
 		public ParseObject CurrentUser
 		{
@@ -32,8 +28,9 @@ namespace HookMeUP.iOS
 		List<string> items = new List<string>();
 		List<Coffee> coffeeItems = new List<Coffee>();
 		List<TagOrder> taggedOrders = new List<TagOrder>();
-		VoucherCount VoucherCount = new VoucherCount();
 		OrderWaitTime orderWaitTime = new OrderWaitTime();
+		VoucherCount VoucherCount = new VoucherCount();
+		PriceCount PriceCount = new PriceCount(); 
 
 		ParseObject tableNameOrders;
 
@@ -79,7 +76,7 @@ namespace HookMeUP.iOS
 		void SetupView()
 		{
 			VouchersLabel.Text = GetVouchers + " vouchers";
-			PriceCount = new PriceCount(costText);
+
 			hookMeUPButton.TouchUpInside += (obj, evt) =>
 			{
 				// getting orders
@@ -158,11 +155,10 @@ namespace HookMeUP.iOS
 
 				bool tag = false;
 
-				if (!VoucherCount.IsVoucherNegative)  // tag all the orders purchased by vouchers
+				if (!VoucherCount.IsVoucherDepleted)  // tag all the orders purchased by vouchers
 				{
 					tag = true;
 					taggedOrders.Add(new TagOrder(CellName, tag));
-					Debug.WriteLine("Added");
 				}
 
 			};
@@ -171,16 +167,15 @@ namespace HookMeUP.iOS
 			{
 				//increments voucher if its a tagged order
 			
+				//foreach (TagOrder order in taggedOrders)
+				//{
+				//	if (order.OrderName.Equals(CellName)) 
+				//	{
+				//		Debug.WriteLine("That was tagged");
+				//	}
+				//}
 
-				foreach (TagOrder order in taggedOrders)
-				{
-					if (order.OrderName.Equals(CellName)) 
-					{
-						Debug.WriteLine("That was tagged");//increment voucher
-					}
-				}
-
-				if (PriceCount.Depleted)
+				if (PriceCount.Depleted || !VoucherCount.IsVoucherDepleted)
 				{
 					VoucherCount.IsDeselected = true;
 					VoucherCount.IsSelected = false;
@@ -193,7 +188,7 @@ namespace HookMeUP.iOS
 			Source.onCellSelectedForPrice += (sender, e) =>
 			{
 				
-				if (VoucherCount.IsVoucherNegative)
+				if (VoucherCount.IsVoucherDepleted)
 				{
 					PriceCount.Price = e;
 					PriceCount.Selected = true;
@@ -206,7 +201,7 @@ namespace HookMeUP.iOS
 
 			Source.onCellDeselectedForPrice += (sender, e) => 
 			{
-				if (VoucherCount.IsVoucherNegative)
+				if (VoucherCount.IsVoucherDepleted)
 				{
 					PriceCount.Price = e;
 					PriceCount.Selected = false;
