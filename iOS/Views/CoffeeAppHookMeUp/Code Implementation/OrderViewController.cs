@@ -17,7 +17,7 @@ namespace HookMeUP.iOS
 		public ParseObject CurrentUser
 		{
 			get;
-			private set;
+			set;
 		}
 
 		ParseObject tableNameOrders
