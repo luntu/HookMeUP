@@ -14,9 +14,13 @@ namespace HookMeUP.iOS
 			private set;
 		}
 
-
-
 		public ParseObject CurrentUser
+		{
+			get;
+			private set;
+		}
+
+		ParseObject tableNameOrders
 		{
 			get;
 			set;
@@ -31,8 +35,6 @@ namespace HookMeUP.iOS
 		OrderWaitTime orderWaitTime = new OrderWaitTime();
 		VoucherCount VoucherCount = new VoucherCount();
 		PriceCount PriceCount = new PriceCount(); 
-
-		ParseObject tableNameOrders;
 
 		public int detectVoucher = 0;
 		public double getPrice;
@@ -167,13 +169,13 @@ namespace HookMeUP.iOS
 			{
 				//increments voucher if its a tagged order
 			
-				//foreach (TagOrder order in taggedOrders)
-				//{
-				//	if (order.OrderName.Equals(CellName)) 
-				//	{
-				//		Debug.WriteLine("That was tagged");
-				//	}
-				//}
+				foreach (TagOrder order in taggedOrders)
+				{
+					if (order.OrderName.Equals(CellName)) 
+					{
+						Debug.WriteLine("That was tagged");
+					}
+				}
 
 				if (PriceCount.Depleted || !VoucherCount.IsVoucherDepleted)
 				{

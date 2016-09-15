@@ -1,6 +1,4 @@
-﻿using UIKit;
-
-namespace HookMeUP.iOS
+﻿namespace HookMeUP.iOS
 {
 	class PriceCount
 	{
