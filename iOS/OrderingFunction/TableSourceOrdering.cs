@@ -48,12 +48,10 @@ namespace HookMeUP.iOS
 			cell.ImageView.Image = ResizeImage(image, 80, 80);
 
 			return cell;
-
 		}
 
 		public override nint RowsInSection(UITableView tableview, nint section)
 		{
-			//return tableItems.Count;
 			return coffeeItems.Count;
 		}
 
@@ -125,7 +123,7 @@ namespace HookMeUP.iOS
 		{
 			UIGraphics.BeginImageContext(new SizeF(width, height));
 			imageSource.Draw(new RectangleF(0, 0, width, height));
-			var imageResult = UIGraphics.GetImageFromCurrentImageContext();
+			UIImage imageResult = UIGraphics.GetImageFromCurrentImageContext();
 			UIGraphics.EndImageContext();
 			return imageResult;
 		}

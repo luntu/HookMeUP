@@ -8,8 +8,8 @@ namespace HookMeUP.iOS
 {
 	public partial class OrderViewController : ScreenViewController
 	{
-		public TableSourceOrdering Source 
-		{ 
+		public TableSourceOrdering Source
+		{
 			get;
 			private set;
 		}
@@ -34,15 +34,14 @@ namespace HookMeUP.iOS
 		List<TagOrder> taggedOrders = new List<TagOrder>();
 		OrderWaitTime orderWaitTime = new OrderWaitTime();
 		VoucherCount VoucherCount = new VoucherCount();
-		PriceCount PriceCount = new PriceCount(); 
+		PriceCount PriceCount = new PriceCount();
 
-		public int detectVoucher = 0;
+
 		public double getPrice;
 		string showOrders = "";
 
-
-		public int GetVouchers 
-		{ 
+		public int GetVouchers
+		{
 			get;
 			set;
 		}
@@ -59,7 +58,11 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-
+		string NamesOfTaggedOrders
+		{
+			get;
+			set;
+		} = "";
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
@@ -101,9 +104,9 @@ namespace HookMeUP.iOS
 			};
 
 			viewOrderButton.TouchUpInside += (o, e) =>
-			 {
-				 NavigationScreenController(queueViewController);
-			 };
+			{
+				NavigationScreenController(queueViewController);
+			};
 		}
 
 		async void LoadTableFuctionality()
@@ -117,14 +120,14 @@ namespace HookMeUP.iOS
 
 				var iEnumerableColl = await query.FindAsync();
 
-				foreach (ParseObject coffeeElements in iEnumerableColl) 
+				foreach (ParseObject coffeeElements in iEnumerableColl)
 				{
 					string coffeeName = coffeeElements.Get<string>("Title");
 					string imageName = coffeeElements.Get<string>("ImageName");
 					double price = coffeeElements.Get<double>("Price");
 
-					coffeeItems.Add(new Coffee(coffeeName,imageName,""+price));
-				
+					coffeeItems.Add(new Coffee(coffeeName, imageName, "" + price));
+
 				}
 
 				loadingOverlay.Hide();
@@ -146,7 +149,7 @@ namespace HookMeUP.iOS
 				CellName = e;
 			};
 
-			Source.onCellSelectedForVouchers += (sender, e) => 
+			Source.onCellSelectedForVouchers += (sender, e) =>
 			{
 				VoucherCount.Voucher = e;
 				VoucherCount.IsSelected = true;
@@ -168,16 +171,15 @@ namespace HookMeUP.iOS
 			Source.onCellDeselectedForVouchers += (sender, e) =>
 			{
 				//increments voucher if its a tagged order
-			
+
+
 				foreach (TagOrder order in taggedOrders)
 				{
-					if (order.OrderName.Equals(CellName)) 
-					{
-						Debug.WriteLine("That was tagged");
-					}
+					if (!NamesOfTaggedOrders.Contains(order.OrderName)) NamesOfTaggedOrders += order.OrderName + "*";
 				}
+				Debug.WriteLine(NamesOfTaggedOrders);
 
-				if (PriceCount.Depleted || !VoucherCount.IsVoucherDepleted)
+				if (PriceCount.Depleted)
 				{
 					VoucherCount.IsDeselected = true;
 					VoucherCount.IsSelected = false;
@@ -185,11 +187,21 @@ namespace HookMeUP.iOS
 					VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
 					Source.Voucher = VouchersLabel.Text;
 				}
+				else
+				if (NamesOfTaggedOrders.Contains(CellName))
+				{
+					VoucherCount.IsDeselected = true;
+					VoucherCount.IsSelected = false;
+					VoucherCount.VoucherChange();
+					VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
+					Source.Voucher = VouchersLabel.Text;
+				}
+				NamesOfTaggedOrders = String.Empty;
 			};
 
 			Source.onCellSelectedForPrice += (sender, e) =>
 			{
-				
+
 				if (VoucherCount.IsVoucherDepleted)
 				{
 					PriceCount.Price = e;
@@ -201,9 +213,10 @@ namespace HookMeUP.iOS
 
 			};
 
-			Source.onCellDeselectedForPrice += (sender, e) => 
+			Source.onCellDeselectedForPrice += (sender, e) =>
 			{
-				if (VoucherCount.IsVoucherDepleted)
+				const int VOUCHER_BEFORE_EXECUTION_TO_ZERO = 1;
+				if (VoucherCount.IsVoucherDepleted && VoucherCount.Voucher != VOUCHER_BEFORE_EXECUTION_TO_ZERO)
 				{
 					PriceCount.Price = e;
 					PriceCount.Selected = false;
@@ -216,7 +229,7 @@ namespace HookMeUP.iOS
 
 		}
 
-		void ResetScreen() 
+		void ResetScreen()
 		{
 			ResetTableView();
 			try
@@ -245,11 +258,11 @@ namespace HookMeUP.iOS
 			foreach (Coffee orderElements in Source.ordersList)
 			{
 				string orderName = orderElements.Title;
-				showOrders += orderName+"\n";
+				showOrders += orderName + "\n";
 
 				items.Add(orderName);
 				prices = double.Parse(Source.FormatPrice(orderElements.Price));
-			
+
 			}
 
 			UIAlertView alert = new UIAlertView();
@@ -260,49 +273,49 @@ namespace HookMeUP.iOS
 			alert.AddButton("Cancel");
 
 			alert.Clicked += async (o, e) =>
-		    {
-			   if (e.ButtonIndex == 0)
-			   {
-				   //submit datadase. Notify Vuyo
+			{
+				if (e.ButtonIndex == 0)
+				{
+					//submit datadase. Notify Vuyo
 
-				   orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
-				   time = orderWaitTime.CalculateWaitTime();
-				   AlertPopUp("Order on the way", "Your order will take about " + time + " minutes", "OK");
+					orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
+					time = orderWaitTime.CalculateWaitTime();
+					AlertPopUp("Order on the way", "Your order will take about " + time + " minutes", "OK");
 
-				   string[] arrSplit = VouchersLabel.Text.Split(' ');
-				   voucherUpdate = int.Parse(arrSplit[0]);
+					string[] arrSplit = VouchersLabel.Text.Split(' ');
+					voucherUpdate = int.Parse(arrSplit[0]);
 
 
-				   loadingOverlay = new LoadingOverlay(bounds);
-				   View.Add(loadingOverlay);
+					loadingOverlay = new LoadingOverlay(bounds);
+					View.Add(loadingOverlay);
 
-				   
-				   try
-				   {
+
+					try
+					{
 						tableNameOrders = new ParseObject("Orders");
 						tableNameOrders["PersonOrdered"] = GetName;
 						tableNameOrders["OrderList"] = items;
-					   	tableNameOrders["Price"] = prices;
-					   	tableNameOrders["IsOrderDone"] = false;
-					   	tableNameOrders["Time"] = ""+time;
-					   	CurrentUser["Vouchers"] = voucherUpdate;
-					   	await tableNameOrders.SaveAsync();
-					   	await CurrentUser.SaveAsync();
+						tableNameOrders["Price"] = prices;
+						tableNameOrders["IsOrderDone"] = false;
+						tableNameOrders["Time"] = "" + time;
+						CurrentUser["Vouchers"] = voucherUpdate;
+						await tableNameOrders.SaveAsync();
+						await CurrentUser.SaveAsync();
 						items.Clear();
-				   }
-				   catch (ParseException q)
-				   {
-					  Debug.WriteLine(q.StackTrace);
-				   }
+					}
+					catch (ParseException q)
+					{
+						Debug.WriteLine(q.StackTrace);
+					}
 					ResetScreen();
-				  	loadingOverlay.Hide();
+					loadingOverlay.Hide();
 				}
 
-		    };
+			};
 			alert.Show();
 
 		}
-			
+
 	}
 
 }
