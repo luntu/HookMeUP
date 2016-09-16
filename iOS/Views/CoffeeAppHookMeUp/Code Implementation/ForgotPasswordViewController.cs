@@ -1,5 +1,5 @@
-﻿using System;
-using Parse;
+﻿//using System;
+//using Parse;
 
 
 //namespace HookMeUP.iOS

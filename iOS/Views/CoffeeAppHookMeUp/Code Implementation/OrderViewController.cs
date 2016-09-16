@@ -85,7 +85,6 @@ namespace HookMeUP.iOS
 			hookMeUPButton.TouchUpInside += (obj, evt) =>
 			{
 				// getting orders
-
 				try
 				{
 
@@ -175,9 +174,15 @@ namespace HookMeUP.iOS
 
 				foreach (TagOrder order in taggedOrders)
 				{
-					if (!NamesOfTaggedOrders.Contains(order.OrderName)) NamesOfTaggedOrders += order.OrderName + "*";
+					//if (!NamesOfTaggedOrders.Contains(order.OrderName)) NamesOfTaggedOrders += order.OrderName + "*";
+					if (order.OrderName.Equals(CellName))
+					{
+						NamesOfTaggedOrders = order.OrderName;
+						taggedOrders.Remove(order);
+						break;
+					}
 				}
-				Debug.WriteLine(NamesOfTaggedOrders);
+
 
 				if (PriceCount.Depleted)
 				{
@@ -188,8 +193,9 @@ namespace HookMeUP.iOS
 					Source.Voucher = VouchersLabel.Text;
 				}
 				else
-				if (NamesOfTaggedOrders.Contains(CellName))
+				if (NamesOfTaggedOrders.Equals(CellName))
 				{
+					Debug.WriteLine("that was tagged");
 					VoucherCount.IsDeselected = true;
 					VoucherCount.IsSelected = false;
 					VoucherCount.VoucherChange();
@@ -197,6 +203,7 @@ namespace HookMeUP.iOS
 					Source.Voucher = VouchersLabel.Text;
 				}
 				NamesOfTaggedOrders = String.Empty;
+
 			};
 
 			Source.onCellSelectedForPrice += (sender, e) =>
