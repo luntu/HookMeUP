@@ -10,13 +10,25 @@ namespace HookMeUP.iOS
 	{
 		List<Coffee> coffeeItems;
 		string cellIdentifier = "TableCell";
-		public string Voucher { get; set; }
-		double price = 0;
+
+		public string Voucher 
+		{
+			get;
+			set;
+		}
+
+		double price 
+		{
+			get;
+			set;
+		} = 0.00;
+
 		public event EventHandler<double> onCellSelectedForPrice;
 		public event EventHandler<double> onCellDeselectedForPrice;
 		public event EventHandler<int> onCellSelectedForVouchers;
 		public event EventHandler<int> onCellDeselectedForVouchers;
 		public event EventHandler<string> onCellForOrderName;
+		public event EventHandler<UITableViewCell> getSelectedCell;
 
 		public List<Coffee> ordersList = new List<Coffee>();
 
@@ -33,17 +45,16 @@ namespace HookMeUP.iOS
 
 		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
 		{
+			
 			Coffee item = coffeeItems[indexPath.Row];
 
 			UITableViewCell cell = tableView.DequeueReusableCell(cellIdentifier);
 
 			if (cell == null)
-			{
 				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
-			}
-
+			
 			cell.TextLabel.Text = item.Title;
-			var directory = "TableImages/";
+			string directory = "TableImages/";
 			UIImage image = UIImage.FromFile(directory + item.ImageName);
 			cell.ImageView.Image = ResizeImage(image, 80, 80);
 
@@ -58,17 +69,20 @@ namespace HookMeUP.iOS
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
 			Coffee coffeeItem = coffeeItems[indexPath.Row];
-
 			ordersList.Add(coffeeItem);
-
 			price = double.Parse(FormatPrice(coffeeItem.Price));
+
+			UITableViewCell cell =  tableView.CellAt(indexPath);
 
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);
 
+
 			if (onCellForOrderName != null)
 				onCellForOrderName(tableView, coffeeItem.Title);
 			
+			if (getSelectedCell != null)
+				getSelectedCell(tableView, cell);
 
 			if (onCellSelectedForVouchers != null)
 				onCellSelectedForVouchers(tableView, voucherNumber);
@@ -79,9 +93,9 @@ namespace HookMeUP.iOS
 			
 		}
 
+
 		public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
 		{
-
 			Coffee coffeeItem = coffeeItems[indexPath.Row];
 
 			price = double.Parse(FormatPrice(coffeeItem.Price));
@@ -99,7 +113,6 @@ namespace HookMeUP.iOS
 			if (onCellDeselectedForPrice != null)
 				onCellDeselectedForPrice(tableView, price);
 			
-
 			ordersList.Remove(coffeeItem);
 
 		}

@@ -20,7 +20,13 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		ParseObject tableNameOrders
+		ParseObject TableNameOrders
+		{
+			get;
+			set;
+		}
+
+		UITableViewCell Cell
 		{
 			get;
 			set;
@@ -88,10 +94,7 @@ namespace HookMeUP.iOS
 				try
 				{
 
-					if (Source.ordersList != null && !Source.ordersList[0].Equals(""))
-					{
-						Order();
-					}
+					if (Source.ordersList != null && !Source.ordersList[0].Equals("")) Order();
 					else AlertPopUp("Error", "No order(s) selected", "OK");
 
 				}
@@ -143,6 +146,11 @@ namespace HookMeUP.iOS
 			ordersTable.Source = Source;
 			ordersTable.ReloadData();
 
+			Source.getSelectedCell += (sender, e) =>
+			{
+				Cell = e;
+			};
+
 			Source.onCellForOrderName += (sender, e) =>
 			{
 				CellName = e;
@@ -157,12 +165,12 @@ namespace HookMeUP.iOS
 				VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
 				Source.Voucher = VouchersLabel.Text;
 
-				bool tag = false;
+				bool tagged = false;
 
 				if (!VoucherCount.IsVoucherDepleted)  // tag all the orders purchased by vouchers
 				{
-					tag = true;
-					taggedOrders.Add(new TagOrder(CellName, tag));
+					tagged = true;
+					taggedOrders.Add(new TagOrder(CellName, tagged));
 				}
 
 			};
@@ -170,7 +178,8 @@ namespace HookMeUP.iOS
 			Source.onCellDeselectedForVouchers += (sender, e) =>
 			{
 				//increments voucher if its a tagged order
-
+				Cell.BackgroundColor = UIColor.Green;
+				//else Cell.BackgroundColor = UIColor.DarkGray;
 
 				foreach (TagOrder order in taggedOrders)
 				{
@@ -202,7 +211,7 @@ namespace HookMeUP.iOS
 					VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
 					Source.Voucher = VouchersLabel.Text;
 				}
-				NamesOfTaggedOrders = String.Empty;
+				NamesOfTaggedOrders = string.Empty;
 
 			};
 
@@ -299,14 +308,14 @@ namespace HookMeUP.iOS
 
 					try
 					{
-						tableNameOrders = new ParseObject("Orders");
-						tableNameOrders["PersonOrdered"] = GetName;
-						tableNameOrders["OrderList"] = items;
-						tableNameOrders["Price"] = prices;
-						tableNameOrders["IsOrderDone"] = false;
-						tableNameOrders["Time"] = "" + time;
+						TableNameOrders = new ParseObject("Orders");
+						TableNameOrders["PersonOrdered"] = GetName;
+						TableNameOrders["OrderList"] = items;
+						TableNameOrders["Price"] = prices;
+						TableNameOrders["IsOrderDone"] = false;
+						TableNameOrders["Time"] = "" + time;
 						CurrentUser["Vouchers"] = voucherUpdate;
-						await tableNameOrders.SaveAsync();
+						await TableNameOrders.SaveAsync();
 						await CurrentUser.SaveAsync();
 						items.Clear();
 					}

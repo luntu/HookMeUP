@@ -48,7 +48,8 @@ namespace HookMeUP.iOS
 
 			ParsePush.ParsePushNotificationReceived += (sender, e) =>
 			{
-				Debug.WriteLine("You have received a notification");			
+				Debug.WriteLine("You have received a notification");
+
 			};
 
 			Window = new UIWindow(UIScreen.MainScreen.Bounds);
@@ -62,13 +63,13 @@ namespace HookMeUP.iOS
 
 		public override void DidRegisterUserNotificationSettings(UIApplication application, UIUserNotificationSettings notificationSettings)
 		{
-			//base.DidRegisterUserNotificationSettings(application, notificationSettings);
+			
 			//application.RegisterForRemoteNotifications();
 		}
 
 		public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
 		{
-			//base.RegisteredForRemoteNotifications(application, deviceToken);
+			
 			ParseInstallation installation = ParseInstallation.CurrentInstallation;
 			installation.SetDeviceTokenFromData(deviceToken);
 			installation.Channels = new string[] { "Global" }; 
@@ -77,7 +78,7 @@ namespace HookMeUP.iOS
 
 		public override void ReceivedRemoteNotification(UIApplication application, NSDictionary userInfo)
 		{
-			//base.ReceivedRemoteNotification(application, userInfo);
+			
 			ParsePush.HandlePush(userInfo);
 		}
 
