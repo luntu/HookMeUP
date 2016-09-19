@@ -44,6 +44,13 @@ namespace HookMeUP.iOS
 			InputTextEditingValidation();
 			InitializeButtons();
 		}
+		public override void ViewWillAppear(bool animated)
+		{
+			base.ViewWillAppear(animated);
+
+			Border(UIColor.Clear.CGColor, nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
+			submitButton.Enabled = true;
+		}
 
 		void InputTextEditingValidation()
 		{
@@ -140,7 +147,6 @@ namespace HookMeUP.iOS
 				{
 					Border(UIColor.Clear.CGColor, usernameTextR);
 					submitButton.Enabled = true;
-
 				}
 			};
 
@@ -152,13 +158,11 @@ namespace HookMeUP.iOS
 					Border(UIColor.Red.CGColor, passwordTextR, verifyPasswordText);
 
 					submitButton.Enabled = false;
-
 				}
 				else
 				{
 					Border(UIColor.Clear.CGColor, passwordTextR, verifyPasswordText);
 					submitButton.Enabled = true;
-
 				}
 
 			};

@@ -38,6 +38,7 @@ namespace HookMeUP.iOS
 		List<string> items = new List<string>();
 		List<Coffee> coffeeItems = new List<Coffee>();
 		List<TagOrder> taggedOrders = new List<TagOrder>();
+		List<string> taggedOrderNamesForPrice = new List<string>();
 		OrderWaitTime orderWaitTime = new OrderWaitTime();
 		VoucherCount VoucherCount = new VoucherCount();
 		PriceCount PriceCount = new PriceCount();
@@ -158,6 +159,9 @@ namespace HookMeUP.iOS
 
 			Source.onCellSelectedForVouchers += (sender, e) =>
 			{
+				//if (!VoucherCount.IsVoucherDepleted) Cell.BackgroundColor = UIColor.Green;
+				//else Cell.BackgroundColor = UIColor.DarkGray;
+
 				VoucherCount.Voucher = e;
 				VoucherCount.IsSelected = true;
 				VoucherCount.IsDeselected = false;
@@ -165,21 +169,16 @@ namespace HookMeUP.iOS
 				VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
 				Source.Voucher = VouchersLabel.Text;
 
-				bool tagged = false;
-
-				if (!VoucherCount.IsVoucherDepleted)  // tag all the orders purchased by vouchers
-				{
-					tagged = true;
-					taggedOrders.Add(new TagOrder(CellName, tagged));
+				if (!VoucherCount.IsVoucherDepleted)
+				{  // tag all the orders purchased by vouchers
+					taggedOrders.Add(new TagOrder(CellName));
+					taggedOrderNamesForPrice.Add(CellName);
 				}
-
 			};
 
 			Source.onCellDeselectedForVouchers += (sender, e) =>
 			{
 				//increments voucher if its a tagged order
-				Cell.BackgroundColor = UIColor.Green;
-				//else Cell.BackgroundColor = UIColor.DarkGray;
 
 				foreach (TagOrder order in taggedOrders)
 				{
@@ -192,7 +191,6 @@ namespace HookMeUP.iOS
 					}
 				}
 
-
 				if (PriceCount.Depleted)
 				{
 					VoucherCount.IsDeselected = true;
@@ -204,7 +202,6 @@ namespace HookMeUP.iOS
 				else
 				if (NamesOfTaggedOrders.Equals(CellName))
 				{
-					Debug.WriteLine("that was tagged");
 					VoucherCount.IsDeselected = true;
 					VoucherCount.IsSelected = false;
 					VoucherCount.VoucherChange();
@@ -217,7 +214,6 @@ namespace HookMeUP.iOS
 
 			Source.onCellSelectedForPrice += (sender, e) =>
 			{
-
 				if (VoucherCount.IsVoucherDepleted)
 				{
 					PriceCount.Price = e;
@@ -240,6 +236,7 @@ namespace HookMeUP.iOS
 					PriceCount.PriceChange();
 					costText.Text = PriceCount.GetPrice().ToString("R 0.00");
 				}
+
 			};
 
 
@@ -308,6 +305,8 @@ namespace HookMeUP.iOS
 
 					try
 					{
+						//submitt order
+
 						TableNameOrders = new ParseObject("Orders");
 						TableNameOrders["PersonOrdered"] = GetName;
 						TableNameOrders["OrderList"] = items;
@@ -318,6 +317,13 @@ namespace HookMeUP.iOS
 						await TableNameOrders.SaveAsync();
 						await CurrentUser.SaveAsync();
 						items.Clear();
+
+						//send push
+
+						var push = new ParsePush();
+						push.Channels = new string[] { "Global" };
+						push.Alert = "your order is ready";
+						await push.SendAsync();
 					}
 					catch (ParseException q)
 					{

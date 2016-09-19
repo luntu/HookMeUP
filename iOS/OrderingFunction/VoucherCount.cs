@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace HookMeUP.iOS
+﻿namespace HookMeUP.iOS
 {
 	class VoucherCount
 	{
@@ -44,7 +42,7 @@ namespace HookMeUP.iOS
 
 			if (IsSelected && !IsVoucherDepleted) --Voucher;
 			if (IsDeselected) ++Voucher;
-			Debug.WriteLine(Voucher);
+
 		}
 
 		public int GetVoucher()
@@ -55,22 +53,16 @@ namespace HookMeUP.iOS
 
 	class TagOrder
 	{
-		public bool HasTag
-		{
-			get;
-			private set;
-		}
-
 		public string OrderName
 		{
 			get;
 			private set;
 		}
 
-		public TagOrder(string orderName, bool hasTag)
+		public TagOrder(string orderName)
 		{
 			OrderName = orderName;
-			HasTag = hasTag;		
+				
 		}
 
 	}

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Foundation;
 using Parse;
 using UIKit;
@@ -50,6 +49,8 @@ namespace HookMeUP.iOS
 			{
 				Debug.WriteLine("You have received a notification");
 
+
+
 			};
 
 			Window = new UIWindow(UIScreen.MainScreen.Bounds);
@@ -61,11 +62,11 @@ namespace HookMeUP.iOS
 			return true;
 		}
 
-		public override void DidRegisterUserNotificationSettings(UIApplication application, UIUserNotificationSettings notificationSettings)
-		{
+		//public override void DidRegisterUserNotificationSettings(UIApplication application, UIUserNotificationSettings notificationSettings)
+		//{
 			
-			//application.RegisterForRemoteNotifications();
-		}
+		//	//application.RegisterForRemoteNotifications();
+		//}
 
 		public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
 		{
@@ -78,9 +79,10 @@ namespace HookMeUP.iOS
 
 		public override void ReceivedRemoteNotification(UIApplication application, NSDictionary userInfo)
 		{
-			
 			ParsePush.HandlePush(userInfo);
 		}
+
+
 
 		public override void OnResignActivation(UIApplication application)
 		{
