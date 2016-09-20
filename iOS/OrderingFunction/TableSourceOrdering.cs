@@ -108,7 +108,6 @@ namespace HookMeUP.iOS
 
 			if (onCellDeselectedForVouchers != null)
 				onCellDeselectedForVouchers(tableView, voucherNumber);
-			
 
 			if (onCellDeselectedForPrice != null)
 				onCellDeselectedForPrice(tableView, price);

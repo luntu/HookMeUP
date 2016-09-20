@@ -70,6 +70,7 @@ namespace HookMeUP.iOS
 			get;
 			set;
 		} = "";
+
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
@@ -180,6 +181,8 @@ namespace HookMeUP.iOS
 			{
 				//increments voucher if its a tagged order
 
+				VoucherCount.HasTag = false;
+
 				foreach (TagOrder order in taggedOrders)
 				{
 					//if (!NamesOfTaggedOrders.Contains(order.OrderName)) NamesOfTaggedOrders += order.OrderName + "*";
@@ -187,8 +190,10 @@ namespace HookMeUP.iOS
 					{
 						NamesOfTaggedOrders = order.OrderName;
 						taggedOrders.Remove(order);
+						VoucherCount.HasTag = true;
 						break;
 					}
+
 				}
 
 				if (PriceCount.Depleted)
@@ -228,6 +233,8 @@ namespace HookMeUP.iOS
 			Source.onCellDeselectedForPrice += (sender, e) =>
 			{
 				const int VOUCHER_BEFORE_EXECUTION_TO_ZERO = 1;
+				Debug.WriteLine(VoucherCount.HasTag);
+
 				if (VoucherCount.IsVoucherDepleted && VoucherCount.Voucher != VOUCHER_BEFORE_EXECUTION_TO_ZERO)
 				{
 					PriceCount.Price = e;
@@ -235,6 +242,14 @@ namespace HookMeUP.iOS
 					PriceCount.Deselected = true;
 					PriceCount.PriceChange();
 					costText.Text = PriceCount.GetPrice().ToString("R 0.00");
+				}
+				else if (VoucherCount.GetVoucher() !=0 && !VoucherCount.HasTag)
+				{
+					PriceCount.Price = e;
+					PriceCount.Selected = false;
+					PriceCount.Deselected = true;
+					PriceCount.PriceChange();
+					costText.Text = PriceCount.GetPrice().ToString("R 0.00");                                                                                                                                                                             
 				}
 
 			};
@@ -320,9 +335,17 @@ namespace HookMeUP.iOS
 
 						//send push
 
+						int i = 0;
 						var push = new ParsePush();
 						push.Channels = new string[] { "Global" };
-						push.Alert = "your order is ready";
+						push.Data = new Dictionary<string, object>
+						{
+							{"title","HookMeUp"},
+							{"alert","your order is ready"},
+							{"badge",i++}
+
+
+						};
 						await push.SendAsync();
 					}
 					catch (ParseException q)
