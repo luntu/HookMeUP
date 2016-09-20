@@ -160,6 +160,7 @@ namespace HookMeUP.iOS
 
 			Source.onCellSelectedForVouchers += (sender, e) =>
 			{
+				Cell.BackgroundColor = UIColor.Green;
 				//if (!VoucherCount.IsVoucherDepleted) Cell.BackgroundColor = UIColor.Green;
 				//else Cell.BackgroundColor = UIColor.DarkGray;
 
@@ -233,8 +234,7 @@ namespace HookMeUP.iOS
 			Source.onCellDeselectedForPrice += (sender, e) =>
 			{
 				const int VOUCHER_BEFORE_EXECUTION_TO_ZERO = 1;
-				Debug.WriteLine(VoucherCount.HasTag);
-
+			
 				if (VoucherCount.IsVoucherDepleted && VoucherCount.Voucher != VOUCHER_BEFORE_EXECUTION_TO_ZERO)
 				{
 					PriceCount.Price = e;
