@@ -12,7 +12,12 @@ namespace HookMeUP.iOS
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
+			//string fullName = nameFireText.Text;
+			//string contactNo = contactNoFireText.Text;
 
+			//ParseObject pObj = new ParseObject("Guests");
+			//pObj["Name"] = fullName;
+			//pObj["ContactNo"] = contactNo;
 
 
 		}

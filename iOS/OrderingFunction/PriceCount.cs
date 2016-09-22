@@ -40,7 +40,6 @@
 
 			if (ReturnPrice <= 0) Depleted = true;
 			else Depleted = false;
-
 		}
 
 		public double GetPrice()

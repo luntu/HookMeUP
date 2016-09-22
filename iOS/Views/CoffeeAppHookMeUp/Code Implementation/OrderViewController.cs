@@ -32,6 +32,8 @@ namespace HookMeUP.iOS
 			set;
 		}
 
+		int Badge = 0;
+
 		int voucherUpdate = 0;
 		public int time;
 
@@ -160,7 +162,7 @@ namespace HookMeUP.iOS
 
 			Source.onCellSelectedForVouchers += (sender, e) =>
 			{
-				Cell.BackgroundColor = UIColor.Green;
+				//Cell.BackgroundColor = UIColor.Green;
 				//if (!VoucherCount.IsVoucherDepleted) Cell.BackgroundColor = UIColor.Green;
 				//else Cell.BackgroundColor = UIColor.DarkGray;
 
@@ -335,15 +337,14 @@ namespace HookMeUP.iOS
 
 						//send push
 
-						int i = 0;
+
 						var push = new ParsePush();
 						push.Channels = new string[] { "Global" };
 						push.Data = new Dictionary<string, object>
 						{
 							{"title","HookMeUp"},
 							{"alert","your order is ready"},
-							{"badge",i++}
-
+							{"badge",++Badge}
 
 						};
 						await push.SendAsync();

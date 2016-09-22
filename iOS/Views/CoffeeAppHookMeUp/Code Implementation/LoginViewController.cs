@@ -25,8 +25,7 @@ namespace HookMeUP.iOS
 				ClearFields(usernameText, passwordText);
 				//NavigationScreenController(forgotPasswordViewController);
 			};
-			usernameText.Text = "luntu";
-			passwordText.Text = "12345";
+
 			int i = 0;
 
 			loginButton.TouchUpInside += async (sender, evt) =>
