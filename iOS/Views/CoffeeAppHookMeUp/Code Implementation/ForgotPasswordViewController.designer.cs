@@ -23,9 +23,6 @@ namespace HookMeUP.iOS
 
 		[Outlet]
 		UIKit.UIButton getPasswordButton { get; set; }
-
-		[Outlet]
-		UIKit.UITextField usernameTextForgot { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -47,11 +44,6 @@ namespace HookMeUP.iOS
 			if (getPasswordButton != null) {
 				getPasswordButton.Dispose ();
 				getPasswordButton = null;
-			}
-
-			if (usernameTextForgot != null) {
-				usernameTextForgot.Dispose ();
-				usernameTextForgot = null;
 			}
 		}
 	}

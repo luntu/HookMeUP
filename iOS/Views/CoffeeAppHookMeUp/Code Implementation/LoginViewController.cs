@@ -23,7 +23,7 @@ namespace HookMeUP.iOS
 			forgotPasswordButton.TouchUpInside += (o, e) =>
 			{
 				ClearFields(usernameText, passwordText);
-				//NavigationScreenController(forgotPasswordViewController);
+				NavigationScreenController(forgotPasswordViewController);
 			};
 
 			int i = 0;

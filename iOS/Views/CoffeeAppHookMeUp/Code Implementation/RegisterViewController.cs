@@ -3,7 +3,6 @@ using UIKit;
 using Parse;
 using ToastIOS;
 using CoreGraphics;
-using System;
 
 namespace HookMeUP.iOS
 {
@@ -16,8 +15,21 @@ namespace HookMeUP.iOS
 		List<ParseObject> employeeObjs = new List<ParseObject>();
 		AuthanticateUser userAuthentication;
 
-		string GetNameTxt { get; set; }
-		string GetEmailTxt { get; set; }
+		string GetNameTxt 
+		{ 
+			get;
+			set; 
+		}
+		string GetEmailTxt 
+		{ 
+			get;
+			set;
+		}
+		bool isUsernameAvailable 
+		{
+			get;
+			set;
+		}
 
 
 		public override void ViewDidLoad()
@@ -81,7 +93,7 @@ namespace HookMeUP.iOS
 
 						if (!userAuthentication.AccountAvailable())
 						{
-							
+							Border(UIColor.Clear.CGColor, usernameTextR);
 							UpdateRegistered();
 							AddToDB(name, surname, username, password, email, 23);
 							NavigationController.PopViewController(true);
@@ -136,7 +148,18 @@ namespace HookMeUP.iOS
 		{
 			usernameTextR.EditingDidEnd += (sender, e) =>
 			{
-				if (usernameCheck.Contains(TrimInput(usernameTextR.Text)))
+				isUsernameAvailable = false;
+				foreach (string usernameElements in usernameCheck) 
+				{
+					System.Diagnostics.Debug.WriteLine(usernameElements);
+					if (usernameElements.ToLower().Equals(TrimInput(usernameTextR.Text.ToLower()))) 
+					{
+						isUsernameAvailable = true;
+						break;
+					}				
+				}
+
+				if (isUsernameAvailable)
 				{
 					Toast.MakeText("Someone already has that username").Show();
 					Border(UIColor.Red.CGColor, usernameTextR);
@@ -156,7 +179,6 @@ namespace HookMeUP.iOS
 				{
 					Toast.MakeText("Username and password don't match").Show();
 					Border(UIColor.Red.CGColor, passwordTextR, verifyPasswordText);
-
 					submitButton.Enabled = false;
 				}
 				else
@@ -200,20 +222,23 @@ namespace HookMeUP.iOS
 			}
 		}
 
-		async void AddToDB(string name,string surname, string username, string password,string empNo,int vouchers)
+		async void AddToDB(string name,string surname, string username, string password,string email,int vouchers)
 		{
 			loadingOverlay = new LoadingOverlay(bounds);
 			View.Add(loadingOverlay);
-		
-			tableNameUserInfo["Name"] = name;
-			tableNameUserInfo["Surname"] = surname;
-			tableNameUserInfo["Username"] = username;
-			tableNameUserInfo["Password"] = password;
-			tableNameUserInfo["Email"] = empNo;
-			tableNameUserInfo["Vouchers"] = vouchers;
-			tableNameUserInfo["IsAdmin"] = false;
 
-			await tableNameUserInfo.SaveAsync();
+			var user = new ParseUser()
+			{
+				Username = username,
+				Password = password,
+				Email = email
+			};
+			user["Name"] = name;
+			user["Surname"] = surname;
+			user["Vouchers"] = vouchers;
+			user["IsAdmin"] = false;
+
+			await user.SignUpAsync();
 
 			loadingOverlay.Hide();
 		}
@@ -245,15 +270,16 @@ namespace HookMeUP.iOS
 			loadingOverlay = new LoadingOverlay(bounds);
 			View.Add(loadingOverlay);
 
-			ParseQuery<ParseObject> query = ParseObject.GetQuery("UserInformation");
-			query.Include("Username");
+			//var query =  ParseObject.GetQuery("UserInformation");
+			var query = ParseUser.Query;
+			query.Include("username");
 
-			var coll = await query.FindAsync();
-
-			foreach (ParseObject element in coll)
-			{
-				usernameCheck.Add(element.Get<string>("Username"));
-			}
+			var coll = await query.FirstAsync();
+			usernameCheck.Add(coll.Get<string>("username"));
+			//foreach (ParseObject element in coll)
+			//{
+			//	usernameCheck.Add(element.Get<string>("Username"));
+			//}
 			loadingOverlay.Hide();
 
 		}
@@ -265,7 +291,6 @@ namespace HookMeUP.iOS
 
 			var query = ParseObject.GetQuery("AliensEmployees");
 			query.Include("Name").Include("Email").Include("IsRegistered");
-
 			var iEnumerablecoll = await query.FindAsync();
 
 			foreach (var parseObj in iEnumerablecoll) 

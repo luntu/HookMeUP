@@ -23,7 +23,7 @@
 
 //			//getPasswordButton.TouchUpInside += (obj, evt) => 
 //			//{
-				
+
 //				//i++;
 
 //				//switch (!usernameTextForgot.Text.Equals("") && !emailTextForgot.Text.Equals("")) {
@@ -110,13 +110,13 @@
 //			//			break;
 
 //			//		case false:
-						
+
 //			//			AlertPopUp("Error","Please fill in details","Ok");
 
 //			//			break;
-						
+
 //				//}
-			
+
 //			//};
 
 //			backButtonForgot.TouchUpInside += (o, e) =>
@@ -137,3 +137,44 @@
 //}
 
 
+using Parse;
+using System.Diagnostics;
+
+namespace HookMeUP.iOS 
+{
+	public partial class ForgotPasswordViewController : ScreenViewController
+	{
+		public override void ViewDidLoad()
+		{
+			base.ViewDidLoad();
+
+			emailTextForgot.BecomeFirstResponder();
+			DismissKeyboardOnBackgroundTap();
+			RegisterForKeyboardNotifications();
+			ShouldReturn(emailTextForgot);
+
+
+			getPasswordButton.TouchUpInside += async (object sender, System.EventArgs e) =>
+			{ 
+				try
+				{
+					string email = emailTextForgot.Text;
+					await ParseUser.RequestPasswordResetAsync(email);
+				}
+				catch(ParseException ex) 
+				{
+					Debug.WriteLine(ex.Message);
+				}
+			
+			};
+
+			backButtonForgot.TouchUpInside += (o, e) =>
+			{
+				NavigationController.PopViewController(true);
+				ClearFields(emailTextForgot);
+			};
+		}
+
+	}
+
+}
