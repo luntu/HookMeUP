@@ -41,9 +41,9 @@ namespace HookMeUP.iOS
 							   loadingOverlay = new LoadingOverlay(bounds);
 							   View.Add(loadingOverlay);
 
-							   ParseQuery<ParseObject> query = from userInformation in ParseObject.GetQuery("UserInformation")
-															   where userInformation.Get<string>("Username") == TrimInput(usernameText.Text)
-															   && userInformation.Get<string>("Password") == TrimInput(passwordText.Text)
+							ParseQuery<ParseUser> query = from userInformation in ParseUser.Query
+															   where userInformation.Get<string>("username") == TrimInput(usernameText.Text)
+															   && userInformation.Get<string>("password") == TrimInput(passwordText.Text)
 														   	select userInformation;
 
 							   ParseObject result = await query.FirstAsync();

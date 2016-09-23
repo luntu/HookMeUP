@@ -18,6 +18,11 @@ namespace HookMeUP.iOS
 			get;
 			set;
 		}
+		ParseInstallation CurrentInstallation
+		{
+			get;
+			set;
+		}
 
 		public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
 		{
@@ -72,6 +77,7 @@ namespace HookMeUP.iOS
 		{
 			
 			ParseInstallation installation = ParseInstallation.CurrentInstallation;
+			CurrentInstallation = installation;
 			installation.SetDeviceTokenFromData(deviceToken);
 			installation.Channels = new string[] { "Global" }; 
 			installation.SaveAsync();
@@ -84,14 +90,14 @@ namespace HookMeUP.iOS
 
 		public override void OnActivated(UIApplication application)
 		{
-			
-			ParseInstallation currentIstallation = ParseInstallation.CurrentInstallation;
-
-			if (currentIstallation.Badge != 0) 
-			{
-				currentIstallation.Badge = 0;
-				currentIstallation.SaveAsync();
+			if (CurrentInstallation != null) { 
+				if (CurrentInstallation.Badge != 0)
+				{
+					CurrentInstallation.Badge = 0;
+					CurrentInstallation.SaveAsync();
+				}
 			}
+
 		}
 	}
 }

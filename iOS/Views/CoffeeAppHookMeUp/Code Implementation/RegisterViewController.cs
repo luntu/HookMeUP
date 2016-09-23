@@ -10,7 +10,7 @@ namespace HookMeUP.iOS
 	{
 
 		List<UITextField> fields = new List<UITextField>();
-		List<string> usernameCheck = new List<string>();
+		public static List<string> usernameCheck = new List<string>();
 		List<AliensEmployees> employees = new List<AliensEmployees>();
 		List<ParseObject> employeeObjs = new List<ParseObject>();
 		AuthanticateUser userAuthentication;
@@ -25,13 +25,7 @@ namespace HookMeUP.iOS
 			get;
 			set;
 		}
-		bool isUsernameAvailable 
-		{
-			get;
-			set;
-		}
-
-
+			
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
@@ -52,10 +46,10 @@ namespace HookMeUP.iOS
 
 			TextFieldKeyboardIteration(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
 
-			TextEditing();
 			InputTextEditingValidation();
 			InitializeButtons();
 		}
+
 		public override void ViewWillAppear(bool animated)
 		{
 			base.ViewWillAppear(animated);
@@ -144,75 +138,6 @@ namespace HookMeUP.iOS
 			ldOvly.Hide();
 		}
 
-		void TextEditing()
-		{
-			usernameTextR.EditingDidEnd += (sender, e) =>
-			{
-				isUsernameAvailable = false;
-				foreach (string usernameElements in usernameCheck) 
-				{
-					System.Diagnostics.Debug.WriteLine(usernameElements);
-					if (usernameElements.ToLower().Equals(TrimInput(usernameTextR.Text.ToLower()))) 
-					{
-						isUsernameAvailable = true;
-						break;
-					}				
-				}
-
-				if (isUsernameAvailable)
-				{
-					Toast.MakeText("Someone already has that username").Show();
-					Border(UIColor.Red.CGColor, usernameTextR);
-
-					submitButton.Enabled = false;
-				}
-				else
-				{
-					Border(UIColor.Clear.CGColor, usernameTextR);
-					submitButton.Enabled = true;
-				}
-			};
-
-			verifyPasswordText.EditingDidEnd += (sender, e) =>
-			{
-				if (!TrimInput(passwordTextR.Text).Equals(TrimInput(verifyPasswordText.Text)))
-				{
-					Toast.MakeText("Username and password don't match").Show();
-					Border(UIColor.Red.CGColor, passwordTextR, verifyPasswordText);
-					submitButton.Enabled = false;
-				}
-				else
-				{
-					Border(UIColor.Clear.CGColor, passwordTextR, verifyPasswordText);
-					submitButton.Enabled = true;
-				}
-
-			};
-
-			emailText.EditingDidEnd += (sender, e) =>
-			{
-				if (!TrimInput(emailText.Text).ToLower().Contains("@cowboyaliens.com"))
-				{
-					Toast.MakeText("Invalid email address").Show();
-					Border(UIColor.Red.CGColor, emailText);
-
-					submitButton.Enabled = false;
-				}
-				else if (emailText.Text == string.Empty)
-				{
-					Border(UIColor.Clear.CGColor, emailText);
-					submitButton.Enabled = true;
-				}
-				else
-				{
-					Border(UIColor.Clear.CGColor, emailText);
-					submitButton.Enabled = true;
-				}
-			};
-		}
-
-	
-
 		void Border(CGColor color, params UITextField[] textF) 
 		{
 			foreach (UITextField field in textF) {
@@ -270,16 +195,15 @@ namespace HookMeUP.iOS
 			loadingOverlay = new LoadingOverlay(bounds);
 			View.Add(loadingOverlay);
 
-			//var query =  ParseObject.GetQuery("UserInformation");
 			var query = ParseUser.Query;
 			query.Include("username");
 
-			var coll = await query.FirstAsync();
-			usernameCheck.Add(coll.Get<string>("username"));
-			//foreach (ParseObject element in coll)
-			//{
-			//	usernameCheck.Add(element.Get<string>("Username"));
-			//}
+			var coll = await query.FindAsync();
+
+			foreach (ParseObject element in coll)
+			{
+				usernameCheck.Add(element.Get<string>("username"));
+			}
 			loadingOverlay.Hide();
 
 		}
