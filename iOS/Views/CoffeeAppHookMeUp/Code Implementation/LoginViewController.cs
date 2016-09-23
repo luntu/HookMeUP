@@ -41,14 +41,15 @@ namespace HookMeUP.iOS
 							   loadingOverlay = new LoadingOverlay(bounds);
 							   View.Add(loadingOverlay);
 
-							ParseQuery<ParseUser> query = from userInformation in ParseUser.Query
-															   where userInformation.Get<string>("username") == TrimInput(usernameText.Text)
-															   && userInformation.Get<string>("password") == TrimInput(passwordText.Text)
-														   	select userInformation;
+							   //ParseQuery<ParseUser> query = from parseUser in ParseUser.Query
+							   //							   where parseUser.Get<string>("username") == TrimInput(usernameText.Text)
+							   //							   && parseUser.Get<string>("password") == TrimInput(passwordText.Text)
+							   //						   	   select parseUser;
 
-							   ParseObject result = await query.FirstAsync();
+							   //  ParseObject result = await query.FirstAsync();
 
-							   orderViewController.GetName = result.Get<string>("Name");
+							   ParseUser result = await ParseUser.LogInAsync(TrimInput(usernameText.Text), TrimInput(passwordText.Text));
+								orderViewController.GetName = result.Get<string>("Name");
 							   bool isAdmin = result.Get<bool>("IsAdmin");
 							   orderViewController.CurrentUser = result;
 							   int vouchers = result.Get<int>("Vouchers");
