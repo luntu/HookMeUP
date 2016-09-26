@@ -11,8 +11,16 @@ namespace HookMeUP.iOS
 	public partial class AdminViewController : ScreenViewController
 	{
 
-		public TableSourceAdmin Source { get;private set; }
-		public List<string> AdminGetOrders { get; set; } = new List<string>();
+		public TableSourceAdmin Source 
+		{
+			get;
+			private set; 
+		}
+		public List<string> AdminGetOrders 
+		{ 
+			get;
+			set;
+		} = new List<string>();
 		IList orderItems = null;
 	
 		public override async void ViewDidLoad()
@@ -69,13 +77,6 @@ namespace HookMeUP.iOS
 
 		}
 
-		public override void DidReceiveMemoryWarning()
-		{
-			base.DidReceiveMemoryWarning();
-			// Release any cached data, images, etc that aren't in use.
-		}
-
-
 	}
 
 
@@ -130,7 +131,7 @@ namespace HookMeUP.iOS
 			alert.Title = "Order items";
 
 			string[] split = orders[indexPath.Row].Split('-');
-			//string objectId = split[0];
+
 			PersonOrderedName = split[1];
 			string[] split1 = split[2].Split('+');
 			string s = "";

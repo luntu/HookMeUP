@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Foundation;
 using Parse;
 using UIKit;
 
@@ -33,6 +34,18 @@ namespace HookMeUP.iOS
 		}
 
 		UITableViewCell Cell
+		{
+			get;
+			set;
+		}
+
+		Coffee SelectedCoffeeItem
+		{
+			get;
+			set;
+		}
+
+		NSIndexPath SelectedIndexPath
 		{
 			get;
 			set;
@@ -159,6 +172,8 @@ namespace HookMeUP.iOS
 			Source.getSelectedCell += (sender, e) =>
 			{
 				Cell = e;
+				SelectedIndexPath = ordersTable.IndexPathForCell(Cell);
+				SelectedCoffeeItem = coffeeItems[SelectedIndexPath.Row];
 			};
 
 			Source.onCellForOrderName += (sender, e) =>
@@ -168,9 +183,11 @@ namespace HookMeUP.iOS
 
 			Source.onCellSelectedForVouchers += (sender, e) =>
 			{
-				//Cell.BackgroundColor = UIColor.Green;
-				//if (!VoucherCount.IsVoucherDepleted) Cell.BackgroundColor = UIColor.Green;
-				//else Cell.BackgroundColor = UIColor.DarkGray;
+				
+				//var isAvailable = !VoucherCount.IsVoucherDepleted;
+				//SelectedCoffeeItem.Available = isAvailable;
+
+				//ordersTable.ReloadRows(new[] { SelectedIndexPath }, UITableViewRowAnimation.Fade);
 
 				VoucherCount.Voucher = e;
 				VoucherCount.IsSelected = true;
@@ -345,11 +362,11 @@ namespace HookMeUP.iOS
 
 
 						var push = new ParsePush();
-						push.Channels = new string[] { "Global" };
+						push.Channels = new string[] { "Admin" };
 						push.Data = new Dictionary<string, object>
 						{
 							{"title","HookMeUp"},
-							{"alert","your order is ready"},
+							{"alert","New order from "+GetName.ToUpper()},
 							{"badge",++Badge}
 
 						};

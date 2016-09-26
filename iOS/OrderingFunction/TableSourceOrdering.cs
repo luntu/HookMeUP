@@ -52,7 +52,9 @@ namespace HookMeUP.iOS
 
 			if (cell == null)
 				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
-			
+
+			cell.BackgroundColor = UIColor.Clear;
+
 			cell.TextLabel.Text = item.Title;
 			string directory = "TableImages/";
 			UIImage image = UIImage.FromFile(directory + item.ImageName);
@@ -69,14 +71,14 @@ namespace HookMeUP.iOS
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
 			Coffee coffeeItem = coffeeItems[indexPath.Row];
+			//coffeeItem.Selected = true;
 			ordersList.Add(coffeeItem);
 			price = double.Parse(FormatPrice(coffeeItem.Price));
 
-			UITableViewCell cell =  tableView.CellAt(indexPath);
+			var cell = tableView.CellAt(indexPath);
 
 			string[] splitForVoucher = Voucher.Split(' ');
 			int voucherNumber = int.Parse(splitForVoucher[0]);
-
 
 			if (onCellForOrderName != null)
 				onCellForOrderName(tableView, coffeeItem.Title);
@@ -87,7 +89,6 @@ namespace HookMeUP.iOS
 			if (onCellSelectedForVouchers != null)
 				onCellSelectedForVouchers(tableView, voucherNumber);
 			
-
 			if (onCellSelectedForPrice != null)
 				onCellSelectedForPrice(tableView, price);
 			
@@ -97,6 +98,7 @@ namespace HookMeUP.iOS
 		public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
 		{
 			Coffee coffeeItem = coffeeItems[indexPath.Row];
+			//coffeeItem.Selected = false;
 
 			price = double.Parse(FormatPrice(coffeeItem.Price));
 

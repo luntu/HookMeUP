@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Foundation;
 using Parse;
 using UIKit;
@@ -53,10 +55,14 @@ namespace HookMeUP.iOS
 
 			ParsePush.ParsePushNotificationReceived += (sender, e) =>
 			{
-				Debug.WriteLine("You have received a notification");
+				var payload = e.Payload;
+				object objectId;
+				Debug.WriteLine(payload.Contains(new KeyValuePair<string, object>("deviceType", "ios")));
 
-
-
+				if (payload.TryGetValue("objectId", out objectId))
+				{
+					Debug.WriteLine(objectId as string);
+				}
 			};
 
 			Window = new UIWindow(UIScreen.MainScreen.Bounds);
@@ -78,9 +84,11 @@ namespace HookMeUP.iOS
 			
 			ParseInstallation installation = ParseInstallation.CurrentInstallation;
 			CurrentInstallation = installation;
-			installation.SetDeviceTokenFromData(deviceToken);
-			//installation.Channels = new string[] { "Global" }; 
-			installation.SaveAsync();
+			CurrentInstallation.SetDeviceTokenFromData(deviceToken);
+			if (CurrentInstallation.Badge != 0)
+				CurrentInstallation.Badge = 0;
+			
+			CurrentInstallation.SaveAsync();
 		}
 
 		public override void ReceivedRemoteNotification(UIApplication application, NSDictionary userInfo)
@@ -90,6 +98,7 @@ namespace HookMeUP.iOS
 
 		public override void OnActivated(UIApplication application)
 		{
+			
 			if (CurrentInstallation != null)
 			{ 
 				if (CurrentInstallation.Badge != 0)
@@ -99,6 +108,15 @@ namespace HookMeUP.iOS
 				}
 			}
 
+		}
+
+		public override void DidEnterBackground(UIApplication application)
+		{
+			if (CurrentInstallation.Badge != 0)
+			{
+				CurrentInstallation.Badge = 0;
+				CurrentInstallation.SaveAsync();
+			}
 		}
 
 		public override void WillTerminate(UIApplication application)
@@ -113,9 +131,6 @@ namespace HookMeUP.iOS
 			}
 
 		}
-
-
-
 
 	}
 }
