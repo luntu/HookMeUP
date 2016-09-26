@@ -79,7 +79,7 @@ namespace HookMeUP.iOS
 			ParseInstallation installation = ParseInstallation.CurrentInstallation;
 			CurrentInstallation = installation;
 			installation.SetDeviceTokenFromData(deviceToken);
-			installation.Channels = new string[] { "Global" }; 
+			//installation.Channels = new string[] { "Global" }; 
 			installation.SaveAsync();
 		}
 
@@ -90,7 +90,8 @@ namespace HookMeUP.iOS
 
 		public override void OnActivated(UIApplication application)
 		{
-			if (CurrentInstallation != null) { 
+			if (CurrentInstallation != null)
+			{ 
 				if (CurrentInstallation.Badge != 0)
 				{
 					CurrentInstallation.Badge = 0;
@@ -99,6 +100,23 @@ namespace HookMeUP.iOS
 			}
 
 		}
+
+		public override void WillTerminate(UIApplication application)
+		{
+			try
+			{
+				ParseUser.LogOut();
+			}
+			catch(ParseException e) 
+			{
+				Debug.WriteLine(e.StackTrace);
+			}
+
+		}
+
+
+
+
 	}
 }
 

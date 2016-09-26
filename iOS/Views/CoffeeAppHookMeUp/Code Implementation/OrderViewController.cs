@@ -14,9 +14,15 @@ namespace HookMeUP.iOS
 			private set;
 		}
 
-		public ParseObject CurrentUser
+		public ParseUser CurrentUser
 		{
 			get;
+			set;
+		}
+
+		public string GetUserChannelName 
+		{
+			get; 
 			set;
 		}
 

@@ -41,7 +41,6 @@ namespace HookMeUP.iOS
 
 					string personOrdered = parseObject.Get<string>("PersonOrdered");
 					orderItems = parseObject.Get<IList>("OrderList");
-					Debug.WriteLine(objectId +"\t" +personOrdered );
 
 					foreach (string e in orderItems) 
 					{

@@ -4,13 +4,13 @@ namespace HookMeUP.iOS
 {
 	public partial class LoginViewController : ScreenViewController
 	{
-		
 
-		public override  void ViewDidLoad()
+
+		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
-					
+
 			NavigationController.NavigationBarHidden = true;
 
 			DismissKeyboardOnBackgroundTap();
@@ -30,30 +30,38 @@ namespace HookMeUP.iOS
 
 			loginButton.TouchUpInside += async (sender, evt) =>
 		   	{
-				i++;
+				   i++;
 
-			   switch (!usernameText.Text.Equals("") && !passwordText.Text.Equals(""))
-			   {
+				   switch (!usernameText.Text.Equals("") && !passwordText.Text.Equals(""))
+				   {
 
-				case true:
+					   case true:
 						   try
 						   {
 							   loadingOverlay = new LoadingOverlay(bounds);
 							   View.Add(loadingOverlay);
 
-							   //ParseQuery<ParseUser> query = from parseUser in ParseUser.Query
-							   //							   where parseUser.Get<string>("username") == TrimInput(usernameText.Text)
-							   //							   && parseUser.Get<string>("password") == TrimInput(passwordText.Text)
-							   //						   	   select parseUser;
-
-							   //  ParseObject result = await query.FirstAsync();
-
+							   // get user details
 							   ParseUser result = await ParseUser.LogInAsync(TrimInput(usernameText.Text), TrimInput(passwordText.Text));
-								orderViewController.GetName = result.Get<string>("Name");
+							   string name = result.Get<string>("Name");
+							   string surname = result.Get<string>("Surname");
+							   orderViewController.GetName = name;
 							   bool isAdmin = result.Get<bool>("IsAdmin");
 							   orderViewController.CurrentUser = result;
 							   int vouchers = result.Get<int>("Vouchers");
 							   orderViewController.GetVouchers = vouchers;
+							   string userChannelName = name + surname;
+							   orderViewController.GetUserChannelName = userChannelName;
+							   // create user channel
+							   var installation = ParseInstallation.CurrentInstallation;
+
+							   Debug.WriteLine(isAdmin);
+							  
+							   if (isAdmin) installation.Channels = new string[] { "Admin" };
+							   else installation.Channels = new string[] { userChannelName };
+
+							   await installation.SaveAsync();
+
 							   loadingOverlay.Hide();
 
 							   if (isAdmin) NavigationScreenController(adminViewController);
@@ -62,7 +70,6 @@ namespace HookMeUP.iOS
 						   }
 						   catch (ParseException ex)
 						   {
-
 							   Debug.WriteLine(ex.GetType());
 							   loadingOverlay.Hide();
 							   AlertPopUp("Login failed", "Username or password incorrect", "OK");
@@ -70,33 +77,30 @@ namespace HookMeUP.iOS
 							   if (i == 3)
 							   {
 								   AlertPopUp("Login failed!!", "You failed to login 3 times we suggest \nyou either Register or retrieve lost password", "OK");
-								   BorderButton(registerButton, forgotPasswordButton);
 								   loginButton.Enabled = false;
 							   }
 						   }
-						   catch (System.NullReferenceException) 
+						   catch (System.NullReferenceException)
 						   {
-							   AlertPopUp("Connection error", "Can't connect", "");				
+							   AlertPopUp("Connection error", "Can't connect", "");
 						   }
 
+						   break;
+
+					   case false:
+
+						   AlertPopUp("Error", "Please fill in details", "OK");
+
+						   break;
 
 
-					   break;
-
-				   case false:
-
-					   AlertPopUp("Error", "Please fill in details", "OK");
-
-					   break;
-
-
-			   }
+				   }
 
 
 
-			   ClearFields(usernameText, passwordText);
+				   ClearFields(usernameText, passwordText);
 
-		   };
+			   };
 
 			registerButton.TouchUpInside += (o, e) =>
 			{
@@ -109,7 +113,7 @@ namespace HookMeUP.iOS
 
 		}
 
-	
+
 		public override void DidReceiveMemoryWarning()
 		{
 			base.DidReceiveMemoryWarning();
