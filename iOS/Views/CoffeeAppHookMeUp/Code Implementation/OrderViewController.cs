@@ -51,7 +51,6 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		int Badge = 0;
 
 		int voucherUpdate = 0;
 		public int time;
@@ -362,12 +361,13 @@ namespace HookMeUP.iOS
 
 
 						var push = new ParsePush();
-						push.Channels = new string[] { "Admin" };
+						//push.Channels = new string[] { "Admin" };
 						push.Data = new Dictionary<string, object>
 						{
 							{"title","HookMeUp"},
 							{"alert","New order from "+GetName.ToUpper()},
-							{"badge",++Badge}
+							{"channel","Admin"},
+							{"badge","Increment"}
 
 						};
 						await push.SendAsync();

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Foundation;
 using Parse;
 using UIKit;
@@ -43,7 +42,7 @@ namespace HookMeUP.iOS
 				UIRemoteNotificationType notificationTypes = UIRemoteNotificationType.Alert | UIRemoteNotificationType.Badge | UIRemoteNotificationType.Sound;
 				UIApplication.SharedApplication.RegisterForRemoteNotificationTypes(notificationTypes);
 			}
-			else 
+			else
 			{
 				UIUserNotificationType notificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound;
 				var settings = UIUserNotificationSettings.GetSettingsForTypes(notificationTypes, null);
@@ -55,13 +54,19 @@ namespace HookMeUP.iOS
 
 			ParsePush.ParsePushNotificationReceived += (sender, e) =>
 			{
-				var payload = e.Payload;
-				object objectId;
-				Debug.WriteLine(payload.Contains(new KeyValuePair<string, object>("deviceType", "ios")));
+				
+				IDictionary<string, object> payload = e.Payload;
+				object aps;
 
-				if (payload.TryGetValue("objectId", out objectId))
+				if (payload.TryGetValue("aps", out aps))
 				{
-					Debug.WriteLine(objectId as string);
+					NSDictionary dictionary = aps as NSDictionary;
+					Debug.WriteLine(dictionary);
+					foreach (var elements in dictionary) 
+					{
+						Debug.WriteLine(elements + "element");
+					}
+
 				}
 			};
 
@@ -81,13 +86,13 @@ namespace HookMeUP.iOS
 
 		public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
 		{
-			
+
 			ParseInstallation installation = ParseInstallation.CurrentInstallation;
 			CurrentInstallation = installation;
 			CurrentInstallation.SetDeviceTokenFromData(deviceToken);
 			if (CurrentInstallation.Badge != 0)
 				CurrentInstallation.Badge = 0;
-			
+
 			CurrentInstallation.SaveAsync();
 		}
 
@@ -98,9 +103,9 @@ namespace HookMeUP.iOS
 
 		public override void OnActivated(UIApplication application)
 		{
-			
+
 			if (CurrentInstallation != null)
-			{ 
+			{
 				if (CurrentInstallation.Badge != 0)
 				{
 					CurrentInstallation.Badge = 0;
@@ -125,7 +130,7 @@ namespace HookMeUP.iOS
 			{
 				ParseUser.LogOut();
 			}
-			catch(ParseException e) 
+			catch (ParseException e)
 			{
 				Debug.WriteLine(e.StackTrace);
 			}
