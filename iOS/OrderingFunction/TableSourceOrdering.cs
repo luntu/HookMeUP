@@ -8,7 +8,10 @@ namespace HookMeUP.iOS
 {
 	public class TableSourceOrdering : UITableViewSource
 	{
-		List<Coffee> coffeeItems;
+		List<Coffee> coffeeItems 
+		{
+			get;
+		}
 		string cellIdentifier = "TableCell";
 
 		public string Voucher 

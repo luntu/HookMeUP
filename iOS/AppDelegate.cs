@@ -54,20 +54,35 @@ namespace HookMeUP.iOS
 
 			ParsePush.ParsePushNotificationReceived += (sender, e) =>
 			{
-				
 				IDictionary<string, object> payload = e.Payload;
 				object aps;
 
 				if (payload.TryGetValue("aps", out aps))
 				{
 					NSDictionary dictionary = aps as NSDictionary;
-					Debug.WriteLine(dictionary);
+
 					foreach (var elements in dictionary) 
 					{
-						Debug.WriteLine(elements + "element");
+						string value = elements.Value.ToString();
+
+						if (value.Contains("New"))
+						{
+							//App Admin side handles notification
+							string[] splitArr = value.Split(' ');
+							string channelName = splitArr[3] + splitArr[4];
+							var adminOrders = new AdminViewController(channelName);
+							adminOrders.AddOrders();
+							break;
+						}
+						if (value.Contains("Done")) 
+						{
+							//App user side handles notification 
+						}
+						
 					}
 
 				}
+
 			};
 
 			Window = new UIWindow(UIScreen.MainScreen.Bounds);

@@ -10,24 +10,40 @@ namespace HookMeUP.iOS
 {
 	public partial class AdminViewController : ScreenViewController
 	{
-
 		public TableSourceAdmin Source 
 		{
 			get;
 			private set; 
 		}
-		public List<string> AdminGetOrders 
-		{ 
-			get;
-			set;
-		} = new List<string>();
-		IList orderItems = null;
-	
-		public override async void ViewDidLoad()
-		{
-			base.ViewDidLoad();
+		public List<OrdersAdmin> AdminGetOrders = new List<OrdersAdmin>();
 
-			AdminGetOrders.Clear();		
+		IList orderItems = null;
+
+		public string ChannelName
+		{
+			get;
+			private set;
+		}
+
+		public AdminViewController(string channelName)
+		{
+			ChannelName = channelName;
+		}
+
+		public AdminViewController()
+		{
+		}
+	
+		public override void ViewDidAppear(bool animated)
+		{
+			base.ViewDidAppear(animated);
+			AddOrders();
+		}
+
+
+		public async void AddOrders() 
+		{
+			AdminGetOrders.Clear();
 
 			try
 			{
@@ -40,24 +56,25 @@ namespace HookMeUP.iOS
 
 
 				IEnumerable coll = await query.FindAsync();
-			
-				string orderConcat = "";
 
-				foreach (ParseObject parseObject in coll) 
+				List<string> itemsOrdered = new List<string>();
+				foreach (ParseObject parseObject in coll)
 				{
 					string objectId = parseObject.ObjectId;
 
 					string personOrdered = parseObject.Get<string>("PersonOrdered");
 					orderItems = parseObject.Get<IList>("OrderList");
 
-					foreach (string e in orderItems) 
+					foreach (string e in orderItems)
 					{
-						orderConcat += e + "+";
+						itemsOrdered.Add(e);
+						//orderConcat += e + "+";
 					}
+					AdminGetOrders.Add(new OrdersAdmin(objectId,personOrdered, itemsOrdered));
+					//AdminGetOrders.Add(objectId + "#" + personOrdered + "#" + orderConcat.Trim());
+					itemsOrdered.Clear();
+				}
 
-					AdminGetOrders.Add(objectId+ "#" +personOrdered + "#" + orderConcat.Trim());
-					orderConcat = String.Empty;
-            	}
 
 				loadingOverlay.Hide();
 			}
@@ -68,13 +85,13 @@ namespace HookMeUP.iOS
 			}
 			if (orderItems != null)
 			{
-				Source = new TableSourceAdmin(AdminGetOrders);
+				Source = new TableSourceAdmin(AdminGetOrders, ChannelName);
 			}
-			else  Debug.WriteLine("Order items is null");
+			else Debug.WriteLine("Order items is null");
 
 			AminOrdersTable.Source = Source;
 			AminOrdersTable.ReloadData();
-
+		
 		}
 
 	}
@@ -88,16 +105,26 @@ namespace HookMeUP.iOS
 	public class TableSourceAdmin : UITableViewSource
 	{
 		string cellIdentifier = "TableCell";
-	
 
-		List<string> items;
-		List<string> orders= new List<string>();
+
+		List<OrdersAdmin> Items
+		{
+			get;
+			set;
+		}
+		string ChannelName 
+		{
+			get;
+			set;
+		}
+		//List<string> Orders= new List<string>();
 
 		string PersonOrderedName = "";
 
-		public TableSourceAdmin(List<string> items) {
-			this.items = items;
-		
+
+		public TableSourceAdmin(List<OrdersAdmin> items,string channelName) {
+			Items = items;
+			ChannelName = channelName;
 		}
 
 
@@ -110,10 +137,15 @@ namespace HookMeUP.iOS
 			{
 				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
 			}
-			string[] split = items[indexPath.Row].Split('#');
-			string objectIdd = split[0];
-			string personOrdered = split[1];
-			orders.Add(objectIdd+"-"+personOrdered + "-" + split[2]);
+			//string[] split = Items[indexPath.Row].Split('#');
+			//string objectIdd = split[0];
+			//string personOrdered = split[1];
+			//Orders.Add(objectIdd+"-"+personOrdered + "-" + split[2]);
+
+			//cell.TextLabel.Text = personOrdered;
+
+			OrdersAdmin orders = Items[indexPath.Row];
+			string personOrdered = orders.PersonOrdered;
 
 			cell.TextLabel.Text = personOrdered;
 
@@ -122,22 +154,27 @@ namespace HookMeUP.iOS
 
 		public override nint RowsInSection(UITableView tableview, nint section)
 		{
-			return items.Count;
+			return Items.Count;
 		}
 
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
+			//string[] split = Orders[indexPath.Row].Split('-');
+			
+			//PersonOrderedName = split[1];
+			//string[] split1 = split[2].Split('+');
+
+			OrdersAdmin orders = Items[indexPath.Row];
+			PersonOrderedName = orders.PersonOrdered;
+			Debug.WriteLine(PersonOrderedName);
+
 			UIAlertView alert = new UIAlertView();
 			alert.Title = "Order items";
-
-			string[] split = orders[indexPath.Row].Split('-');
-
-			PersonOrderedName = split[1];
-			string[] split1 = split[2].Split('+');
 			string s = "";
 
-			foreach (string elements in split1) 
+			foreach (string elements in orders.Items) 
 			{
+				Debug.WriteLine(elements);
 				s += elements+"\n";
 			}
 
@@ -153,11 +190,11 @@ namespace HookMeUP.iOS
 				case UITableViewCellEditingStyle.Delete:
 					Debug.WriteLine(PersonOrderedName);
 
-					string[] split = items[indexPath.Row].Split('#');
-					string objectID = split[0];
-								
-
-					items.RemoveAt(indexPath.Row);
+					//string[] split = Items[indexPath.Row].Split('#');
+					//string objectID = split[0];
+					OrdersAdmin orders = Items[indexPath.Row];
+					string objectID = orders.ObjectId;
+					Items.Remove(orders);
 					tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
 
 					try

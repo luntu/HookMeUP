@@ -11,9 +11,21 @@
 			//Selected = selected;
 		}
 
-		public string Title { get; private set; }
-		public string ImageName { get; private set; }
-		public string Price { get; private set; }
+		public string Title 
+		{
+			get;
+			private set;
+		}
+		public string ImageName 
+		{
+			get;
+			private set;
+		}
+		public string Price 
+		{
+			get;
+			private set;
+		}
 		//public bool Available;
 		//public bool Selected;
 	}

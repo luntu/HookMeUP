@@ -45,20 +45,22 @@ namespace HookMeUP.iOS
 							   ParseUser result = await ParseUser.LogInAsync(TrimInput(usernameText.Text), TrimInput(passwordText.Text));
 							   string name = result.Get<string>("Name");
 							   string surname = result.Get<string>("Surname");
-							   orderViewController.GetName = name;
 							   bool isAdmin = result.Get<bool>("IsAdmin");
-							   orderViewController.CurrentUser = result;
 							   int vouchers = result.Get<int>("Vouchers");
-							   orderViewController.GetVouchers = vouchers;
 							   string userChannelName = name + surname;
+
+							   orderViewController.GetName = name;
+							   orderViewController.GetSurname = surname;
+							   orderViewController.CurrentUser = result;
+							   orderViewController.GetVouchers = vouchers;
 							   orderViewController.GetUserChannelName = userChannelName;
 							   // create user channel
 							   var installation = ParseInstallation.CurrentInstallation;
 
 							   Debug.WriteLine(isAdmin);
-							  
+
 							   if (isAdmin) installation.Channels = new string[] { "Admin" };
-							   else installation.Channels = new string[] { userChannelName };
+							   else installation.Channels = new string[] { userChannelName.ToLower() };
 
 							   await installation.SaveAsync();
 

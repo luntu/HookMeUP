@@ -21,29 +21,23 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		public string GetUserChannelName 
-		{
-			get; 
-			set;
-		}
-
 		ParseObject TableNameOrders
 		{
 			get;
 			set;
 		}
 
-		UITableViewCell Cell
-		{
-			get;
-			set;
-		}
+		//UITableViewCell Cell
+		//{
+		//	get;
+		//	set;
+		//}
 
-		Coffee SelectedCoffeeItem
-		{
-			get;
-			set;
-		}
+		//Coffee SelectedCoffeeItem
+		//{
+		//	get;
+		//	set;
+		//}
 
 		NSIndexPath SelectedIndexPath
 		{
@@ -67,6 +61,12 @@ namespace HookMeUP.iOS
 		public double getPrice;
 		string showOrders = "";
 
+		public string GetUserChannelName 
+		{
+			get; 
+			set;
+		}
+		
 		public int GetVouchers
 		{
 			get;
@@ -80,6 +80,12 @@ namespace HookMeUP.iOS
 		}
 
 		public string GetName
+		{
+			get;
+			set;
+		}
+
+		public string GetSurname
 		{
 			get;
 			set;
@@ -168,12 +174,12 @@ namespace HookMeUP.iOS
 			ordersTable.Source = Source;
 			ordersTable.ReloadData();
 
-			Source.getSelectedCell += (sender, e) =>
-			{
-				Cell = e;
-				SelectedIndexPath = ordersTable.IndexPathForCell(Cell);
-				SelectedCoffeeItem = coffeeItems[SelectedIndexPath.Row];
-			};
+			//Source.getSelectedCell += (sender, e) =>
+			//{
+			//	Cell = e;
+			//	SelectedIndexPath = ordersTable.IndexPathForCell(Cell);
+			//	SelectedCoffeeItem = coffeeItems[SelectedIndexPath.Row];
+			//};
 
 			Source.onCellForOrderName += (sender, e) =>
 			{
@@ -306,7 +312,6 @@ namespace HookMeUP.iOS
 		{
 			double prices = 0;
 
-
 			foreach (Coffee orderElements in Source.ordersList)
 			{
 				string orderName = orderElements.Title;
@@ -365,7 +370,7 @@ namespace HookMeUP.iOS
 						push.Data = new Dictionary<string, object>
 						{
 							{"title","HookMeUp"},
-							{"alert","New order from "+GetName.ToUpper()},
+							{"alert","New order from "+(GetName+" "+GetSurname).ToUpper()},
 							{"channel","Admin"},
 							{"badge","Increment"}
 
@@ -379,6 +384,7 @@ namespace HookMeUP.iOS
 					ResetScreen();
 					loadingOverlay.Hide();
 				}
+				else items.Clear();
 
 			};
 			alert.Show();

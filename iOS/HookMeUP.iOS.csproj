@@ -188,6 +188,7 @@
     <Compile Include="Views\FireEvacuation\Code Implementation\AliensTrackerRegisterViewController.designer.cs">
       <DependentUpon>..\..\Code Implementation\AliensTrackerRegisterViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\OrdersAdmin.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
