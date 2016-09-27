@@ -366,7 +366,6 @@ namespace HookMeUP.iOS
 
 
 						var push = new ParsePush();
-						//push.Channels = new string[] { "Admin" };
 						push.Data = new Dictionary<string, object>
 						{
 							{"title","HookMeUp"},

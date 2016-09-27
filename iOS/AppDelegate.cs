@@ -74,7 +74,7 @@ namespace HookMeUP.iOS
 							adminOrders.AddOrders();
 							break;
 						}
-						if (value.Contains("Done")) 
+						if (value.Contains("Ready!!!")) 
 						{
 							//App user side handles notification 
 						}

@@ -10,10 +10,10 @@ namespace HookMeUP.iOS
 {
 	public partial class AdminViewController : ScreenViewController
 	{
-		public TableSourceAdmin Source 
+		public TableSourceAdmin Source
 		{
 			get;
-			private set; 
+			private set;
 		}
 		public List<OrdersAdmin> AdminGetOrders = new List<OrdersAdmin>();
 
@@ -33,7 +33,7 @@ namespace HookMeUP.iOS
 		public AdminViewController()
 		{
 		}
-	
+
 		public override void ViewDidAppear(bool animated)
 		{
 			base.ViewDidAppear(animated);
@@ -41,7 +41,7 @@ namespace HookMeUP.iOS
 		}
 
 
-		public async void AddOrders() 
+		public async void AddOrders()
 		{
 			AdminGetOrders.Clear();
 
@@ -57,9 +57,11 @@ namespace HookMeUP.iOS
 
 				IEnumerable coll = await query.FindAsync();
 
-				List<string> itemsOrdered = new List<string>();
+				List<string> itemsOrdered;// = new List<string>();
+
 				foreach (ParseObject parseObject in coll)
 				{
+					itemsOrdered = new List<string>();
 					string objectId = parseObject.ObjectId;
 
 					string personOrdered = parseObject.Get<string>("PersonOrdered");
@@ -68,11 +70,11 @@ namespace HookMeUP.iOS
 					foreach (string e in orderItems)
 					{
 						itemsOrdered.Add(e);
-						//orderConcat += e + "+";
 					}
-					AdminGetOrders.Add(new OrdersAdmin(objectId,personOrdered, itemsOrdered));
-					//AdminGetOrders.Add(objectId + "#" + personOrdered + "#" + orderConcat.Trim());
-					itemsOrdered.Clear();
+
+					AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, itemsOrdered));
+
+					//itemsOrdered.Clear();
 				}
 
 
@@ -91,7 +93,7 @@ namespace HookMeUP.iOS
 
 			AminOrdersTable.Source = Source;
 			AminOrdersTable.ReloadData();
-		
+
 		}
 
 	}
@@ -112,19 +114,20 @@ namespace HookMeUP.iOS
 			get;
 			set;
 		}
-		string ChannelName 
+		string ChannelName
 		{
 			get;
 			set;
 		}
-		//List<string> Orders= new List<string>();
 
 		string PersonOrderedName = "";
 
 
-		public TableSourceAdmin(List<OrdersAdmin> items,string channelName) {
+		public TableSourceAdmin(List<OrdersAdmin> items, string channelName)
+		{
 			Items = items;
 			ChannelName = channelName;
+
 		}
 
 
@@ -137,12 +140,6 @@ namespace HookMeUP.iOS
 			{
 				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
 			}
-			//string[] split = Items[indexPath.Row].Split('#');
-			//string objectIdd = split[0];
-			//string personOrdered = split[1];
-			//Orders.Add(objectIdd+"-"+personOrdered + "-" + split[2]);
-
-			//cell.TextLabel.Text = personOrdered;
 
 			OrdersAdmin orders = Items[indexPath.Row];
 			string personOrdered = orders.PersonOrdered;
@@ -159,11 +156,6 @@ namespace HookMeUP.iOS
 
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
-			//string[] split = Orders[indexPath.Row].Split('-');
-			
-			//PersonOrderedName = split[1];
-			//string[] split1 = split[2].Split('+');
-
 			OrdersAdmin orders = Items[indexPath.Row];
 			PersonOrderedName = orders.PersonOrdered;
 			Debug.WriteLine(PersonOrderedName);
@@ -172,10 +164,10 @@ namespace HookMeUP.iOS
 			alert.Title = "Order items";
 			string s = "";
 
-			foreach (string elements in orders.Items) 
+			foreach (string elements in orders.Items)
 			{
 				Debug.WriteLine(elements);
-				s += elements+"\n";
+				s += elements + "\n";
 			}
 
 			alert.Message = s.Trim();
@@ -188,10 +180,7 @@ namespace HookMeUP.iOS
 			switch (editingStyle)
 			{
 				case UITableViewCellEditingStyle.Delete:
-					Debug.WriteLine(PersonOrderedName);
 
-					//string[] split = Items[indexPath.Row].Split('#');
-					//string objectID = split[0];
 					OrdersAdmin orders = Items[indexPath.Row];
 					string objectID = orders.ObjectId;
 					Items.Remove(orders);
@@ -199,17 +188,30 @@ namespace HookMeUP.iOS
 
 					try
 					{
-					ParseQuery<ParseObject> queryForUpdate = from ordersTB in ParseObject.GetQuery("Orders")
-						                                     where ordersTB.Get<string>("objectId") == objectID
-															 select ordersTB;
+						ParseQuery<ParseObject> queryForUpdate = from ordersTB in ParseObject.GetQuery("Orders")
+																 where ordersTB.Get<string>("objectId") == objectID
+																 select ordersTB;
 
-						ParseObject obj =  await queryForUpdate.FirstAsync();
+						ParseObject obj = await queryForUpdate.FirstAsync();
 						obj["IsOrderDone"] = true;
 						await obj.SaveAsync();
+
+						//send push
+
+						var push = new ParsePush();
+						push.Data = new Dictionary<string, object>
+						{
+							{"title","HookMeUp"},
+							{"alert","Your order is Ready!!!"},
+							{"channel",ChannelName},
+							{"badge","Increment"}
+
+						};
+						await push.SendAsync();
 					}
 					catch (ParseException e)
 					{
-						Debug.WriteLine(e.StackTrace);	
+						Debug.WriteLine(e.StackTrace);
 					}
 					break;
 
