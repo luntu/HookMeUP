@@ -15,6 +15,7 @@ namespace HookMeUP.iOS
 			get;
 			private set;
 		}
+
 		public List<OrdersAdmin> AdminGetOrders = new List<OrdersAdmin>();
 
 		IList orderItems = null;
@@ -40,6 +41,10 @@ namespace HookMeUP.iOS
 			AddOrders();
 		}
 
+		public void ReloadTableData() 
+		{
+			AminOrdersTable.ReloadData();
+		}
 
 		public async void AddOrders()
 		{
@@ -88,6 +93,7 @@ namespace HookMeUP.iOS
 			if (orderItems != null)
 			{
 				Source = new TableSourceAdmin(AdminGetOrders, ChannelName);
+				AminOrdersTable.ReloadData();
 			}
 			else Debug.WriteLine("Order items is null");
 
@@ -208,6 +214,7 @@ namespace HookMeUP.iOS
 
 						};
 						await push.SendAsync();
+
 					}
 					catch (ParseException e)
 					{

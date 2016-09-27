@@ -72,10 +72,12 @@ namespace HookMeUP.iOS
 							string channelName = splitArr[3] + splitArr[4];
 							var adminOrders = new AdminViewController(channelName);
 							adminOrders.AddOrders();
+							adminOrders.ReloadTableData();
 							break;
 						}
 						if (value.Contains("Ready!!!")) 
 						{
+							Debug.WriteLine("Order ready for user");
 							//App user side handles notification 
 						}
 						
