@@ -5,9 +5,13 @@ using UIKit;
 using Parse;
 using System.Diagnostics;
 using System.Collections;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace HookMeUP.iOS
 {
+	[Serializable]
 	public partial class AdminViewController : ScreenViewController
 	{
 		public TableSourceAdmin Source
@@ -62,26 +66,23 @@ namespace HookMeUP.iOS
 
 				IEnumerable coll = await query.FindAsync();
 
-				List<string> itemsOrdered;// = new List<string>();
+				List<string> itemsOrdered;
 
 				foreach (ParseObject parseObject in coll)
 				{
+					OrderReceivedByAdmin(parseObject);
 					itemsOrdered = new List<string>();
 					string objectId = parseObject.ObjectId;
 
 					string personOrdered = parseObject.Get<string>("PersonOrdered");
 					orderItems = parseObject.Get<IList>("OrderList");
 
-					foreach (string e in orderItems)
-					{
-						itemsOrdered.Add(e);
-					}
+					foreach (string e in orderItems) itemsOrdered.Add(e);
+				
 
 					AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, itemsOrdered));
 
-					//itemsOrdered.Clear();
 				}
-
 
 				loadingOverlay.Hide();
 			}
@@ -90,17 +91,131 @@ namespace HookMeUP.iOS
 				loadingOverlay.Hide();
 				Debug.WriteLine(e.StackTrace);
 			}
-			if (orderItems != null)
+			PopulateTable();
+
+			//serialize AdminGetOrders object
+
+			if (AdminGetOrders != null && !AdminGetOrders[0].Equals("")) Serialize(AdminGetOrders);
+			else Debug.WriteLine("No data to seialise");
+
+		}
+
+		public async void AddNewOrders() 
+		{
+			// deserialise old values
+
+			Deserialize();
+
+			LoadingOverlay loading = new LoadingOverlay(bounds);
+			View.Add(loading);
+
+			ParseQuery<ParseObject> query = from ordersTb in ParseObject.GetQuery("Orders")
+											where ordersTb.Get<bool>("IsOrderDone") == false
+											where ordersTb.Get<bool>("OrderReceivedByAdmin") == false
+											select ordersTb;
+
+
+			IEnumerable coll = await query.FindAsync();
+			List<string> newOrders;
+
+			foreach (ParseObject parseObject in coll)
 			{
-				Source = new TableSourceAdmin(AdminGetOrders, ChannelName);
-				AminOrdersTable.ReloadData();
+				newOrders = new List<string>();
+				string objectId = parseObject.ObjectId;
+
+				string personOrdered = parseObject.Get<string>("PersonOrdered");
+				orderItems = parseObject.Get<IList>("OrderList");
+
+				foreach (string e in orderItems)
+				{
+					Debug.WriteLine(e);
+					newOrders.Add(e);
+				}
+
+				AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, newOrders));
+
+				OrderReceivedByAdmin(parseObject);
+				loading.Hide();
+				PopulateTable();
 			}
+
+		}
+
+		async void OrderReceivedByAdmin(ParseObject pObj)
+		{
+			if (!pObj.Get<bool>("OrderReceivedByAdmin"))
+			{
+				try
+				{
+					pObj["OrderReceivedByAdmin"] = true;
+					await pObj.SaveAsync();
+				}
+				catch (ParseException e)
+				{
+					Debug.WriteLine(e.StackTrace + "Order received not updated");
+				}
+			}
+			else Debug.WriteLine("Order is received already");
+
+		}
+
+		void PopulateTable() 
+		{
+			foreach (var e in AdminGetOrders)
+				Debug.WriteLine(e.PersonOrdered);
+			
+			if (orderItems != null) Source = new TableSourceAdmin(AdminGetOrders, ChannelName);
 			else Debug.WriteLine("Order items is null");
 
 			AminOrdersTable.Source = Source;
 			AminOrdersTable.ReloadData();
 
 		}
+
+		void Serialize(List<OrdersAdmin> orders) 
+		{
+			var fileStream = new FileStream("AdminOrders.dat", FileMode.Create);
+
+			var formatter = new BinaryFormatter();
+
+			try
+			{
+				formatter.Serialize(fileStream, orders);
+			}
+			catch (SerializationException ex)
+			{
+				Console.WriteLine("Failed to serialize. Reason: " + ex.Message);
+			}
+			finally
+			{
+				fileStream.Close();
+			}
+		
+		}
+
+		void Deserialize() 
+		{
+			AdminGetOrders = null;
+
+			var fileStream = new FileStream("AdminOrders.dat", FileMode.Open);
+			var formatter = new BinaryFormatter();
+
+			try
+			{
+				AdminGetOrders = (List<OrdersAdmin>)formatter.Deserialize(fileStream);
+			}
+			catch (SerializationException ex)
+			{
+				Debug.WriteLine("Failed to deserialize. Reason: " + ex.Message);
+			}
+			finally
+			{
+				fileStream.Close();
+			}
+		}
+
+
+
 
 	}
 

@@ -356,6 +356,7 @@ namespace HookMeUP.iOS
 						TableNameOrders["OrderList"] = items;
 						TableNameOrders["Price"] = prices;
 						TableNameOrders["IsOrderDone"] = false;
+						TableNameOrders["OrderReceivedByAdmin"] = false;
 						TableNameOrders["Time"] = "" + time;
 						CurrentUser["Vouchers"] = voucherUpdate;
 						await TableNameOrders.SaveAsync();

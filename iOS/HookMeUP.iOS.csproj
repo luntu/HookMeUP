@@ -90,14 +90,14 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="Calabash">
-      <HintPath>..\packages\Xamarin.TestCloud.Agent.0.19.2\lib\Xamarin.iOS10\Calabash.dll</HintPath>
-    </Reference>
     <Reference Include="Parse.iOS">
       <HintPath>..\Components\parse-1.7.0\lib\ios-unified\Parse.iOS.dll</HintPath>
     </Reference>
     <Reference Include="ToastIOS">
       <HintPath>..\Components\ToastIOS-1.6\lib\ios-unified\ToastIOS.dll</HintPath>
+    </Reference>
+    <Reference Include="Calabash">
+      <HintPath>..\packages\Xamarin.TestCloud.Agent.0.20.1\lib\Xamarin.iOS10\Calabash.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -71,8 +71,7 @@ namespace HookMeUP.iOS
 							string[] splitArr = value.Split(' ');
 							string channelName = splitArr[3] + splitArr[4];
 							var adminOrders = new AdminViewController(channelName);
-							adminOrders.AddOrders();
-							adminOrders.ReloadTableData();
+							adminOrders.AddNewOrders();
 							break;
 						}
 						if (value.Contains("Ready!!!")) 
