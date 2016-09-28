@@ -5,11 +5,7 @@ using UIKit;
 using Parse;
 using System.Diagnostics;
 using System.Collections;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Security;
-using System.Security.Permissions;
+
 
 namespace HookMeUP.iOS
 {
@@ -29,16 +25,7 @@ namespace HookMeUP.iOS
 		public string ChannelName
 		{
 			get;
-			private set;
-		}
-
-		public AdminViewController(string channelName)
-		{
-			ChannelName = channelName;
-		}
-
-		public AdminViewController()
-		{
+			set;
 		}
 
 		public override void ViewDidAppear(bool animated)

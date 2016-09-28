@@ -70,7 +70,9 @@ namespace HookMeUP.iOS
 							//App Admin side handles notification
 							string[] splitArr = value.Split(' ');
 							string channelName = splitArr[3] + splitArr[4];
-							((Window.RootViewController as UINavigationController).TopViewController as AdminViewController).AddOrders();
+							var admin = ((Window.RootViewController as UINavigationController).TopViewController as AdminViewController);
+							admin.AddOrders();
+							admin.ChannelName = channelName;
 							//var adminOrders = new AdminViewController(channelName);
 							//adminOrders.AddNewOrders();
 							break;
