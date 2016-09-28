@@ -8,10 +8,12 @@ using System.Collections;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Security;
+using System.Security.Permissions;
 
 namespace HookMeUP.iOS
 {
-	[Serializable]
+	
 	public partial class AdminViewController : ScreenViewController
 	{
 		public TableSourceAdmin Source
@@ -78,7 +80,6 @@ namespace HookMeUP.iOS
 					orderItems = parseObject.Get<IList>("OrderList");
 
 					foreach (string e in orderItems) itemsOrdered.Add(e);
-				
 
 					AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, itemsOrdered));
 
@@ -93,53 +94,45 @@ namespace HookMeUP.iOS
 			}
 			PopulateTable();
 
-			//serialize AdminGetOrders object
-
-			if (AdminGetOrders != null && !AdminGetOrders[0].Equals("")) Serialize(AdminGetOrders);
-			else Debug.WriteLine("No data to seialise");
-
 		}
 
-		public async void AddNewOrders() 
-		{
-			// deserialise old values
+		//public async void AddNewOrders() 
+		//{
+			
+		//	LoadingOverlay loading = new LoadingOverlay(bounds);
+		//	View.Add(loading);
 
-			Deserialize();
-
-			LoadingOverlay loading = new LoadingOverlay(bounds);
-			View.Add(loading);
-
-			ParseQuery<ParseObject> query = from ordersTb in ParseObject.GetQuery("Orders")
-											where ordersTb.Get<bool>("IsOrderDone") == false
-											where ordersTb.Get<bool>("OrderReceivedByAdmin") == false
-											select ordersTb;
+		//	ParseQuery<ParseObject> query = from ordersTb in ParseObject.GetQuery("Orders")
+		//									where ordersTb.Get<bool>("IsOrderDone") == false
+		//									where ordersTb.Get<bool>("OrderReceivedByAdmin") == false
+		//									select ordersTb;
 
 
-			IEnumerable coll = await query.FindAsync();
-			List<string> newOrders;
+		//	IEnumerable coll = await query.FindAsync();
+		//	List<string> newOrders;
 
-			foreach (ParseObject parseObject in coll)
-			{
-				newOrders = new List<string>();
-				string objectId = parseObject.ObjectId;
+		//	foreach (ParseObject parseObject in coll)
+		//	{
+		//		newOrders = new List<string>();
+		//		string objectId = parseObject.ObjectId;
 
-				string personOrdered = parseObject.Get<string>("PersonOrdered");
-				orderItems = parseObject.Get<IList>("OrderList");
+		//		string personOrdered = parseObject.Get<string>("PersonOrdered");
+		//		orderItems = parseObject.Get<IList>("OrderList");
 
-				foreach (string e in orderItems)
-				{
-					Debug.WriteLine(e);
-					newOrders.Add(e);
-				}
+		//		foreach (string e in orderItems)
+		//		{
+		//			Debug.WriteLine(e);
+		//			newOrders.Add(e);
+		//		}
 
-				AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, newOrders));
+		//		AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, newOrders));
 
-				OrderReceivedByAdmin(parseObject);
-				loading.Hide();
-				PopulateTable();
-			}
+		//		OrderReceivedByAdmin(parseObject);
+		//		loading.Hide();
+		//		PopulateTable();
+		//	}
 
-		}
+		//}
 
 		async void OrderReceivedByAdmin(ParseObject pObj)
 		{
@@ -171,51 +164,6 @@ namespace HookMeUP.iOS
 			AminOrdersTable.ReloadData();
 
 		}
-
-		void Serialize(List<OrdersAdmin> orders) 
-		{
-			var fileStream = new FileStream("AdminOrders.dat", FileMode.Create);
-
-			var formatter = new BinaryFormatter();
-
-			try
-			{
-				formatter.Serialize(fileStream, orders);
-			}
-			catch (SerializationException ex)
-			{
-				Console.WriteLine("Failed to serialize. Reason: " + ex.Message);
-			}
-			finally
-			{
-				fileStream.Close();
-			}
-		
-		}
-
-		void Deserialize() 
-		{
-			AdminGetOrders = null;
-
-			var fileStream = new FileStream("AdminOrders.dat", FileMode.Open);
-			var formatter = new BinaryFormatter();
-
-			try
-			{
-				AdminGetOrders = (List<OrdersAdmin>)formatter.Deserialize(fileStream);
-			}
-			catch (SerializationException ex)
-			{
-				Debug.WriteLine("Failed to deserialize. Reason: " + ex.Message);
-			}
-			finally
-			{
-				fileStream.Close();
-			}
-		}
-
-
-
 
 	}
 
