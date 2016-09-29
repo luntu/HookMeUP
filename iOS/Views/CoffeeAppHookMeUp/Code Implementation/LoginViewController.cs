@@ -38,6 +38,7 @@ namespace HookMeUP.iOS
 
 					   case true:
 						   ParseUser result = null;
+
 						   try
 						   {
 							   loadingOverlay = new LoadingOverlay(bounds);
@@ -66,12 +67,13 @@ namespace HookMeUP.iOS
 							   string surname = result.Get<string>("Surname");
 							   bool isAdmin = result.Get<bool>("IsAdmin");
 							   int vouchers = result.Get<int>("Vouchers");
-							   string userChannelName = new GenerateUserChannel(name).UserChannelID;
-							   Debug.WriteLine(userChannelName);
+							   string userChannelName = name+surname;
+							  
 							   orderViewController.GetName = name;
 							   orderViewController.GetSurname = surname;
 							   orderViewController.CurrentUser = result;
 							   orderViewController.GetVouchers = vouchers;
+							   
 							   orderViewController.GetUserChannelName = userChannelName;
 							   // create user channel
 							   var installation = ParseInstallation.CurrentInstallation;
@@ -116,8 +118,6 @@ namespace HookMeUP.iOS
 
 			registerButton.TouchUpInside += (o, e) =>
 			{
-
-
 				NavigationScreenController(registerViewController);
 				ClearFields(usernameText, passwordText);
 
@@ -133,20 +133,6 @@ namespace HookMeUP.iOS
 		}
 	}
 
-	class GenerateUserChannel
-	{
-
-		public string UserChannelID
-		{
-			get;
-		}
-
-		public GenerateUserChannel(string name)
-		{
-			var random = new Random();
-			UserChannelID = name + random.Next(1000, 9999) + random.Next(1000, 9999);
-		}
-	}
 }
 
 

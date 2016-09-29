@@ -18,8 +18,7 @@ namespace HookMeUP.iOS
 			private set;
 		}
 
-		public Dictionary<string, OrdersAdmin> AdminGetOrders = new Dictionary<string, OrdersAdmin>();
-		public List<string> Keys = new List<string>();
+		public List<OrdersAdmin> AdminGetOrders = new List<OrdersAdmin>();
 
 		IList orderItems = null;
 
@@ -39,7 +38,6 @@ namespace HookMeUP.iOS
 		public async void AddOrders()
 		{
 			AdminGetOrders.Clear();
-			Keys.Clear();
 
 			try
 			{
@@ -65,8 +63,8 @@ namespace HookMeUP.iOS
 					ChannelName = parseObject.Get<string>("UserChannel");
 					foreach (string e in orderItems) itemsOrdered.Add(e);
 
-					AdminGetOrders.Add(ChannelName, new OrdersAdmin(objectId, personOrdered, itemsOrdered));
-					Keys.Add(ChannelName);
+					AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, ChannelName, itemsOrdered));
+
 				}
 
 				loadingOverlay.Hide();
@@ -138,7 +136,7 @@ namespace HookMeUP.iOS
 
 		void PopulateTable() 
 		{
-			if (orderItems != null) Source = new TableSourceAdmin(AdminGetOrders, Keys);
+			if (orderItems != null) Source = new TableSourceAdmin(AdminGetOrders);
 			else Debug.WriteLine("Order items is null");
 
 			AminOrdersTable.Source = Source;
@@ -159,7 +157,7 @@ namespace HookMeUP.iOS
 		string cellIdentifier = "TableCell";
 
 
-		Dictionary<string, OrdersAdmin> Items
+		List<OrdersAdmin> Items
 		{
 			get;
 		}
@@ -175,14 +173,10 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		List<string> Keys 
-		{ 
-			get;
-		}
-		public TableSourceAdmin(Dictionary<string, OrdersAdmin> items, List<string> keys)
+
+		public TableSourceAdmin(List<OrdersAdmin> items)
 		{
 			Items = items;
-			Keys = keys;
 
 		}
 
@@ -196,14 +190,9 @@ namespace HookMeUP.iOS
 			{
 				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
 			}
-			string key = Keys[indexPath.Row];
-			OrdersAdmin orders = Items[key];
+
+			OrdersAdmin orders = Items[indexPath.Row];
 			string personOrdered = orders.PersonOrdered;
-
-			Debug.WriteLine(key);
-			foreach (var e in Items)
-				Debug.WriteLine(e.Key+"\t"+e.Value.Items);
-
 			cell.TextLabel.Text = personOrdered;
 
 			return cell;
@@ -216,8 +205,7 @@ namespace HookMeUP.iOS
 
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
-			string key = Keys[indexPath.Row];
-			OrdersAdmin orders = Items[key];
+			OrdersAdmin orders = Items[indexPath.Row];
 			PersonOrderedName = orders.PersonOrdered;
 
 
@@ -241,10 +229,9 @@ namespace HookMeUP.iOS
 			{
 				case UITableViewCellEditingStyle.Delete:
 
-					string key = Keys[indexPath.Row];
-					OrdersAdmin orders = Items[key];
+					OrdersAdmin orders = Items[indexPath.Row];
 					string objectID = orders.ObjectId;
-					Items.Remove(key);
+					Items.Remove(orders);
 					tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
 
 					try
@@ -264,11 +251,11 @@ namespace HookMeUP.iOS
 						{
 							{"title","HookMeUp"},
 							{"alert","Your order is Ready!!!"},
-							{"channel",ChannelName},
+							{"channel",orders.Channel},
 							{"badge","Increment"}
 
 						};
-						Debug.WriteLine(ChannelName);
+						Debug.WriteLine(orders.Channel);
 						await push.SendAsync();
 
 					}

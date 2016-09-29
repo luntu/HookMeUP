@@ -17,10 +17,15 @@ namespace HookMeUP.iOS
 		{
 			get;
 		}
-		public OrdersAdmin(string objectId, string personOrdered, List<string> items)
+		public string Channel
+		{
+			get;
+		}
+		public OrdersAdmin(string objectId, string personOrdered, string channel, List<string> items)
 		{
 			ObjectId = objectId;
 			PersonOrdered = personOrdered;
+			Channel = channel;
 			Items = items;
 		}
 	}

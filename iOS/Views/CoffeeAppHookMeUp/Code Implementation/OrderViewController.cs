@@ -45,7 +45,6 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-
 		int voucherUpdate = 0;
 		public int time;
 
