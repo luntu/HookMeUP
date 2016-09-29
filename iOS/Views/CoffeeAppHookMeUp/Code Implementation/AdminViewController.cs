@@ -18,7 +18,8 @@ namespace HookMeUP.iOS
 			private set;
 		}
 
-		public List<OrdersAdmin> AdminGetOrders = new List<OrdersAdmin>();
+		public Dictionary<string, OrdersAdmin> AdminGetOrders = new Dictionary<string, OrdersAdmin>();
+		public List<string> Keys = new List<string>();
 
 		IList orderItems = null;
 
@@ -34,14 +35,11 @@ namespace HookMeUP.iOS
 			AddOrders();
 		}
 
-		public void ReloadTableData() 
-		{
-			AminOrdersTable.ReloadData();
-		}
 
 		public async void AddOrders()
 		{
 			AdminGetOrders.Clear();
+			Keys.Clear();
 
 			try
 			{
@@ -62,24 +60,23 @@ namespace HookMeUP.iOS
 					OrderReceivedByAdmin(parseObject);
 					itemsOrdered = new List<string>();
 					string objectId = parseObject.ObjectId;
-
 					string personOrdered = parseObject.Get<string>("PersonOrdered");
 					orderItems = parseObject.Get<IList>("OrderList");
-
+					ChannelName = parseObject.Get<string>("UserChannel");
 					foreach (string e in orderItems) itemsOrdered.Add(e);
 
-					AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, itemsOrdered));
-
+					AdminGetOrders.Add(ChannelName, new OrdersAdmin(objectId, personOrdered, itemsOrdered));
+					Keys.Add(ChannelName);
 				}
 
 				loadingOverlay.Hide();
+				PopulateTable();
 			}
 			catch (ParseException e)
 			{
 				loadingOverlay.Hide();
 				Debug.WriteLine(e.StackTrace);
 			}
-			PopulateTable();
 
 		}
 
@@ -135,16 +132,13 @@ namespace HookMeUP.iOS
 					Debug.WriteLine(e.StackTrace + "Order received not updated");
 				}
 			}
-			else Debug.WriteLine("Order is received already");
+			else Console.WriteLine("Order is received already");
 
 		}
 
 		void PopulateTable() 
 		{
-			foreach (var e in AdminGetOrders)
-				Debug.WriteLine(e.PersonOrdered);
-			
-			if (orderItems != null) Source = new TableSourceAdmin(AdminGetOrders, ChannelName);
+			if (orderItems != null) Source = new TableSourceAdmin(AdminGetOrders, Keys);
 			else Debug.WriteLine("Order items is null");
 
 			AminOrdersTable.Source = Source;
@@ -165,10 +159,9 @@ namespace HookMeUP.iOS
 		string cellIdentifier = "TableCell";
 
 
-		List<OrdersAdmin> Items
+		Dictionary<string, OrdersAdmin> Items
 		{
 			get;
-			set;
 		}
 		string ChannelName
 		{
@@ -176,13 +169,20 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		string PersonOrderedName = "";
+		string PersonOrderedName 
+		{
+			get;
+			set;
+		}
 
-
-		public TableSourceAdmin(List<OrdersAdmin> items, string channelName)
+		List<string> Keys 
+		{ 
+			get;
+		}
+		public TableSourceAdmin(Dictionary<string, OrdersAdmin> items, List<string> keys)
 		{
 			Items = items;
-			ChannelName = channelName;
+			Keys = keys;
 
 		}
 
@@ -196,9 +196,13 @@ namespace HookMeUP.iOS
 			{
 				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
 			}
-
-			OrdersAdmin orders = Items[indexPath.Row];
+			string key = Keys[indexPath.Row];
+			OrdersAdmin orders = Items[key];
 			string personOrdered = orders.PersonOrdered;
+
+			Debug.WriteLine(key);
+			foreach (var e in Items)
+				Debug.WriteLine(e.Key+"\t"+e.Value.Items);
 
 			cell.TextLabel.Text = personOrdered;
 
@@ -212,9 +216,10 @@ namespace HookMeUP.iOS
 
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
-			OrdersAdmin orders = Items[indexPath.Row];
+			string key = Keys[indexPath.Row];
+			OrdersAdmin orders = Items[key];
 			PersonOrderedName = orders.PersonOrdered;
-			Debug.WriteLine(PersonOrderedName);
+
 
 			UIAlertView alert = new UIAlertView();
 			alert.Title = "Order items";
@@ -222,7 +227,6 @@ namespace HookMeUP.iOS
 
 			foreach (string elements in orders.Items)
 			{
-				Debug.WriteLine(elements);
 				s += elements + "\n";
 			}
 
@@ -237,9 +241,10 @@ namespace HookMeUP.iOS
 			{
 				case UITableViewCellEditingStyle.Delete:
 
-					OrdersAdmin orders = Items[indexPath.Row];
+					string key = Keys[indexPath.Row];
+					OrdersAdmin orders = Items[key];
 					string objectID = orders.ObjectId;
-					Items.Remove(orders);
+					Items.Remove(key);
 					tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
 
 					try
@@ -263,6 +268,7 @@ namespace HookMeUP.iOS
 							{"badge","Increment"}
 
 						};
+						Debug.WriteLine(ChannelName);
 						await push.SendAsync();
 
 					}

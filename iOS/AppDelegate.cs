@@ -68,11 +68,11 @@ namespace HookMeUP.iOS
 						if (value.Contains("New"))
 						{
 							//App Admin side handles notification
-							string[] splitArr = value.Split(' ');
-							string channelName = splitArr[3] + splitArr[4];
-							var admin = ((Window.RootViewController as UINavigationController).TopViewController as AdminViewController);
-							admin.AddOrders();
-							admin.ChannelName = channelName;
+							//string[] splitArr = value.Split(' ');
+							//string channelName = splitArr[3] + splitArr[4];
+							var refreshAdminTable = (Window.RootViewController as UINavigationController).TopViewController as AdminViewController;
+							refreshAdminTable.AddOrders();
+
 							//var adminOrders = new AdminViewController(channelName);
 							//adminOrders.AddNewOrders();
 							break;
@@ -81,6 +81,8 @@ namespace HookMeUP.iOS
 						{
 							Debug.WriteLine("Order ready for user");
 							//App user side handles notification 
+							var refreshQueueTable = (Window.RootViewController as UINavigationController).TopViewController as QueueViewController;
+							refreshQueueTable.AddQueueOrders();
 						}
 						
 					}

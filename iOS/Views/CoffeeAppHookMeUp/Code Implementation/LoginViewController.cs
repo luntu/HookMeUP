@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Parse;
 namespace HookMeUP.iOS
 {
@@ -36,19 +37,37 @@ namespace HookMeUP.iOS
 				   {
 
 					   case true:
+						   ParseUser result = null;
 						   try
 						   {
 							   loadingOverlay = new LoadingOverlay(bounds);
 							   View.Add(loadingOverlay);
 
-							   // get user details
-							   ParseUser result = await ParseUser.LogInAsync(TrimInput(usernameText.Text), TrimInput(passwordText.Text));
+
+							   result = await ParseUser.LogInAsync(TrimInput(usernameText.Text), TrimInput(passwordText.Text));
+
+						   }
+						   catch (ParseException ex)
+						   {
+							   Debug.WriteLine(ex.GetType());
+							   loadingOverlay.Hide();
+							   AlertPopUp("Login failed", "Username or password incorrect", "OK");
+
+							   if (i == 3)
+							   {
+								   AlertPopUp("Login failed!!", "You failed to login 3 times we suggest \nyou either Register or retrieve lost password", "OK");
+								   loginButton.Enabled = false;
+							   }
+						   }
+
+						   try
+						   {
 							   string name = result.Get<string>("Name");
 							   string surname = result.Get<string>("Surname");
 							   bool isAdmin = result.Get<bool>("IsAdmin");
 							   int vouchers = result.Get<int>("Vouchers");
-							   string userChannelName = name + surname;
-
+							   string userChannelName = new GenerateUserChannel(name).UserChannelID;
+							   Debug.WriteLine(userChannelName);
 							   orderViewController.GetName = name;
 							   orderViewController.GetSurname = surname;
 							   orderViewController.CurrentUser = result;
@@ -70,22 +89,16 @@ namespace HookMeUP.iOS
 							   else NavigationScreenController(orderViewController);
 
 						   }
+						   catch (NullReferenceException ex)
+						   {
+							   Debug.WriteLine(ex.Message);
+						   }
 						   catch (ParseException ex)
 						   {
-							   Debug.WriteLine(ex.GetType());
-							   loadingOverlay.Hide();
-							   AlertPopUp("Login failed", "Username or password incorrect", "OK");
+							   Debug.WriteLine(ex.Message);
+						   }
 
-							   if (i == 3)
-							   {
-								   AlertPopUp("Login failed!!", "You failed to login 3 times we suggest \nyou either Register or retrieve lost password", "OK");
-								   loginButton.Enabled = false;
-							   }
-						   }
-						   catch (System.NullReferenceException)
-						   {
-							   AlertPopUp("Connection error", "Can't connect", "");
-						   }
+
 
 						   break;
 
@@ -95,10 +108,7 @@ namespace HookMeUP.iOS
 
 						   break;
 
-
 				   }
-
-
 
 				   ClearFields(usernameText, passwordText);
 
@@ -120,6 +130,21 @@ namespace HookMeUP.iOS
 		{
 			base.DidReceiveMemoryWarning();
 			// Release any cached data, images, etc that aren't in use.
+		}
+	}
+
+	class GenerateUserChannel
+	{
+
+		public string UserChannelID
+		{
+			get;
+		}
+
+		public GenerateUserChannel(string name)
+		{
+			var random = new Random();
+			UserChannelID = name + random.Next(1000, 9999) + random.Next(1000, 9999);
 		}
 	}
 }

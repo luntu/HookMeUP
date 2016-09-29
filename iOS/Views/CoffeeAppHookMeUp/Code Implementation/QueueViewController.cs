@@ -10,10 +10,12 @@ namespace HookMeUP.iOS
 	{
 
 		public List<string> ActiveOrdersList = new List<string>();
-		public TableSourceActiveOrders Source { get; set; }
 
-
-
+		public TableSourceActiveOrders Source 
+		{
+			get;
+			private set;
+		}
 
 		public override  void ViewDidLoad()
 		{
@@ -26,9 +28,13 @@ namespace HookMeUP.iOS
 			};
 		}
 
-		public async override void ViewDidAppear(bool animated)
+		public override void ViewDidAppear(bool animated)
 		{
+			AddQueueOrders();		
+		}
 
+		public async void AddQueueOrders() 
+		{
 			loadingOverlay = new LoadingOverlay(bounds);
 			View.Add(loadingOverlay);
 
@@ -49,15 +55,15 @@ namespace HookMeUP.iOS
 				string time = nameElements.Get<string>("Time");
 				ActiveOrdersList.Add(replacedName + "#" + time);
 			}
+			PopulateTable();
+		}
 
+		void PopulateTable()
+		{
 			Source = new TableSourceActiveOrders(ActiveOrdersList);
 			ActiveOrdersTable.Source = Source;
 			ActiveOrdersTable.ReloadData();
 		}
-
-
-
-
 
 		public override void DidReceiveMemoryWarning()
 		{

@@ -358,6 +358,7 @@ namespace HookMeUP.iOS
 						TableNameOrders["IsOrderDone"] = false;
 						TableNameOrders["OrderReceivedByAdmin"] = false;
 						TableNameOrders["Time"] = "" + time;
+						TableNameOrders["UserChannel"] = GetUserChannelName;
 						CurrentUser["Vouchers"] = voucherUpdate;
 						await TableNameOrders.SaveAsync();
 						await CurrentUser.SaveAsync();
