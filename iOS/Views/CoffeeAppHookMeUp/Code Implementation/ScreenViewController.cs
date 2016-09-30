@@ -40,9 +40,8 @@ namespace HookMeUP.iOS
 				alert.Message = message;
 
 				foreach (string elements in buttonText)
-				{
 					alert.AddButton(elements);
-				}
+				
 
 				alert.Show();
 			}

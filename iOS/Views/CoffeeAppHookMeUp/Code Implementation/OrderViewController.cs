@@ -60,12 +60,12 @@ namespace HookMeUP.iOS
 		public double getPrice;
 		string showOrders = "";
 
-		public string GetUserChannelName 
+		public string GetUserChannelName
 		{
-			get; 
+			get;
 			set;
 		}
-		
+
 		public int GetVouchers
 		{
 			get;
@@ -94,7 +94,13 @@ namespace HookMeUP.iOS
 		{
 			get;
 			set;
-		} = "";
+		}
+
+		bool Paid
+		{
+			get;
+			set;
+		}
 
 		public override void ViewDidLoad()
 		{
@@ -111,6 +117,13 @@ namespace HookMeUP.iOS
 
 		}
 
+		public override void ViewWillDisappear(bool animated)
+		{
+			base.ViewWillDisappear(animated);
+
+
+		}
+
 		void SetupView()
 		{
 			VouchersLabel.Text = GetVouchers + " vouchers";
@@ -120,7 +133,6 @@ namespace HookMeUP.iOS
 				// getting orders
 				try
 				{
-
 					if (Source.ordersList != null && !Source.ordersList[0].Equals("")) Order();
 					else AlertPopUp("Error", "No order(s) selected", "OK");
 
@@ -187,24 +199,25 @@ namespace HookMeUP.iOS
 
 			Source.onCellSelectedForVouchers += (sender, e) =>
 			{
-				
+
 				//var isAvailable = !VoucherCount.IsVoucherDepleted;
 				//SelectedCoffeeItem.Available = isAvailable;
 
 				//ordersTable.ReloadRows(new[] { SelectedIndexPath }, UITableViewRowAnimation.Fade);
+				    
+					VoucherCount.Voucher = e;
+					VoucherCount.IsSelected = true;
+					VoucherCount.IsDeselected = false;
+					VoucherCount.VoucherChange();
+					VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
+					Source.Voucher = VouchersLabel.Text;
 
-				VoucherCount.Voucher = e;
-				VoucherCount.IsSelected = true;
-				VoucherCount.IsDeselected = false;
-				VoucherCount.VoucherChange();
-				VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
-				Source.Voucher = VouchersLabel.Text;
-
-				if (!VoucherCount.IsVoucherDepleted)
-				{  // tag all the orders purchased by vouchers
-					taggedOrders.Add(new TagOrder(CellName));
-					taggedOrderNamesForPrice.Add(CellName);
-				}
+					if (!VoucherCount.IsVoucherDepleted)
+					{  // tag all the orders purchased by vouchers
+						taggedOrders.Add(new TagOrder(CellName));
+						taggedOrderNamesForPrice.Add(CellName);
+					}
+				
 			};
 
 			Source.onCellDeselectedForVouchers += (sender, e) =>
@@ -263,7 +276,7 @@ namespace HookMeUP.iOS
 			Source.onCellDeselectedForPrice += (sender, e) =>
 			{
 				const int VOUCHER_BEFORE_EXECUTION_TO_ZERO = 1;
-			
+
 				if (VoucherCount.IsVoucherDepleted && VoucherCount.Voucher != VOUCHER_BEFORE_EXECUTION_TO_ZERO)
 				{
 					PriceCount.Price = e;
@@ -272,13 +285,13 @@ namespace HookMeUP.iOS
 					PriceCount.PriceChange();
 					costText.Text = PriceCount.GetPrice().ToString("R 0.00");
 				}
-				else if (VoucherCount.GetVoucher() !=0 && !VoucherCount.HasTag)
+				else if (VoucherCount.GetVoucher() != 0 && !VoucherCount.HasTag)
 				{
 					PriceCount.Price = e;
 					PriceCount.Selected = false;
 					PriceCount.Deselected = true;
 					PriceCount.PriceChange();
-					costText.Text = PriceCount.GetPrice().ToString("R 0.00");                                                                                                                                                                             
+					costText.Text = PriceCount.GetPrice().ToString("R 0.00");
 				}
 
 			};
@@ -294,6 +307,10 @@ namespace HookMeUP.iOS
 				taggedOrders.Clear();
 				Source.ordersList.Clear();
 				costText.Text = "R 0,00";
+				PriceCount.ResetPrice();
+				VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
+				VoucherCount.Commited = false;
+				//VoucherCount.ResetVoucher();
 			}
 			catch (NullReferenceException ex)
 			{
@@ -309,86 +326,107 @@ namespace HookMeUP.iOS
 
 		void Order()
 		{
-			double prices = 0;
+			
+			if (costText.Text.Equals("R 0,00")) OrderAnyway();
+			else OrderWithPrice();
+		}
 
+		void OrderAnyway()
+		{
+			double prices = 0;
 			foreach (Coffee orderElements in Source.ordersList)
 			{
 				string orderName = orderElements.Title;
 				showOrders += orderName + "\n";
 
 				items.Add(orderName);
-				prices = double.Parse(Source.FormatPrice(orderElements.Price));
-
+				prices += double.Parse(Source.FormatPrice(orderElements.Price));
 			}
 
-			UIAlertView alert = new UIAlertView();
-			alert.Title = "Orders selected";
-			alert.Message = showOrders.Trim();
+			UIAlertView alert = PopUp("Orders selected", showOrders.Trim(), "Order", "Cancel");
 			showOrders = string.Empty;
-			alert.AddButton("Order");
-			alert.AddButton("Cancel");
 
-			alert.Clicked += async (o, e) =>
-			{
-				if (e.ButtonIndex == 0)
-				{
-					//submit datadase. Notify Vuyo
-
-					orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
-					time = orderWaitTime.CalculateWaitTime();
-					AlertPopUp("Order on the way", "Your order will take about " + time + " minutes", "OK");
-
-					string[] arrSplit = VouchersLabel.Text.Split(' ');
-					voucherUpdate = int.Parse(arrSplit[0]);
-
-
-					loadingOverlay = new LoadingOverlay(bounds);
-					View.Add(loadingOverlay);
-
-
-					try
-					{
-						//submitt order
-
-						TableNameOrders = new ParseObject("Orders");
-						TableNameOrders["PersonOrdered"] = GetName;
-						TableNameOrders["OrderList"] = items;
-						TableNameOrders["Price"] = prices;
-						TableNameOrders["IsOrderDone"] = false;
-						TableNameOrders["OrderReceivedByAdmin"] = false;
-						TableNameOrders["Time"] = "" + time;
-						TableNameOrders["UserChannel"] = GetUserChannelName;
-						CurrentUser["Vouchers"] = voucherUpdate;
-						await TableNameOrders.SaveAsync();
-						await CurrentUser.SaveAsync();
-						items.Clear();
-
-						//send push
-
-
-						var push = new ParsePush();
-						push.Data = new Dictionary<string, object>
-						{
-							{"title","HookMeUp"},
-							{"alert","New order from "+(GetName+" "+GetSurname).ToUpper()},
-							{"channel","Admin"},
-							{"badge","Increment"}
-
-						};
-						await push.SendAsync();
-					}
-					catch (ParseException q)
-					{
-						Debug.WriteLine(q.StackTrace);
-					}
-					ResetScreen();
-					loadingOverlay.Hide();
-				}
-				else items.Clear();
-
-			};
+			alert.Clicked += (o, e) =>
+		   	{
+			   if (e.ButtonIndex == 0) SubmittOrders(prices);
+			   else items.Clear();
+		   	};
 			alert.Show();
+		}
 
+		void OrderWithPrice()
+		{
+			double price = 0;
+
+			price = double.Parse(costText.Text.Split(' ')[1]);
+			
+			UIAlertView alert = PopUp("Cost", "Are you gonna pay "+price.ToString("R 0.00"), "Yes", "No");
+
+			alert.Clicked += (o, e) =>
+		   	{	
+				if (e.ButtonIndex == 0) OrderAnyway();
+			   	else items.Clear();
+		 	};
+			alert.Show();
+		}
+
+		UIAlertView PopUp(string title, string message, params string[] buttons)
+		{
+			UIAlertView alert = new UIAlertView();
+			alert.Title = title;
+			alert.Message = message;
+			foreach (string buttonElements in buttons)
+				alert.AddButton(buttonElements);
+			return alert;
+		}
+
+		async void SubmittOrders(double prices)
+		{
+			orderWaitTime.GetOrdersTotal = Source.ordersList.Count;
+			time = orderWaitTime.CalculateWaitTime();
+			AlertPopUp("Order on the way", "Your order will take about " + time + " minutes", "OK");
+			string[] arrSplit = VouchersLabel.Text.Split(' ');
+			voucherUpdate = int.Parse(arrSplit[0]);
+
+			loadingOverlay = new LoadingOverlay(bounds);
+			View.Add(loadingOverlay);
+
+			try
+			{
+				TableNameOrders = new ParseObject("Orders");
+				TableNameOrders["PersonOrdered"] = GetName;
+				TableNameOrders["OrderList"] = items;
+				TableNameOrders["Price"] = prices;
+				TableNameOrders["IsOrderDone"] = false;
+				TableNameOrders["OrderReceivedByAdmin"] = false;
+				TableNameOrders["Time"] = "" + time;
+				TableNameOrders["UserChannel"] = GetUserChannelName;
+				CurrentUser["Vouchers"] = voucherUpdate;
+
+				await TableNameOrders.SaveAsync();
+				await CurrentUser.SaveAsync();
+				items.Clear();
+
+				//send push
+
+
+				var push = new ParsePush();
+				push.Data = new Dictionary<string, object>
+							{
+								{"title","HookMeUp"},
+								{"alert","New order from "+(GetName+" "+GetSurname).ToUpper()},
+								{"channel","Admin"},
+								{"badge","Increment"}
+							};
+				await push.SendAsync();
+			}
+			catch (ParseException q)
+			{
+				Debug.WriteLine(q.StackTrace);
+			}
+
+			ResetScreen();
+			loadingOverlay.Hide();
 		}
 
 	}

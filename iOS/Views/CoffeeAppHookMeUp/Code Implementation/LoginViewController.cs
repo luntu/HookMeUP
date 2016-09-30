@@ -77,7 +77,7 @@ namespace HookMeUP.iOS
 							   orderViewController.GetUserChannelName = userChannelName;
 							   // create user channel
 							   var installation = ParseInstallation.CurrentInstallation;
-
+								
 							   Debug.WriteLine(isAdmin);
 
 							   if (isAdmin) installation.Channels = new string[] { "Admin" };

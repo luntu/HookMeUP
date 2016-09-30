@@ -1,4 +1,6 @@
-﻿namespace HookMeUP.iOS
+﻿using System;
+
+namespace HookMeUP.iOS
 {
 	class VoucherCount
 	{
@@ -33,16 +35,28 @@
 			set;
 		}
 
-		public bool HasTag 
+		public bool HasTag
 		{
 			get;
 			set;
 		}
+
+		public bool Commited
+		{
+			get;
+			set;
+		}
+
+		public int GetUncommitedVouchers
+		{
+			get;
+			private set;
+		}
+
 		public void VoucherChange()
 		{
 			if (Voucher > 0) IsVoucherDepleted = false;
-			else
-				IsVoucherDepleted = true;
+			else IsVoucherDepleted = true;
 			
 			if (IsSelected && !IsVoucherDepleted) --Voucher;
 			if (IsDeselected) ++Voucher;

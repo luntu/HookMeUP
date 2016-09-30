@@ -46,6 +46,11 @@
 		{
 			return ReturnPrice;
 		}
+
+		public void ResetPrice() 
+		{
+			ReturnPrice = 0;
+		}
 	}
 }
 
