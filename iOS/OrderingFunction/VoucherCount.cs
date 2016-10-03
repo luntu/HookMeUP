@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace HookMeUP.iOS
 {
@@ -41,18 +42,6 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		public bool Commited
-		{
-			get;
-			set;
-		}
-
-		public int GetUncommitedVouchers
-		{
-			get;
-			private set;
-		}
-
 		public void VoucherChange()
 		{
 			if (Voucher > 0) IsVoucherDepleted = false;
@@ -65,7 +54,9 @@ namespace HookMeUP.iOS
 		public int GetVoucher()
 		{
 			return Voucher;
+
 		}
+			
 	}
 
 	class TagOrder
@@ -73,7 +64,6 @@ namespace HookMeUP.iOS
 		public string OrderName
 		{
 			get;
-			private set;
 		}
 
 		public TagOrder(string orderName)

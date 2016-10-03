@@ -9,7 +9,7 @@ using System.Collections;
 
 namespace HookMeUP.iOS
 {
-	
+
 	public partial class AdminViewController : ScreenViewController
 	{
 		public TableSourceAdmin Source
@@ -59,11 +59,14 @@ namespace HookMeUP.iOS
 					itemsOrdered = new List<string>();
 					string objectId = parseObject.ObjectId;
 					string personOrdered = parseObject.Get<string>("PersonOrdered");
+					bool paid = parseObject.Get<bool>("Paid");
 					orderItems = parseObject.Get<IList>("OrderList");
 					ChannelName = parseObject.Get<string>("UserChannel");
+					double price = parseObject.Get<double>("Price");
+
 					foreach (string e in orderItems) itemsOrdered.Add(e);
 
-					AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, ChannelName, itemsOrdered));
+					AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, ChannelName, paid, price, itemsOrdered));
 
 				}
 
@@ -80,7 +83,7 @@ namespace HookMeUP.iOS
 
 		//public async void AddNewOrders() 
 		//{
-			
+
 		//	LoadingOverlay loading = new LoadingOverlay(bounds);
 		//	View.Add(loading);
 
@@ -134,7 +137,7 @@ namespace HookMeUP.iOS
 
 		}
 
-		void PopulateTable() 
+		void PopulateTable()
 		{
 			if (orderItems != null) Source = new TableSourceAdmin(AdminGetOrders);
 			else Debug.WriteLine("Order items is null");
@@ -161,18 +164,6 @@ namespace HookMeUP.iOS
 		{
 			get;
 		}
-		string ChannelName
-		{
-			get;
-			set;
-		}
-
-		string PersonOrderedName 
-		{
-			get;
-			set;
-		}
-
 
 		public TableSourceAdmin(List<OrdersAdmin> items)
 		{
@@ -187,9 +178,8 @@ namespace HookMeUP.iOS
 
 
 			if (cell == null)
-			{
 				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
-			}
+			
 
 			OrdersAdmin orders = Items[indexPath.Row];
 			string personOrdered = orders.PersonOrdered;
@@ -206,17 +196,15 @@ namespace HookMeUP.iOS
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
 			OrdersAdmin orders = Items[indexPath.Row];
-			PersonOrderedName = orders.PersonOrdered;
-
 
 			UIAlertView alert = new UIAlertView();
-			alert.Title = "Order items";
+
+
+
 			string s = "";
 
 			foreach (string elements in orders.Items)
-			{
 				s += elements + "\n";
-			}
 
 			alert.Message = s.Trim();
 			alert.AddButton("OK");
@@ -252,7 +240,8 @@ namespace HookMeUP.iOS
 							{"title","HookMeUp"},
 							{"alert","Your order is Ready!!!"},
 							{"channel",orders.Channel},
-							{"badge","Increment"}
+							{"badge","Increment"},
+							{"sound","default"}
 
 						};
 						Debug.WriteLine(orders.Channel);

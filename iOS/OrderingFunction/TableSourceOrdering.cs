@@ -26,6 +26,24 @@ namespace HookMeUP.iOS
 			set;
 		} = 0.00;
 
+		public string GetInitialVoucher
+		{
+			get;
+			set;
+		}
+
+		public bool Launched
+		{
+			get;
+			set;
+		}
+
+		public bool Ordered
+		{
+			get;
+			set;
+		}
+
 		public event EventHandler<double> onCellSelectedForPrice;
 		public event EventHandler<double> onCellDeselectedForPrice;
 		public event EventHandler<int> onCellSelectedForVouchers;
@@ -145,6 +163,17 @@ namespace HookMeUP.iOS
 			return imageResult;
 		}
 
+		public void ResetVoucher()
+		{
+			if (Launched || Ordered)
+				Voucher = GetInitialVoucher;
+			System.Diagnostics.Debug.WriteLine(Voucher);
+		}
+
+		public int GetVoucher()
+		{
+			return int.Parse(Voucher.Split(' ')[0]);
+		}
 
 	}
 }

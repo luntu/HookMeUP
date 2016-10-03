@@ -136,6 +136,7 @@ namespace HookMeUP.iOS
 
 		}
 
+
 		public override void DidEnterBackground(UIApplication application)
 		{
 			if (CurrentInstallation.Badge != 0)

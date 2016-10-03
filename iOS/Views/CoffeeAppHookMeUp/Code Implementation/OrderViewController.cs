@@ -96,7 +96,7 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		bool Paid
+		bool DidInitiliseSource 
 		{
 			get;
 			set;
@@ -108,20 +108,22 @@ namespace HookMeUP.iOS
 			SetupView();
 			LoadTableFuctionality();
 			costText.Text = "R 0,00";
+
 		}
 
 		public override void ViewWillAppear(bool animated)
 		{
 			base.ViewWillAppear(animated);
+			if(DidInitiliseSource)
+			{
+				ResetVoucher();
+				VouchersLabel.Text = Source.GetVoucher() + " vouchers";
+			}
 			ResetScreen();
-
 		}
-
-		public override void ViewWillDisappear(bool animated)
-		{
-			base.ViewWillDisappear(animated);
-
-
+		void ResetVoucher() 
+		{ 
+			Source.ResetVoucher();
 		}
 
 		void SetupView()
@@ -152,6 +154,7 @@ namespace HookMeUP.iOS
 
 		async void LoadTableFuctionality()
 		{
+			DidInitiliseSource = false;
 			try
 			{
 				loadingOverlay = new LoadingOverlay(bounds);
@@ -182,9 +185,14 @@ namespace HookMeUP.iOS
 
 			Source = new TableSourceOrdering(coffeeItems);
 			Source.Voucher = VouchersLabel.Text;
+
+			Source.Launched = true;
+			Source.Ordered = false;
+			Source.GetInitialVoucher = VouchersLabel.Text;
+
 			ordersTable.Source = Source;
 			ordersTable.ReloadData();
-
+			DidInitiliseSource = true;
 			//Source.getSelectedCell += (sender, e) =>
 			//{
 			//	Cell = e;
@@ -231,6 +239,7 @@ namespace HookMeUP.iOS
 					//if (!NamesOfTaggedOrders.Contains(order.OrderName)) NamesOfTaggedOrders += order.OrderName + "*";
 					if (order.OrderName.Equals(CellName))
 					{
+						Debug.WriteLine(order.OrderName);
 						NamesOfTaggedOrders = order.OrderName;
 						taggedOrders.Remove(order);
 						VoucherCount.HasTag = true;
@@ -247,8 +256,7 @@ namespace HookMeUP.iOS
 					VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
 					Source.Voucher = VouchersLabel.Text;
 				}
-				else
-				if (NamesOfTaggedOrders.Equals(CellName))
+				else if (CellName.Equals(NamesOfTaggedOrders))
 				{
 					VoucherCount.IsDeselected = true;
 					VoucherCount.IsSelected = false;
@@ -308,9 +316,6 @@ namespace HookMeUP.iOS
 				Source.ordersList.Clear();
 				costText.Text = "R 0,00";
 				PriceCount.ResetPrice();
-				VouchersLabel.Text = "" + VoucherCount.GetVoucher() + " Vouchers";
-				VoucherCount.Commited = false;
-				//VoucherCount.ResetVoucher();
 			}
 			catch (NullReferenceException ex)
 			{
@@ -326,7 +331,6 @@ namespace HookMeUP.iOS
 
 		void Order()
 		{
-			
 			if (costText.Text.Equals("R 0,00")) OrderAnyway();
 			else OrderWithPrice();
 		}
@@ -401,6 +405,7 @@ namespace HookMeUP.iOS
 				TableNameOrders["OrderReceivedByAdmin"] = false;
 				TableNameOrders["Time"] = "" + time;
 				TableNameOrders["UserChannel"] = GetUserChannelName;
+				TableNameOrders["Paid"] = false;
 				CurrentUser["Vouchers"] = voucherUpdate;
 
 				await TableNameOrders.SaveAsync();
@@ -409,16 +414,18 @@ namespace HookMeUP.iOS
 
 				//send push
 
-
 				var push = new ParsePush();
 				push.Data = new Dictionary<string, object>
 							{
 								{"title","HookMeUp"},
 								{"alert","New order from "+(GetName+" "+GetSurname).ToUpper()},
 								{"channel","Admin"},
-								{"badge","Increment"}
+								{"badge","Increment"},
+								{"sound","default"}
 							};
 				await push.SendAsync();
+				Source.Ordered = true;
+				Source.GetInitialVoucher = voucherUpdate + " vouchers";
 			}
 			catch (ParseException q)
 			{
