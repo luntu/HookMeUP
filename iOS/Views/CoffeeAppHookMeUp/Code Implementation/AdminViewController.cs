@@ -236,7 +236,12 @@ namespace HookMeUP.iOS
 
 						var push = new ParsePush();
 						push.Channels = new List<string> { orders.Channel };
-						push.Alert =orders.PersonOrdered + " your order is ready!!!";
+
+						push.Data = new Dictionary<string, object> 
+						{
+							{"alert", UpperCaseFirstCharacterName(orders.PersonOrdered) + " your order is ready!!!"},
+							{"sound","default"}
+						};
 
 						await push.SendAsync();
 						Debug.WriteLine("Thread finished");
@@ -251,6 +256,21 @@ namespace HookMeUP.iOS
 					Debug.WriteLine("Nothing");
 					break;
 			}
+		}
+
+		string UpperCaseFirstCharacterName(string name) 
+		{
+			string nameUpper = "";
+			for (int i = 0; i < name.Length; i++) 
+			{
+				if (i == 0)
+					nameUpper += name[0].ToString().ToUpper();
+				else 
+				{
+					nameUpper += name[i];
+				}
+			}
+			return nameUpper;
 		}
 
 		public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)

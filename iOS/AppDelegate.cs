@@ -5,6 +5,7 @@ using Foundation;
 using Parse;
 using UIKit;
 
+
 namespace HookMeUP.iOS
 {
 	// The UIApplicationDelegate for the application. This class is responsible for launching the
@@ -70,6 +71,8 @@ namespace HookMeUP.iOS
 							//App Admin side handles notification
 							//string[] splitArr = value.Split(' ');
 							//string channelName = splitArr[3] + splitArr[4];
+						
+							
 							var refreshAdminTable = (Window.RootViewController as UINavigationController).TopViewController as AdminViewController;
 							refreshAdminTable.AddOrders();
 
@@ -77,8 +80,14 @@ namespace HookMeUP.iOS
 							//adminOrders.AddNewOrders();
 							break;
 						}
-						if (value.Contains("Ready!!!")) 
+						if (value.Contains("ready!!!")) 
 						{
+							UIAlertView alert = new UIAlertView();
+							alert.Title = "Done";
+							alert.Message = "You are hooked!!!";
+							alert.AddButton("OK");
+							alert.Show();
+
 							Debug.WriteLine("Order ready for user");
 							//App user side handles notification 
 							var refreshQueueTable = (Window.RootViewController as UINavigationController).TopViewController as QueueViewController;
