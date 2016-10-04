@@ -236,11 +236,10 @@ namespace HookMeUP.iOS
 
 						var push = new ParsePush();
 						push.Channels = new List<string> { orders.Channel };
-						push.Alert = "Your order is ready!!";
-					
-						Debug.WriteLine(orders.Channel);
-						await push.SendAsync();
+						push.Alert =orders.PersonOrdered + " your order is ready!!!";
 
+						await push.SendAsync();
+						Debug.WriteLine("Thread finished");
 					}
 					catch (ParseException e)
 					{
