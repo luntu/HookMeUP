@@ -235,15 +235,9 @@ namespace HookMeUP.iOS
 						//send push
 
 						var push = new ParsePush();
-						push.Data = new Dictionary<string, object>
-						{
-							{"title","HookMeUp"},
-							{"alert","Your order is Ready!!!"},
-							{"channel",orders.Channel},
-							{"badge","Increment"},
-							{"sound","default"}
-
-						};
+						push.Channels = new List<string> { orders.Channel };
+						push.Alert = "Your order is ready!!";
+					
 						Debug.WriteLine(orders.Channel);
 						await push.SendAsync();
 

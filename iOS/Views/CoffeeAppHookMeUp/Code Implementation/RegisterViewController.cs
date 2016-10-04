@@ -19,6 +19,7 @@ namespace HookMeUP.iOS
 			get;
 			set; 
 		}
+
 		string GetEmailTxt 
 		{ 
 			get;
@@ -28,8 +29,6 @@ namespace HookMeUP.iOS
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
-			// Perform any additional setup after loading the view, typically from a nib.
-			//NSNotificationCenter.DefaultCenter.AddObserver
 
 			NavigationController.NavigationBarHidden = true;
 			DismissKeyboardOnBackgroundTap();

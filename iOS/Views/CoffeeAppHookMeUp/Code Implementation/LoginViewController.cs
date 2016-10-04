@@ -100,8 +100,6 @@ namespace HookMeUP.iOS
 							   Debug.WriteLine(ex.Message);
 						   }
 
-
-
 						   break;
 
 					   case false:
@@ -109,7 +107,6 @@ namespace HookMeUP.iOS
 						   AlertPopUp("Error", "Please fill in details", "OK");
 
 						   break;
-
 				   }
 
 				   ClearFields(usernameText, passwordText);

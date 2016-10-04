@@ -415,14 +415,17 @@ namespace HookMeUP.iOS
 				//send push
 
 				var push = new ParsePush();
-				push.Data = new Dictionary<string, object>
-							{
-								{"title","HookMeUp"},
-								{"alert","New order from "+(GetName+" "+GetSurname).ToUpper()},
-								{"channel","Admin"},
-								{"badge","Increment"},
-								{"sound","default"}
-							};
+				push.Channels = new List<string> { "Admin" };
+				push.Alert = "New order from " + (GetName + " " + GetSurname).ToUpper();
+
+				//push.Data = new Dictionary<string, object>
+				//			{
+				//				{"title","HookMeUp"},
+				//				{"alert","New order from "+(GetName+" "+GetSurname).ToUpper()},
+				//				{"channel","Admin"},
+				//				{"badge","Increment"},
+				//				{"sound","default"}
+				//			};
 				await push.SendAsync();
 				Source.Ordered = true;
 				Source.GetInitialVoucher = voucherUpdate + " vouchers";

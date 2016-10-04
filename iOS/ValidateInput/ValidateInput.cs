@@ -26,6 +26,7 @@ namespace HookMeUP.iOS
 			get;
 			set;
 		}
+
 		UIButton Button 
 		{
 			get;
