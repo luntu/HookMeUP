@@ -8,9 +8,11 @@ namespace HookMeUP.iOS
 	{
 		RegisterViewController register = new RegisterViewController();
 		List<UITextField> textFields = new List<UITextField>();
-		List<char> illegalCharacters = new List<char> 
+		List<char> IllegalCharacters = new List<char> 
 		{
-			'.','!', '#', '%', '^', '(', ')', '_', '-', '=', '+', ',', '\'', '/', '?',';',':','\"', ' ' 
+			'.', '!', '#', '%', '^', '(', ')', '_', '-', '=',
+			'+', ',', '\'', '/', '?', ';', ':', '\"','$', '±',
+			'*', '>', '<', '[', ']', '{', '}' , '`', '~'
 		};
 
 		bool IsValid 
@@ -83,17 +85,17 @@ namespace HookMeUP.iOS
 						break;
 						
 					case 2:                            //Enter text of length >= 5 and <=10 and no illegal characters
-						foreach (char c in illegalCharacters)
-						{
-							if (f.Text.Contains("" + c))
-							{
-								hasIllegalCharacter = true;
-								break;
-							}
-						}
-
+											
 						f.EditingDidEnd += (sender, e) =>
 						{
+							foreach (char c in IllegalCharacters)
+							{
+								if (f.Text.Contains("" + c))
+								{
+									hasIllegalCharacter = true;
+									break;
+								}
+							}
 							
 							isUsernameUsed = false;
 							foreach (string usernameElements in RegisterViewController.usernameCheck)

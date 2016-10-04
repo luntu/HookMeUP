@@ -127,6 +127,7 @@
     <Folder Include="Views\FireEvacuation\" />
     <Folder Include="Views\FireEvacuation\Design\" />
     <Folder Include="Views\FireEvacuation\Code Implementation\" />
+    <Folder Include="UserAuthentication\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -189,6 +190,7 @@
       <DependentUpon>..\..\Code Implementation\AliensTrackerRegisterViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\OrdersAdmin.cs" />
+    <Compile Include="UserAuthentication\AuthanticateUser.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />

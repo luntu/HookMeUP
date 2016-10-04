@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UIKit;
 using Parse;
-using ToastIOS;
 using CoreGraphics;
 
 namespace HookMeUP.iOS
@@ -228,57 +227,6 @@ namespace HookMeUP.iOS
 
 			loadO.Hide();
 
-		}
-
-	}
-
-	class AuthanticateUser // Check if the user is an Alien employee and that he cannot create multiple accounts 
-	{
-	
-		public string Name { get; private set; }
-		public string Email { get; private set; }
-		public List<AliensEmployees> Employees;
-		bool isAvailable = false;
-
-		public AuthanticateUser(List<AliensEmployees>employees, string name, string email) 
-		{
-			Employees = employees;
-			Name = name.ToLower();
-			Email = email.ToLower();
-
-		}
-
-		bool Authanticate() 
-		{
-			foreach (AliensEmployees employeeElements in Employees) 
-			{
-				string name = employeeElements.Name.ToLower();
-				string email = employeeElements.Email.ToLower();
-				bool isRegistered = employeeElements.IsRegistered;
-
-				if (name.Equals(Name) && email.Equals(Email))
-				{
-					if (isRegistered) 
-					{
-						isAvailable = isRegistered;
-					}
-					return true;
-				}
-
-			}
-			return false;
-		}
-
-		public bool IsAlienEmployee() 
-		{
-			if (Authanticate()) return true;
-			else return false;
-		}
-
-
-		public bool AccountAvailable()
-		{
-			return isAvailable;
 		}
 
 	}
