@@ -196,7 +196,7 @@ namespace HookMeUP.iOS
 		public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
 		{
 			OrdersAdmin orders = Items[indexPath.Row];
-
+			Debug.WriteLine(orders.Items);
 			UIAlertView alert = new UIAlertView();
 
 
