@@ -1,4 +1,4 @@
-﻿// WARNING
+// WARNING
 //
 // This file has been generated automatically by Xamarin Studio from the outlets and
 // actions declared in your storyboard file.
@@ -11,12 +11,11 @@ using UIKit;
 
 namespace HookMeUP.iOS
 {
-	[Register("HomeViewController")]
-	partial class HomeViewController
-	{
-		void ReleaseDesignerOutlets()
-		{
-		}
-	}
+    [Register ("HomeViewController")]
+    partial class HomeViewController
+    {
+        void ReleaseDesignerOutlets ()
+        {
+        }
+    }
 }
-

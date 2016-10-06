@@ -78,9 +78,7 @@ namespace HookMeUP.iOS
 							   // create user channel
 							   var installation = ParseInstallation.CurrentInstallation;
 								
-							   Debug.WriteLine(isAdmin);
-
-							   if (isAdmin) installation.Channels = new string[] { "Admin" };
+							if (isAdmin) installation.Channels = new string[] { "Admin" };
 							   else installation.Channels = new string[] { userChannelName.ToLower() };
 
 							   await installation.SaveAsync();

@@ -121,6 +121,7 @@ namespace HookMeUP.iOS
 			}
 			ResetScreen();
 		}
+
 		void ResetVoucher() 
 		{ 
 			Source.ResetVoucher();
@@ -405,7 +406,6 @@ namespace HookMeUP.iOS
 				TableNameOrders["OrderReceivedByAdmin"] = false;
 				TableNameOrders["Time"] = "" + time;
 				TableNameOrders["UserChannel"] = GetUserChannelName;
-				TableNameOrders["Paid"] = false;
 				CurrentUser["Vouchers"] = voucherUpdate;
 
 				await TableNameOrders.SaveAsync();

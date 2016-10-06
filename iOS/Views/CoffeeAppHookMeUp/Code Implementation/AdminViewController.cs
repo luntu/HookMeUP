@@ -5,6 +5,7 @@ using UIKit;
 using Parse;
 using System.Diagnostics;
 using System.Collections;
+using ToastIOS;
 
 
 namespace HookMeUP.iOS
@@ -59,14 +60,13 @@ namespace HookMeUP.iOS
 					itemsOrdered = new List<string>();
 					string objectId = parseObject.ObjectId;
 					string personOrdered = parseObject.Get<string>("PersonOrdered");
-					bool paid = parseObject.Get<bool>("Paid");
 					orderItems = parseObject.Get<IList>("OrderList");
 					ChannelName = parseObject.Get<string>("UserChannel");
 					double price = parseObject.Get<double>("Price");
 
 					foreach (string e in orderItems) itemsOrdered.Add(e);
 
-					AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, ChannelName, paid, price, itemsOrdered));
+					AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, ChannelName, price, itemsOrdered));
 
 				}
 
@@ -119,7 +119,7 @@ namespace HookMeUP.iOS
 
 		//}
 
-		async void OrderReceivedByAdmin(ParseObject pObj)
+		private async void OrderReceivedByAdmin(ParseObject pObj)
 		{
 			if (!pObj.Get<bool>("OrderReceivedByAdmin"))
 			{
@@ -159,6 +159,17 @@ namespace HookMeUP.iOS
 	{
 		string cellIdentifier = "TableCell";
 
+		string Tester
+		{
+			get;
+			set;
+		}
+
+		double Price
+		{
+			get;
+			set;
+		}
 
 		List<OrdersAdmin> Items
 		{
@@ -197,11 +208,11 @@ namespace HookMeUP.iOS
 		{
 			OrdersAdmin orders = Items[indexPath.Row];
 			Debug.WriteLine(orders.Items);
+
 			UIAlertView alert = new UIAlertView();
 
-
-
 			string s = "";
+			alert.Title = "Order items";
 
 			foreach (string elements in orders.Items)
 				s += elements + "\n";
@@ -221,6 +232,8 @@ namespace HookMeUP.iOS
 					string objectID = orders.ObjectId;
 					Items.Remove(orders);
 					tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
+
+					//updating isOrderDone
 
 					try
 					{
@@ -244,11 +257,25 @@ namespace HookMeUP.iOS
 						};
 
 						await push.SendAsync();
-						Debug.WriteLine("Thread finished");
+						Toast.MakeText("Order updated successfuly").Show();
 					}
 					catch (ParseException e)
 					{
 						Debug.WriteLine(e.StackTrace);
+					}
+
+					try 
+					{
+						var pObj = new ParseObject("Unpaid");
+						pObj["Name"] = orders.PersonOrdered;
+						pObj["AmountOwing"] = orders.Price;
+						pObj["UserChannel"] = orders.Channel;
+						pObj["Paid"] = false;
+						await pObj.SaveAsync();
+					} 
+					catch (ParseException ex) 
+					{
+						Debug.WriteLine(ex.Message);
 					}
 					break;
 
@@ -272,6 +299,7 @@ namespace HookMeUP.iOS
 			}
 			return nameUpper;
 		}
+
 
 		public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
 		{

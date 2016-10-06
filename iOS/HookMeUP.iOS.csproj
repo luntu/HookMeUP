@@ -191,6 +191,10 @@
     </Compile>
     <Compile Include="Models\OrdersAdmin.cs" />
     <Compile Include="UserAuthentication\AuthanticateUser.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\UnpaidViewController.cs" />
+    <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\UnpaidViewController.designer.cs">
+      <DependentUpon>UnpaidViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
@@ -226,6 +230,7 @@
     <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\RegisterViewController.xib" />
     <InterfaceDefinition Include="Views\FireEvacuation\Design\AliensTrackerListViewController.xib" />
     <InterfaceDefinition Include="Views\FireEvacuation\Design\AliensTrackerRegisterViewController.xib" />
+    <InterfaceDefinition Include="Views\CoffeeAppHookMeUp\Design\UnpaidViewController.xib" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="parse">

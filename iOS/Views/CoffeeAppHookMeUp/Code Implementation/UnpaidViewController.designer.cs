@@ -9,25 +9,25 @@ using System.CodeDom.Compiler;
 
 namespace HookMeUP.iOS
 {
-	[Register ("AdminViewController")]
-	partial class AdminViewController
+	[Register ("UnpaidViewController")]
+	partial class UnpaidViewController
 	{
 		[Outlet]
-		UIKit.UITableView AminOrdersTable { get; set; }
+		UIKit.UIButton backButton { get; set; }
 
 		[Outlet]
-		UIKit.UIButton viewUnpaidButton { get; set; }
+		UIKit.UITableView unpaidTable { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (AminOrdersTable != null) {
-				AminOrdersTable.Dispose ();
-				AminOrdersTable = null;
+			if (unpaidTable != null) {
+				unpaidTable.Dispose ();
+				unpaidTable = null;
 			}
 
-			if (viewUnpaidButton != null) {
-				viewUnpaidButton.Dispose ();
-				viewUnpaidButton = null;
+			if (backButton != null) {
+				backButton.Dispose ();
+				backButton = null;
 			}
 		}
 	}
