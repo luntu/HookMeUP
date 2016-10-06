@@ -29,6 +29,16 @@ namespace HookMeUP.iOS
 			set;
 		}
 
+		public override void ViewDidLoad()
+		{
+			base.ViewDidLoad();
+
+			viewUnpaidButton.TouchUpInside += (sender, e) =>
+			{
+				NavigationScreenController(unpaidViewController);
+			};
+		}
+
 		public override void ViewDidAppear(bool animated)
 		{
 			base.ViewDidAppear(animated);
@@ -119,7 +129,7 @@ namespace HookMeUP.iOS
 
 		//}
 
-		private async void OrderReceivedByAdmin(ParseObject pObj)
+		async void OrderReceivedByAdmin(ParseObject pObj)
 		{
 			if (!pObj.Get<bool>("OrderReceivedByAdmin"))
 			{
@@ -159,17 +169,6 @@ namespace HookMeUP.iOS
 	{
 		string cellIdentifier = "TableCell";
 
-		string Tester
-		{
-			get;
-			set;
-		}
-
-		double Price
-		{
-			get;
-			set;
-		}
 
 		List<OrdersAdmin> Items
 		{
@@ -230,6 +229,20 @@ namespace HookMeUP.iOS
 
 					OrdersAdmin orders = Items[indexPath.Row];
 					string objectID = orders.ObjectId;
+
+					try
+					{
+						var pObj = new ParseObject("Unpaid");
+						pObj["Name"] = orders.PersonOrdered;
+						pObj["AmountOwing"] = orders.Price;
+						pObj["Paid"] = false;
+						await pObj.SaveAsync();
+					}
+					catch (ParseException ex)
+					{
+						Debug.WriteLine(ex.Message);
+					}
+
 					Items.Remove(orders);
 					tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
 
@@ -264,19 +277,6 @@ namespace HookMeUP.iOS
 						Debug.WriteLine(e.StackTrace);
 					}
 
-					try 
-					{
-						var pObj = new ParseObject("Unpaid");
-						pObj["Name"] = orders.PersonOrdered;
-						pObj["AmountOwing"] = orders.Price;
-						pObj["UserChannel"] = orders.Channel;
-						pObj["Paid"] = false;
-						await pObj.SaveAsync();
-					} 
-					catch (ParseException ex) 
-					{
-						Debug.WriteLine(ex.Message);
-					}
 					break;
 
 				case UITableViewCellEditingStyle.None:
@@ -299,7 +299,6 @@ namespace HookMeUP.iOS
 			}
 			return nameUpper;
 		}
-
 
 		public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
 		{
