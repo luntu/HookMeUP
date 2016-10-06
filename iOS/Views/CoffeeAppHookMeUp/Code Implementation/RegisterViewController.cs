@@ -118,7 +118,7 @@ namespace HookMeUP.iOS
 
 		async void UpdateRegistered()
 		{
-			LoadingOverlay ldOvly = new LoadingOverlay(bounds);
+			LoadingOverlay ldOvly = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 			View.Add(ldOvly);
 
 			foreach (ParseObject employeeObjsElements in employeeObjs) 
@@ -147,7 +147,7 @@ namespace HookMeUP.iOS
 
 		async void AddToDB(string name,string surname, string username, string password,string email,int vouchers)
 		{
-			loadingOverlay = new LoadingOverlay(bounds);
+			loadingOverlay = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 			View.Add(loadingOverlay);
 
 			var user = new ParseUser()
@@ -190,7 +190,7 @@ namespace HookMeUP.iOS
 		async void LoadUsernames()
 		{
 
-			loadingOverlay = new LoadingOverlay(bounds);
+			loadingOverlay = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 			View.Add(loadingOverlay);
 
 			var query = ParseUser.Query;
@@ -208,7 +208,7 @@ namespace HookMeUP.iOS
 
 		async void LoadEmployees()
 		{
-			LoadingOverlay loadO = new LoadingOverlay(bounds);
+			LoadingOverlay loadO = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 			View.Add(loadingOverlay);
 
 			var query = ParseObject.GetQuery("AliensEmployees");

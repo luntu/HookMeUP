@@ -35,7 +35,7 @@ namespace HookMeUP.iOS
 
 		public async void AddQueueOrders() 
 		{
-			loadingOverlay = new LoadingOverlay(bounds);
+			loadingOverlay = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 			View.Add(loadingOverlay);
 
 			ActiveOrdersList.Clear();

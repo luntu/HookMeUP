@@ -21,7 +21,7 @@ namespace HookMeUP.iOS
 		//public ParseObject tableNameUserInfo = new ParseObject("UserInformation");
 
 		public LoadingOverlay loadingOverlay;
-		public CGRect bounds = UIScreen.MainScreen.Bounds;
+		//public CGRect bounds = UIScreen.MainScreen.Bounds;
 
 
 		public string TrimInput(string input) 

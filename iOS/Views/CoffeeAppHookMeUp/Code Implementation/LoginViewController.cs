@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using Parse;
+using UIKit;
+
 namespace HookMeUP.iOS
 {
 	public partial class LoginViewController : ScreenViewController
@@ -41,7 +43,7 @@ namespace HookMeUP.iOS
 
 						   try
 						   {
-							   loadingOverlay = new LoadingOverlay(bounds);
+							   loadingOverlay = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 							   View.Add(loadingOverlay);
 
 

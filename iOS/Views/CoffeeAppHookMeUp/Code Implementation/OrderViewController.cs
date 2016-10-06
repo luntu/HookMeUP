@@ -158,7 +158,7 @@ namespace HookMeUP.iOS
 			DidInitiliseSource = false;
 			try
 			{
-				loadingOverlay = new LoadingOverlay(bounds);
+				loadingOverlay = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 				View.Add(loadingOverlay);
 				ParseQuery<ParseObject> query = ParseObject.GetQuery("Coffees");
 				query.Include("Title").Include("Price").Include("ImageName");
@@ -393,7 +393,7 @@ namespace HookMeUP.iOS
 			string[] arrSplit = VouchersLabel.Text.Split(' ');
 			voucherUpdate = int.Parse(arrSplit[0]);
 
-			loadingOverlay = new LoadingOverlay(bounds);
+			loadingOverlay = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 			View.Add(loadingOverlay);
 
 			try

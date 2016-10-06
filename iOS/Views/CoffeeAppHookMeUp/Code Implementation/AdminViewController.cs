@@ -42,7 +42,7 @@ namespace HookMeUP.iOS
 
 			try
 			{
-				loadingOverlay = new LoadingOverlay(bounds);
+				loadingOverlay = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 				View.Add(loadingOverlay);
 
 				ParseQuery<ParseObject> query = from ordersTb in ParseObject.GetQuery("Orders")
