@@ -115,7 +115,7 @@ namespace HookMeUP.iOS
 
 			cell.TextLabel.Text = Keys[indexPath.Row].Split('-')[1];
 
-			cell.DetailTextLabel.Text = CalculatePrice(channelKey).ToString("R 0.00");
+			cell.DetailTextLabel.Text = (OrdersMap[Keys[indexPath.Row]]+CalculatePrice(channelKey)).ToString("R 0.00");
 			return cell;
 		}
 
@@ -137,7 +137,7 @@ namespace HookMeUP.iOS
 			{
 				string channelKey = elements.Split('-')[0];
 				string priceValue = elements.Split('-')[1];
-				Debug.WriteLine(channelKey);
+
 				if (channelKey.Equals(key))
 					price += double.Parse(priceValue);
 				
