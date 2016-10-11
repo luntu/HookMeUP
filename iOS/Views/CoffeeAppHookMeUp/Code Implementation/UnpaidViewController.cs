@@ -16,12 +16,6 @@ namespace HookMeUP.iOS
 			set;
 		}
 
-		Dictionary<string, double> OrdersMap 
-		{
-			get;
-			set;
-		}
-
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
@@ -54,15 +48,16 @@ namespace HookMeUP.iOS
 
 				foreach (var elements in results)
 				{
-					container.Order = new OrdersAdmin(elements.ObjectId,
-												  elements.Get<string>("Name"),
-												  elements.Get<string>("UserChannel"),
-												  elements.Get<double>("AmountOwing"));
+					string objectID = elements.ObjectId;
+					string name = elements.Get<string>("Name");
+					string userChannel = elements.Get<string>("UserChannel");
+					double amountOwing = elements.Get<double>("AmountOwing");
+
+					container.Order = new OrdersAdmin(objectID, name, userChannel, amountOwing);
 					container.InitialiseMaps();
 				}
 
-				OrdersMap = container.GetOrdersMap;
-				Source = new TableSourceUnpaid(OrdersMap);
+				Source = new TableSourceUnpaid(container.GetOrdersMap, container.GetUnaddedOrders);
 				unpaidTable.Source = Source;
 				unpaidTable.ReloadData();
 			}
@@ -92,21 +87,21 @@ namespace HookMeUP.iOS
 			get;
 		}
 
-		List<string> Keys
+		List<string> Unadded 
 		{
 			get;
-			set;
 		}
 
-		internal TableSourceUnpaid(Dictionary<string, double> ordersMap)
+		List<string> Keys = new List<string>();
+
+		internal TableSourceUnpaid(Dictionary<string, double> ordersMap, List<string> unadded)
 		{
 			OrdersMap = ordersMap;
-			foreach (string elementKeys in ordersMap.Keys)
-			{
-				Keys.Add(elementKeys);
-				Debug.WriteLine(elementKeys);
-			}
+			Unadded = unadded;
 
+			foreach (string elementKeys in ordersMap.Keys)
+				Keys.Add(elementKeys);
+			
 		}
 
 		public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
@@ -115,8 +110,12 @@ namespace HookMeUP.iOS
 
 			if (cell == null)
 				cell = new UITableViewCell(UITableViewCellStyle.Subtitle, cellIdentifier);
+			
+			string channelKey = Keys[indexPath.Row].Split('-')[0];
 
-			cell.TextLabel.Text = Keys[indexPath.Row];
+			cell.TextLabel.Text = Keys[indexPath.Row].Split('-')[1];
+
+			cell.DetailTextLabel.Text = CalculatePrice(channelKey).ToString("R 0.00");
 			return cell;
 		}
 
@@ -128,6 +127,22 @@ namespace HookMeUP.iOS
 		public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
 		{
 			return 70f;
+		}
+
+		private double CalculatePrice(string key) 
+		{
+			double price = 0;
+
+			foreach (string elements in Unadded)
+			{
+				string channelKey = elements.Split('-')[0];
+				string priceValue = elements.Split('-')[1];
+				Debug.WriteLine(channelKey);
+				if (channelKey.Equals(key))
+					price += double.Parse(priceValue);
+				
+			}
+			return price;
 		}
 	}
 }

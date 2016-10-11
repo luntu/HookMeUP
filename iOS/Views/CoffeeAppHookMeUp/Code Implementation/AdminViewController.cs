@@ -134,12 +134,6 @@ namespace HookMeUP.iOS
 	{
 		string cellIdentifier = "TableCell";
 
-		Dictionary<string, double> OrdersMap
-		{
-			get;
-			set;
-		}
-
 		List<OrdersAdmin> Items
 		{
 			get;

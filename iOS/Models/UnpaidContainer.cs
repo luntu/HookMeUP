@@ -1,71 +1,28 @@
 ﻿using System.Collections.Generic;
-using Parse;using System.Diagnostics;using System;
+using System.Diagnostics;using System;
 namespace HookMeUP.iOS
 {
 	public class UnpaidContainer
 	{
-		Dictionary<string, double> OrdersMap
-		{
-			get;
-			set;
-		}
-
 		internal OrdersAdmin Order
 		{
 			get;
 			set;
 		}
 
-		string ObjectID 
-		{
-			get;
-		}
-
-		string Name 
-		{ 
-			get;
-		}
-		
-		string Channel 
-		{
-			get;
-		}
-		
-		double AmountOwing 
-		{
-			get;
-		}
-
-		double AmountOwingTest 
-		{
-			get;
-			set;
-		}
-
-		internal UnpaidContainer() 
-		{
-			if (Order != null) 
-			{
-				ObjectID = Order.ObjectId;
-				Name = Order.PersonOrdered;
-				Channel = Order.Channel;
-				AmountOwing = Order.Price;
-			}
-
-			if (OrdersMap == null) OrdersMap = new Dictionary<string, double>();
-				
-		}
+		Dictionary<string, double> OrdersMap = new Dictionary<string, double>();
+		List<string> UnaddedOrders = new List<string>();
 
 		internal void InitialiseMaps()
 		{
 			try
 			{
-				OrdersMap.Add(Name, AmountOwingTest);
+				OrdersMap.Add(Order.Channel+"-"+Order.PersonOrdered, Order.Price);
 			}
 			catch (Exception ex) 
 			{
 				Debug.WriteLine(ex.Message);
-				AmountOwingTest += AmountOwing;
+				UnaddedOrders.Add(Order.Channel + "-" + Order.Price);
 			}
 		}
 
@@ -74,6 +31,14 @@ namespace HookMeUP.iOS
 			get
 			{
 				return OrdersMap;
+			}
+		}
+
+		internal List<string> GetUnaddedOrders 
+		{
+			get 
+			{
+				return UnaddedOrders;
 			}
 		}
 	}
