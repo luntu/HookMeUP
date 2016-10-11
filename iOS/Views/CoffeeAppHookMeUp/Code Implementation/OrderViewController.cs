@@ -425,8 +425,10 @@ namespace HookMeUP.iOS
 				};
 
 				await push.SendAsync();
+
 				Source.Ordered = true;
 				Source.GetInitialVoucher = voucherUpdate + " vouchers";
+
 			}
 			catch (ParseException q)
 			{

@@ -35,5 +35,13 @@ namespace HookMeUP.iOS
 			Price = price;
 			Items = items;
 		}
+
+		public OrdersAdmin(string objectId, string personOrdered, string channel, double price) 
+		{
+			ObjectId = objectId;
+			PersonOrdered = personOrdered;
+			Channel = channel;
+			Price = price;
+		}
 	}
 }

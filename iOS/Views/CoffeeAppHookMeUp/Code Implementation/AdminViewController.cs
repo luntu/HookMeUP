@@ -21,7 +21,11 @@ namespace HookMeUP.iOS
 
 		public List<OrdersAdmin> AdminGetOrders = new List<OrdersAdmin>();
 
-		IList orderItems = null;
+		IList orderItems
+		{
+			get;
+			set; 
+		}
 
 		public string ChannelName
 		{
@@ -58,8 +62,7 @@ namespace HookMeUP.iOS
 				ParseQuery<ParseObject> query = from ordersTb in ParseObject.GetQuery("Orders")
 												where ordersTb.Get<bool>("IsOrderDone") == false
 												select ordersTb;
-
-
+				
 				IEnumerable coll = await query.FindAsync();
 
 				List<string> itemsOrdered;
@@ -90,44 +93,6 @@ namespace HookMeUP.iOS
 			}
 
 		}
-
-		//public async void AddNewOrders() 
-		//{
-
-		//	LoadingOverlay loading = new LoadingOverlay(bounds);
-		//	View.Add(loading);
-
-		//	ParseQuery<ParseObject> query = from ordersTb in ParseObject.GetQuery("Orders")
-		//									where ordersTb.Get<bool>("IsOrderDone") == false
-		//									where ordersTb.Get<bool>("OrderReceivedByAdmin") == false
-		//									select ordersTb;
-
-
-		//	IEnumerable coll = await query.FindAsync();
-		//	List<string> newOrders;
-
-		//	foreach (ParseObject parseObject in coll)
-		//	{
-		//		newOrders = new List<string>();
-		//		string objectId = parseObject.ObjectId;
-
-		//		string personOrdered = parseObject.Get<string>("PersonOrdered");
-		//		orderItems = parseObject.Get<IList>("OrderList");
-
-		//		foreach (string e in orderItems)
-		//		{
-		//			Debug.WriteLine(e);
-		//			newOrders.Add(e);
-		//		}
-
-		//		AdminGetOrders.Add(new OrdersAdmin(objectId, personOrdered, newOrders));
-
-		//		OrderReceivedByAdmin(parseObject);
-		//		loading.Hide();
-		//		PopulateTable();
-		//	}
-
-		//}
 
 		async void OrderReceivedByAdmin(ParseObject pObj)
 		{
@@ -169,6 +134,11 @@ namespace HookMeUP.iOS
 	{
 		string cellIdentifier = "TableCell";
 
+		Dictionary<string, double> OrdersMap
+		{
+			get;
+			set;
+		}
 
 		List<OrdersAdmin> Items
 		{
@@ -178,7 +148,6 @@ namespace HookMeUP.iOS
 		public TableSourceAdmin(List<OrdersAdmin> items)
 		{
 			Items = items;
-
 		}
 
 
@@ -236,6 +205,7 @@ namespace HookMeUP.iOS
 						pObj["Name"] = orders.PersonOrdered;
 						pObj["AmountOwing"] = orders.Price;
 						pObj["Paid"] = false;
+						pObj["UserChannel"] = orders.Channel;
 						await pObj.SaveAsync();
 					}
 					catch (ParseException ex)
@@ -314,7 +284,6 @@ namespace HookMeUP.iOS
 			return 70f;
 		}
 	}
-
 
 }
 

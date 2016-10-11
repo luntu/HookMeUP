@@ -195,6 +195,7 @@
     <Compile Include="Views\CoffeeAppHookMeUp\Code Implementation\UnpaidViewController.designer.cs">
       <DependentUpon>UnpaidViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\UnpaidContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\aliens.png" />
