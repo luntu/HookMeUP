@@ -41,7 +41,7 @@ namespace HookMeUP.iOS
 				var query = from unpaid in ParseObject.GetQuery("Unpaid")
 							where unpaid.Get<bool>("Paid") == false
 							select unpaid;
-
+				
 				var results = await query.FindAsync();
 
 				UnpaidContainer container = new UnpaidContainer();
@@ -129,7 +129,23 @@ namespace HookMeUP.iOS
 			return 70f;
 		}
 
-		private double CalculatePrice(string key) 
+		public override void CommitEditingStyle(UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
+		{
+			switch (editingStyle) 
+			{
+				case UITableViewCellEditingStyle.Delete:
+					
+					
+					break;
+			}
+		}
+
+		public override string TitleForDeleteConfirmation(UITableView tableView, NSIndexPath indexPath)
+		{
+			return "Paid";
+		}
+
+		private double CalculatePrice(string key)
 		{
 			double price = 0;
 
@@ -140,7 +156,7 @@ namespace HookMeUP.iOS
 
 				if (channelKey.Equals(key))
 					price += double.Parse(priceValue);
-				
+
 			}
 			return price;
 		}
