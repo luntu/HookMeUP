@@ -26,19 +26,7 @@ namespace HookMeUP.iOS
 			get;
 			set;
 		}
-
-		//UITableViewCell Cell
-		//{
-		//	get;
-		//	set;
-		//}
-
-		//Coffee SelectedCoffeeItem
-		//{
-		//	get;
-		//	set;
-		//}
-
+			
 		NSIndexPath SelectedIndexPath
 		{
 			get;
@@ -194,12 +182,6 @@ namespace HookMeUP.iOS
 			ordersTable.Source = Source;
 			ordersTable.ReloadData();
 			DidInitiliseSource = true;
-			//Source.getSelectedCell += (sender, e) =>
-			//{
-			//	Cell = e;
-			//	SelectedIndexPath = ordersTable.IndexPathForCell(Cell);
-			//	SelectedCoffeeItem = coffeeItems[SelectedIndexPath.Row];
-			//};
 
 			Source.onCellForOrderName += (sender, e) =>
 			{
@@ -207,13 +189,7 @@ namespace HookMeUP.iOS
 			};
 
 			Source.onCellSelectedForVouchers += (sender, e) =>
-			{
-
-				//var isAvailable = !VoucherCount.IsVoucherDepleted;
-				//SelectedCoffeeItem.Available = isAvailable;
-
-				//ordersTable.ReloadRows(new[] { SelectedIndexPath }, UITableViewRowAnimation.Fade);
-				    
+			{    
 					VoucherCount.Voucher = e;
 					VoucherCount.IsSelected = true;
 					VoucherCount.IsDeselected = false;
@@ -345,8 +321,9 @@ namespace HookMeUP.iOS
 				showOrders += orderName + "\n";
 
 				items.Add(orderName);
-				prices += double.Parse(Source.FormatPrice(orderElements.Price));
+				//prices += double.Parse(Source.FormatPrice(orderElements.Price));
 			}
+			prices = double.Parse(costText.Text.Split(' ')[1]);
 
 			UIAlertView alert = PopUp("Orders selected", showOrders.Trim(), "Order", "Cancel");
 			showOrders = string.Empty;

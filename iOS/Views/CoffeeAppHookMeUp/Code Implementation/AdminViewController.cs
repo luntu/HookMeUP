@@ -193,18 +193,22 @@ namespace HookMeUP.iOS
 					OrdersAdmin orders = Items[indexPath.Row];
 					string objectID = orders.ObjectId;
 
-					try
+					if(!orders.Price.Equals(0))
 					{
-						var pObj = new ParseObject("Unpaid");
-						pObj["Name"] = orders.PersonOrdered;
-						pObj["AmountOwing"] = orders.Price;
-						pObj["UserChannel"] = orders.Channel;
-						await pObj.SaveAsync();
+						try
+						{
+							var pObj = new ParseObject("Unpaid");
+							pObj["Name"] = orders.PersonOrdered;
+							pObj["AmountOwing"] = orders.Price;
+							pObj["UserChannel"] = orders.Channel;
+							pObj["Paid"] = false;
+							await pObj.SaveAsync();
 
-					}
-					catch (ParseException ex)
-					{
-						Debug.WriteLine(ex.Message);
+						}
+						catch (ParseException ex)
+						{
+							Debug.WriteLine(ex.Message);
+						}
 					}
 
 					Items.Remove(orders);

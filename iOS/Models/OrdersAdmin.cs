@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Parse;
 
 namespace HookMeUP.iOS
 {
