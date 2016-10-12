@@ -198,9 +198,9 @@ namespace HookMeUP.iOS
 						var pObj = new ParseObject("Unpaid");
 						pObj["Name"] = orders.PersonOrdered;
 						pObj["AmountOwing"] = orders.Price;
-						pObj["Paid"] = false;
 						pObj["UserChannel"] = orders.Channel;
 						await pObj.SaveAsync();
+
 					}
 					catch (ParseException ex)
 					{

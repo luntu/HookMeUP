@@ -55,9 +55,10 @@ namespace HookMeUP.iOS
 
 					container.Order = new OrdersAdmin(objectID, name, userChannel, amountOwing);
 					container.InitialiseMaps();
+					container.InitialiseList(elements);
 				}
 
-				Source = new TableSourceUnpaid(container.GetOrdersMap, container.GetUnaddedOrders);
+				Source = new TableSourceUnpaid(container.GetOrdersMap, container.GetParseObjectList ,container.GetUnaddedOrders);
 				unpaidTable.Source = Source;
 				unpaidTable.ReloadData();
 			}
@@ -87,6 +88,11 @@ namespace HookMeUP.iOS
 			get;
 		}
 
+		List<ParseObject> ObjectParse
+		{
+			get;
+		}
+
 		List<string> Unadded 
 		{
 			get;
@@ -94,8 +100,9 @@ namespace HookMeUP.iOS
 
 		List<string> Keys = new List<string>();
 
-		internal TableSourceUnpaid(Dictionary<string, double> ordersMap, List<string> unadded)
+		internal TableSourceUnpaid(Dictionary<string, double> ordersMap,List<ParseObject> objectParse, List<string> unadded)
 		{
+			ObjectParse = objectParse;
 			OrdersMap = ordersMap;
 			Unadded = unadded;
 
@@ -121,7 +128,7 @@ namespace HookMeUP.iOS
 
 		public override nint RowsInSection(UITableView tableview, nint section)
 		{
-			return Keys.Count;
+			return OrdersMap.Count;
 		}
 
 		public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
@@ -129,15 +136,23 @@ namespace HookMeUP.iOS
 			return 70f;
 		}
 
-		public override void CommitEditingStyle(UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
+		public override async void CommitEditingStyle(UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
 		{
-			switch (editingStyle) 
+			switch (editingStyle)
 			{
 				case UITableViewCellEditingStyle.Delete:
-					
-					
+
+					int index = indexPath.Row;
+					OrdersMap.Remove(Keys[index]);
+					tableView.DeleteRows(new NSIndexPath[] { indexPath }, UITableViewRowAnimation.Fade);
+					UpdateDuplicates(ObjectParse[index]);
 					break;
 			}
+		}
+
+		public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
+		{
+			return true;
 		}
 
 		public override string TitleForDeleteConfirmation(UITableView tableView, NSIndexPath indexPath)
@@ -159,6 +174,32 @@ namespace HookMeUP.iOS
 
 			}
 			return price;
+		}
+
+		private async void UpdateDuplicates(ParseObject parseObject)
+		{
+
+			string channelName = parseObject.Get<string>("UserChannel");
+
+			foreach (var elementObject in ObjectParse)
+			{
+				Debug.WriteLine(elementObject.Get<string>("UserChannel"));
+				string channelName1 = elementObject.Get<string>("UserChannel");
+
+				if (channelName1.Equals(channelName))
+				{
+					try
+					{
+						elementObject["Paid"] = true;
+						await elementObject.SaveAsync();
+					}
+					catch (ParseException ex)
+					{
+						Debug.WriteLine(ex.Message);
+					}
+				}
+			}
+
 		}
 	}
 }

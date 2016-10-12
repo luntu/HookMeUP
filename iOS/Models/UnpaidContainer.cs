@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;using System;
+using Parse;
 namespace HookMeUP.iOS
 {
 	public class UnpaidContainer
@@ -11,6 +12,7 @@ namespace HookMeUP.iOS
 		}
 
 		Dictionary<string, double> OrdersMap = new Dictionary<string, double>();
+		List<ParseObject> ObjectParse = new List<Parse.ParseObject>();
 		List<string> UnaddedOrders = new List<string>();
 
 		internal void InitialiseMaps()
@@ -26,11 +28,31 @@ namespace HookMeUP.iOS
 			}
 		}
 
+		internal void InitialiseList(ParseObject pObjectParse) 
+		{
+			try 
+			{
+				ObjectParse.Add(pObjectParse);
+			} 
+			catch (Exception e) 
+			{
+				Debug.WriteLine(e.GetType() + "\n" + e.Message);
+			}
+		}
+
 		internal Dictionary<string, double> GetOrdersMap 
 		{
 			get
 			{
 				return OrdersMap;
+			}
+		}
+
+		internal List<ParseObject> GetParseObjectList 
+		{
+			get 
+			{
+				return ObjectParse;
 			}
 		}
 
