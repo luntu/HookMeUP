@@ -233,7 +233,7 @@ namespace HookMeUP.iOS
 
 						push.Data = new Dictionary<string, object> 
 						{
-							{"alert", UpperCaseFirstCharacterName(orders.PersonOrdered) + " your order is ready!!!"},
+							{"alert", UpperCaseFirstCharacterName(orders.PersonOrdered) + ", your order is ready!!!"},
 							{"sound","default"}
 						};
 
