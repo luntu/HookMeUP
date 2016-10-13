@@ -35,7 +35,12 @@ namespace HookMeUP.iOS
 			const string APPLICATION_ID = "G7S25vITx0tfeOhODauYKwtauCvzityLwJFGYHPw";
 			const string DOT_NET_ID = "ypPxS2V2rTGl1lNbvEVKUEACKF8PRhWxkWQsbkFe";
 
-			ParseClient.Initialize(APPLICATION_ID, DOT_NET_ID);
+			ParseClient.Initialize(new ParseClient.Configuration
+			{
+				ApplicationId = APPLICATION_ID,
+				WindowsKey = DOT_NET_ID,
+				Server = "https://parseapi.back4app.com"
+			});
 
 			////Register for remote notifications.
 			if (Convert.ToInt16(UIDevice.CurrentDevice.SystemVersion.Split('.')[0]) < 8)

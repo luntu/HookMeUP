@@ -99,6 +99,9 @@
     <Reference Include="Calabash">
       <HintPath>..\packages\Xamarin.TestCloud.Agent.0.20.1\lib\Xamarin.iOS10\Calabash.dll</HintPath>
     </Reference>
+    <Reference Include="AirshipBindings">
+      <HintPath>..\packages\urbanairship.3.0.0\lib\Xamarin.iOS10\AirshipBindings.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HookMeUP\HookMeUP.csproj">
