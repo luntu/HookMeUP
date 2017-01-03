@@ -18,7 +18,6 @@ namespace HookMeUP.iOS
 
 		public override void ViewDidLoad()
 		{
-			base.ViewDidLoad();
 
 			backButton.TouchUpInside += (sender, e) =>
 			{

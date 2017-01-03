@@ -34,8 +34,10 @@ namespace HookMeUP.iOS
 			loginButton.TouchUpInside += async (sender, evt) =>
 		   	{
 				   i++;
+				string username = usernameText.Text;
+				string password = passwordText.Text;
 
-				   switch (!usernameText.Text.Equals("") && !passwordText.Text.Equals(""))
+				switch ((!username.Equals("") && !password.Equals("")) && (!(username.Length > 10) && !(username.Length < 5)))
 				   {
 
 					   case true:
@@ -46,9 +48,7 @@ namespace HookMeUP.iOS
 							   loadingOverlay = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 							   View.Add(loadingOverlay);
 
-
 							   result = await ParseUser.LogInAsync(TrimInput(usernameText.Text), TrimInput(passwordText.Text));
-
 						   }
 						   catch (ParseException ex)
 						   {
@@ -62,6 +62,11 @@ namespace HookMeUP.iOS
 								   loginButton.Enabled = false;
 							   }
 						   }
+						   catch (NullReferenceException)
+						   {
+							   loadingOverlay.Hide();
+							   AlertPopUp("Login failed!!", "Please check your internet connection", "OK");
+						}
 
 						   try
 						   {
@@ -69,19 +74,26 @@ namespace HookMeUP.iOS
 							   string surname = result.Get<string>("Surname");
 							   bool isAdmin = result.Get<bool>("IsAdmin");
 							   int vouchers = result.Get<int>("Vouchers");
-							   string userChannelName = name+surname;
-							  
+							   string userChannelName = name + surname;
+
 							   orderViewController.GetName = name;
 							   orderViewController.GetSurname = surname;
 							   orderViewController.CurrentUser = result;
 							   orderViewController.GetVouchers = vouchers;
-							   
+
 							   orderViewController.GetUserChannelName = userChannelName;
 							   // create user channel
 							   var installation = ParseInstallation.CurrentInstallation;
-								
-							if (isAdmin) installation.Channels = new string[] { "Admin" };
-							   else installation.Channels = new string[] { userChannelName.ToLower() };
+							   //Debug.WriteLine( installation.DeviceToken);
+
+							   if (isAdmin)
+							   {
+								   installation.Channels = new string[] { "Admin" };
+							   }
+							   else
+							   {
+								   installation.Channels = new string[] { userChannelName.ToLower() };
+							   }
 
 							   await installation.SaveAsync();
 
@@ -91,20 +103,23 @@ namespace HookMeUP.iOS
 							   else NavigationScreenController(orderViewController);
 
 						   }
-						   catch (NullReferenceException ex)
-						   {
-							   Debug.WriteLine(ex.Message);
-						   }
 						   catch (ParseException ex)
 						   {
+							   loadingOverlay.Hide();
 							   Debug.WriteLine(ex.Message);
+							   AlertPopUp("Error", "Can't login server error, try again in a while ", "Ok");
 						   }
+							catch (NullReferenceException e)
+						   {
+							Debug.WriteLine(e.Message);
+							}
 
 						   break;
 
 					   case false:
 
-						   AlertPopUp("Error", "Please fill in details", "OK");
+							if( username.Length == 0 || password.Length == 0)AlertPopUp("Error", "Please fill in all your credentials", "OK");
+							else if ((username.Length > 10 || username.Length < 5)) AlertPopUp("Error", "Username or password is too long/short", "OK");
 
 						   break;
 				   }

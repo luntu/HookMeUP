@@ -35,12 +35,13 @@ namespace HookMeUP.iOS
 			const string APPLICATION_ID = "G7S25vITx0tfeOhODauYKwtauCvzityLwJFGYHPw";
 			const string DOT_NET_ID = "ypPxS2V2rTGl1lNbvEVKUEACKF8PRhWxkWQsbkFe";
 
-			ParseClient.Initialize(new ParseClient.Configuration
-			{
-				ApplicationId = APPLICATION_ID,
-				WindowsKey = DOT_NET_ID,
-				Server = "https://parseapi.back4app.com"
-			});
+			//ParseClient.Initialize(new ParseClient.Configuration
+			//{
+			//	ApplicationId = APPLICATION_ID,
+			//	WindowsKey = DOT_NET_ID,
+			//	Server = "https://parseapi.back4app.com"
+			//});
+			ParseClient.Initialize(APPLICATION_ID, DOT_NET_ID);
 
 			////Register for remote notifications.
 			if (Convert.ToInt16(UIDevice.CurrentDevice.SystemVersion.Split('.')[0]) < 8)
@@ -67,7 +68,7 @@ namespace HookMeUP.iOS
 				{
 					NSDictionary dictionary = aps as NSDictionary;
 
-					foreach (var elements in dictionary) 
+					foreach (var elements in dictionary)
 					{
 						string value = elements.Value.ToString();
 
@@ -76,8 +77,8 @@ namespace HookMeUP.iOS
 							//App Admin side handles notification
 							//string[] splitArr = value.Split(' ');
 							//string channelName = splitArr[3] + splitArr[4];
-						
-							
+
+
 							var refreshAdminTable = (Window.RootViewController as UINavigationController).TopViewController as AdminViewController;
 							refreshAdminTable.AddOrders();
 
@@ -85,7 +86,7 @@ namespace HookMeUP.iOS
 							//adminOrders.AddNewOrders();
 							break;
 						}
-						if (value.Contains("ready!!!")) 
+						if (value.Contains("ready!!!"))
 						{
 							UIAlertView alert = new UIAlertView();
 							alert.Title = "Done";
@@ -98,7 +99,7 @@ namespace HookMeUP.iOS
 							var refreshQueueTable = (Window.RootViewController as UINavigationController).TopViewController as QueueViewController;
 							refreshQueueTable.AddQueueOrders();
 						}
-						
+
 					}
 
 				}
@@ -125,6 +126,8 @@ namespace HookMeUP.iOS
 			ParseInstallation installation = ParseInstallation.CurrentInstallation;
 			CurrentInstallation = installation;
 			CurrentInstallation.SetDeviceTokenFromData(deviceToken);
+
+
 			if (CurrentInstallation.Badge != 0)
 				CurrentInstallation.Badge = 0;
 

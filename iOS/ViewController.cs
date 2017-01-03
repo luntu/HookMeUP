@@ -16,11 +16,7 @@ namespace HookMeUP.iOS
 		public override void ViewDidLoad()
 		{
 			
-
-
-			base.ViewDidLoad();
-
-			// Code to start the Xamarin Test Cloud Agent
+// Code to start the Xamarin Test Cloud Agent
 #if ENABLE_TEST_CLOUD
 			Xamarin.Calabash.Start ();
 #endif

@@ -21,7 +21,7 @@ namespace HookMeUP.iOS
 		public static UnpaidViewController unpaidViewController = new UnpaidViewController();
 		//public ParseObject tableNameUserInfo = new ParseObject("UserInformation");
 
-		public LoadingOverlay loadingOverlay;
+		public static LoadingOverlay loadingOverlay;
 
 
 		public string TrimInput(string input) 

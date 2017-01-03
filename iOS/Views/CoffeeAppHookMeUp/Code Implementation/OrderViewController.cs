@@ -92,7 +92,6 @@ namespace HookMeUP.iOS
 
 		public override void ViewDidLoad()
 		{
-			base.ViewDidLoad();
 			SetupView();
 			LoadTableFuctionality();
 			costText.Text = "R 0,00";

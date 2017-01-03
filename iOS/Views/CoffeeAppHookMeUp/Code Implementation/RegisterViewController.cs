@@ -2,6 +2,7 @@
 using UIKit;
 using Parse;
 using CoreGraphics;
+using System;
 
 namespace HookMeUP.iOS
 {
@@ -14,21 +15,20 @@ namespace HookMeUP.iOS
 		List<ParseObject> employeeObjs = new List<ParseObject>();
 		AuthanticateUser userAuthentication;
 
-		string GetNameTxt 
-		{ 
-			get;
-			set; 
-		}
-
-		string GetEmailTxt 
-		{ 
+		string GetNameTxt
+		{
 			get;
 			set;
 		}
-			
+
+		string GetEmailTxt
+		{
+			get;
+			set;
+		}
+
 		public override void ViewDidLoad()
 		{
-			base.ViewDidLoad();
 
 			NavigationController.NavigationBarHidden = true;
 			DismissKeyboardOnBackgroundTap();
@@ -41,8 +41,8 @@ namespace HookMeUP.iOS
 			submitButton.Enabled = true;
 			LoadUsernames();
 			LoadEmployees();
-
-			TextFieldKeyboardIteration(nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
+		
+			TextFieldKeyboardIteration(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
 
 			InputTextEditingValidation();
 			InitializeButtons();
@@ -58,7 +58,7 @@ namespace HookMeUP.iOS
 
 		void InputTextEditingValidation()
 		{
-			ValidateInput validate = new ValidateInput(submitButton,nameText,surnameText,usernameTextR,passwordTextR,verifyPasswordText,emailText);
+			ValidateInput validate = new ValidateInput(submitButton, nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
 			validate.ValidateTextInput();
 		}
 
@@ -92,7 +92,7 @@ namespace HookMeUP.iOS
 							AlertPopUp("Done!!!", "Registration complete", "OK");
 							ClearFields(nameText, surnameText, usernameTextR, passwordTextR, verifyPasswordText, emailText);
 						}
-						else 
+						else
 						{
 							Border(UIColor.Red.CGColor, emailText);
 							AlertPopUp("Error", "Account already available", "Ok");
@@ -121,12 +121,12 @@ namespace HookMeUP.iOS
 			LoadingOverlay ldOvly = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 			View.Add(ldOvly);
 
-			foreach (ParseObject employeeObjsElements in employeeObjs) 
+			foreach (ParseObject employeeObjsElements in employeeObjs)
 			{
 				string empName = employeeObjsElements.Get<string>("Name");
 				string empEmail = employeeObjsElements.Get<string>("Email");
 
-				if (GetNameTxt.ToLower().Equals(empName.ToLower()) && GetEmailTxt.ToLower().Equals(empEmail.ToLower())) 
+				if (GetNameTxt.ToLower().Equals(empName.ToLower()) && GetEmailTxt.ToLower().Equals(empEmail.ToLower()))
 				{
 					employeeObjsElements["IsRegistered"] = true;
 					await employeeObjsElements.SaveAsync();
@@ -136,16 +136,17 @@ namespace HookMeUP.iOS
 			ldOvly.Hide();
 		}
 
-		void Border(CGColor color, params UITextField[] textF) 
+		void Border(CGColor color, params UITextField[] textF)
 		{
-			foreach (UITextField field in textF) {
+			foreach (UITextField field in textF)
+			{
 				field.Layer.BorderColor = color;
 				field.Layer.BorderWidth = 1;
 				field.Layer.CornerRadius = 3;
 			}
 		}
 
-		async void AddToDB(string name,string surname, string username, string password,string email,int vouchers)
+		async void AddToDB(string name, string surname, string username, string password, string email, int vouchers)
 		{
 			loadingOverlay = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 			View.Add(loadingOverlay);
@@ -189,19 +190,26 @@ namespace HookMeUP.iOS
 
 		async void LoadUsernames()
 		{
-
 			loadingOverlay = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 			View.Add(loadingOverlay);
-
-			var query = ParseUser.Query;
-			query.Include("username");
-
-			var coll = await query.FindAsync();
-
-			foreach (ParseObject element in coll)
+			try
 			{
-				usernameCheck.Add(element.Get<string>("username"));
+				var query = ParseUser.Query;
+				query.Include("username");
+
+				var coll = await query.FindAsync();
+
+				foreach (ParseObject element in coll)
+					usernameCheck.Add(element.Get<string>("username"));
+
+
 			}
+			catch (NullReferenceException)
+			{
+				loadingOverlay.Hide();
+				AlertPopUp("Error", "No internet connection", "OK");
+			}
+
 			loadingOverlay.Hide();
 
 		}
@@ -211,19 +219,27 @@ namespace HookMeUP.iOS
 			LoadingOverlay loadO = new LoadingOverlay(UIScreen.MainScreen.Bounds);
 			View.Add(loadingOverlay);
 
-			var query = ParseObject.GetQuery("AliensEmployees");
-			query.Include("Name").Include("Email").Include("IsRegistered");
-			var iEnumerablecoll = await query.FindAsync();
-
-			foreach (var parseObj in iEnumerablecoll) 
+			try
 			{
-				string emplName = parseObj.Get<string>("Name");
-				string email = parseObj.Get<string>("Email");
-				bool isRegistered = parseObj.Get<bool>("IsRegistered");
-				employees.Add(new AliensEmployees(emplName, email, isRegistered));
-				employeeObjs.Add(parseObj);
-			}
+				var query = ParseObject.GetQuery("AliensEmployees");
+				query.Include("Name").Include("Email").Include("IsRegistered");
+				var iEnumerablecoll = await query.FindAsync();
 
+				foreach (var parseObj in iEnumerablecoll)
+				{
+					string emplName = parseObj.Get<string>("Name");
+					string email = parseObj.Get<string>("Email");
+					bool isRegistered = parseObj.Get<bool>("IsRegistered");
+					employees.Add(new AliensEmployees(emplName, email, isRegistered));
+					employeeObjs.Add(parseObj);
+				}
+
+			}
+			catch (NullReferenceException ex)
+			{
+				loadO.Hide();
+				System.Diagnostics.Debug.WriteLine(ex.Message);
+			}
 			loadO.Hide();
 
 		}

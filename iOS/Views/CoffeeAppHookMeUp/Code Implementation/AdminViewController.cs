@@ -35,7 +35,6 @@ namespace HookMeUP.iOS
 
 		public override void ViewDidLoad()
 		{
-			base.ViewDidLoad();
 
 			viewUnpaidButton.TouchUpInside += (sender, e) =>
 			{
